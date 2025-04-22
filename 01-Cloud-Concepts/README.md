@@ -78,7 +78,8 @@ Cloud technology enables innovation and agility, making it a preferred alternati
 8. **What is the difference between vertical and horizontal scaling?**  
     - **Vertical Scaling**: Adding more power (CPU, RAM) to an existing server (scale-up).
     - **Horizontal Scaling**: Adding more servers to distribute the load (scale-out).
-
+    
+![alt text](image-1.png)
 9. **What are some technical keywords in cloud computing?**  
     - **Scalability**: Ability to increase or decrease resources based on demand.
     - **Elasticity**: Ability to quickly scale resources up or down.
