@@ -11,7 +11,8 @@ AWS S3 is an object storage service that offers high durability, availability, s
 - **Access Control Lists (ACLs)**: A way to manage permissions for buckets and objects. ACLs define who can access the data and what actions they can perform.
 - **Static website hosting**: S3 can be used to host static websites by serving HTML, CSS, and JavaScript files directly from a bucket.
 - **Encryption**: S3 supports server-side encryption (SSE) to protect data at rest. You can use AWS Key Management Service (KMS) or S3-managed keys (SSE-S3) for encryption.
-
+- **Blocked Public Access**: By default, S3 blocks public access to buckets and objects. You can configure bucket policies or ACLs to allow public access if needed.
+- **Gateway Endpoints**: S3 supports VPC endpoints, allowing you to access S3 without going through the public internet through Internet Gateway. This is useful to access S3 from private subnets securely.
 
 **Storage Classes:**
 - **S3 Standard**: General-purpose storage for frequently accessed data. It offers high durability and availability.

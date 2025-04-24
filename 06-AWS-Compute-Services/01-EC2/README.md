@@ -35,8 +35,8 @@ EC2 instances are categorized into different families based on their use cases.
    - Yes, you can create your own AMI from an existing EC2 instance by creating a **snapshot** or use AWS Marketplace to find pre-built AMIs.
 
 3. **What is the difference between EBS and Instance Store?**
-   - EBS (Elastic Block Store) is a persistent block storage service that can be attached to EC2 instances, while Instance Store is temporary storage that is physically attached to the host server and data is lost when the instance is stopped or terminated.
-   - EBS volumes can be backed up using snapshots, while Instance Store data cannot be recovered after instance termination.
+   - EBS (Elastic Block Store) is a persistent block storage service that can be attached to EC2 instances, while Instance Store is temporary storage that is physically attached to the host (EC2) server and data is lost when the instance is stopped or terminated.
+   - EBS volumes can be backed up using snapshots, while Instance Store data cannot be recovered after instance termination(Shutdown).
    - EBS is suitable for data that needs to persist beyond the life of the instance, while Instance Store is suitable for temporary data or caching.
 
 4. **EC2 User Data Scripts VS EC2 Metadata?**

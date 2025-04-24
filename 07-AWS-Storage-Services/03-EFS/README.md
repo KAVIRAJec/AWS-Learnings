@@ -23,11 +23,21 @@
 
 ### Interview Questions
 1. **Difference between EFS and EBS**
-    - EFS is a fully managed, scalable, and elastic file storage service that provides shared file storage for use with AWS services and on-premises resources. It supports the NFS (Network File System) protocol, making it easy to integrate with applications requiring shared file systems.
-    - EBS is a block-level storage service designed for use with Amazon EC2 instances. It provides persistent block storage that can be attached to EC2 instances, allowing them to store data and run applications.
+    | Feature                | EFS                                                                                                   | EBS                                                                                     |
+    |------------------------|-------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+    | **Type**              | Network Attached Storage (NAS)                                                                       | Block-level storage                                                                     |
+    | **Use Case**          | Shared file storage for multiple EC2 instances                                                       | Persistent block storage for a single EC2 instance                                     |
+    | **Access**            | Can be accessed concurrently by multiple EC2 instances                                               | Attached to a single EC2 instance at a time                                           |
+    | **OS Installation**   | Not supported(Network server)                                                                           | Supported(via AMI)                                                                          |
+    | **Scalability**       | Automatically scales as files are added or removed                                                   | Fixed size; requires manual resizing                                                  |
+    | **Protocol**          | Supports linux based NFS (Network File System)                                                                   | Not protocol-based; operates at the block level                                       |
+    | **Analogy**           | Like a Virtual Hard Disk (VHD) that can be shared across multiple EC2 instances                      | Like a physical hard drive attached to a single EC2 instance                          |
+    | **Integration**       | Designed for use with multiple EC2 instances and on-premises resources                               | Designed for use with a single EC2 instance                                           |
+    | **Primary Use**       | Shared file systems, web serving, content management, and concurrent access                          | Running applications, databases, and storing data for a single EC2 instance           |
+    | **Availability** | EC2 and EFS can be in different VPC & AZs                               | EC2 and EBS should be in the same AZs                                   |
 
 2. **How does EFS integrate with on-premises resources?**
-    - EFS can be accessed from on-premises resources using AWS Direct Connect or AWS VPN. This allows organizations to extend their on-premises applications to the cloud and use EFS as a shared file system for their applications.
+    - EFS can be accessed from on-premises resources using AWS Direct Connect or AWS VPN.This allows organizations to extend their on-premises applications to the cloud and use EFS as a shared file system for their applications.
 
 3. **Can you access EFS from multiple Availability Zones?**
     - Yes, EFS is designed to be accessed concurrently from multiple Availability Zones, providing high availability and durability for your data.
