@@ -11,6 +11,8 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
 6. **AWS Cloud Formation**
 7. **AWS Service Health Dashboard**
 8. **AWS Personal Health Dashboard**
+9. **AWS SNS (Simple Notification Service)**
+10. **AWS SQS (Simple Queue Service)**
 
 1. **Amazon CloudWatch**: Amazon CloudWatch is a monitoring and observability service that provides data and insights into your AWS resources and applications. It collects and tracks metrics, collects log files, sets alarms, and automatically reacts to changes in your AWS resources.
     - **Key Features**:
@@ -56,7 +58,18 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
         - Event history and remediation guidance
         - Integration with AWS CloudWatch Events
         - Service health events specific to your account
-    
+9. **AWS SNS (Simple Notification Service)**: Amazon Simple Notification Service (SNS) is a fully managed messaging service that enables you to decouple and scale microservices, distributed systems, and serverless applications. It provides a simple way to send notifications from the cloud to multiple subscribers.
+    - **Key Features**:
+        - Multiple protocols (email, SMS, HTTP/S, etc.)
+        - Integration with AWS Lambda and other AWS services
+        - Message filtering and fan-out capabilities
+10. **AWS SQS (Simple Queue Service)**: Amazon Simple Queue Service (SQS) is a fully managed message queuing service that enables you to decouple and scale microservices, distributed systems, and serverless applications. It allows you to send, store, and receive messages between software components at any volume without losing messages.
+    - **Key Features**:
+        - Fully managed message queuing
+        - FIFO (First-In-First-Out) and Standard queues
+        - Integration with AWS Lambda and other AWS services
+        - Dead-letter queues for error handling 
+
 ### AWS data management services:
 1. **Amazon Key Management Service (KMS)**
 2. **AWS Secrets Manager**

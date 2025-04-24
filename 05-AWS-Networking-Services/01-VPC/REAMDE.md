@@ -53,7 +53,7 @@
     - Network ACLs are evaluated before security groups, so they can be used to provide an additional layer of security.
 
 7. **VPC Peering**:
-    - VPC Peering allows you to connect two VPCs, enabling resources in both VPCs to communicate with each other as if they were within the same network.
+    - VPC Peering allows you to connect two VPCs without exposing to the internet, enabling resources in both VPCs to communicate privately with each other as if they were within the same network.
     - VPC Peering can be established between VPCs in the same AWS account or different AWS accounts, and it can span multiple regions (inter-region peering).
     - Peered VPCs can be in different AWS accounts or regions, but they **must not have overlapping CIDR blocks.**
     - VPC Peering is useful for sharing resources, such as databases or applications, between different VPCs.
