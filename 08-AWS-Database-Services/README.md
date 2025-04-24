@@ -26,6 +26,7 @@ AWS provides a variety of database services to meet different application needs,
      - Single-digit millisecond response times
      - Global tables for multi-region replication
      - Built-in security, backup, and restore features
+     - Key-value data model and Transaction support(ACID transactions) with DynamoDB transactions even in NOSQL databases.
    - **Use Cases**:
      - Mobile applications, gaming, IoT applications, and any application requiring low-latency data access.
 
@@ -45,7 +46,7 @@ AWS provides a variety of database services to meet different application needs,
    - **Use Cases**:
      - Business intelligence, data analytics, and reporting.
 
-5. **Amazon ElastiCache**: A fully managed in-memory caching service that supports Redis and Memcached, designed to improve application performance by caching frequently accessed data.
+5. **Amazon ElastiCache**: A fully managed in-memory caching service that supports **Redis and Memcached**, designed to improve application performance by caching frequently accessed data.
    - **Key Features**:
      - Sub-millisecond response times
      - Automatic failover and backup options
@@ -66,6 +67,7 @@ AWS provides a variety of database services to meet different application needs,
      - Fully managed and scalable
      - Supports MongoDB APIs and tools
      - Automated backups and scaling
+     - Used for JSON-like documents (migration from MongoDB to DocumentDB)
    - **Use Cases**:
      - Content management systems, catalogs, and any application requiring a document database.
 
