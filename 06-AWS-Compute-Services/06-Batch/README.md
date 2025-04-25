@@ -3,6 +3,7 @@
 - AWS Batch is a fully managed service that efficiently runs hundreds to thousands of batch computing jobs on AWS. It dynamically provisions the right compute resources (like EC2 or Spot Instances) and handles job queuing, scheduling, retries, and prioritization, so you don’t need to manage infrastructure.
 - AWS Batch is automatic scalable and serverless.
 - Can be used to run batch jobs on EC2, ECS, or Fargate.
+- Automate the processing of large amounts of data, such as images, videos, or logs at a schedule or in response to events.
 
 ### Key Use Cases
 - Data Processing
