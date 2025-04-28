@@ -13,6 +13,8 @@
 - **Network ACLs (Access Control Lists)**
 - **VPC Peering**
 - **VPC Endpoints**
+- **VPC Flow Logs**
+- **VPC Traffic Mirroring**
 
 1. **Subnets**:
     - Subnets are segments of a VPC's IP address range where you can place groups of isolated resources. You can create public and private subnets within your VPC.
@@ -64,3 +66,29 @@
     - There are two types of VPC Endpoints: Interface Endpoints (for AWS services) and Gateway Endpoints (for S3 and DynamoDB).
 
     ![alt text](image.png)
+
+9. **VPC Flow Logs**:
+    - VPC Flow Logs capture information about the IP traffic going to and from network interfaces in your VPC.
+    - You can publish flow logs to Amazon CloudWatch Logs or Amazon S3 for further analysis.
+    - Flow logs can be created for a VPC, subnet, or network interface.
+    - Flow logs capture information such as source and destination IP addresses, ports, protocol, and the number of bytes transferred.
+    - Flow logs can be used to identify traffic patterns, troubleshoot connectivity issues, and monitor network security.
+
+10. **VPC Traffic Mirroring**:
+    - VPC Traffic Mirroring allows you to capture and inspect network traffic in your VPC.
+    - You can mirror traffic from Elastic Network Interfaces (ENIs) to a target, such as an Amazon EC2 instance or a network appliance, for analysis and monitoring.
+    - Traffic Mirroring is useful for security analysis, performance monitoring, and troubleshooting network issues.
+    - You can filter the mirrored traffic based on source and destination IP addresses, protocols, and ports.
+
+**VPC Flow Logs VS VPC Traffic Mirroring**:
+
+| Feature               | VPC Flow Logs                                                                 | VPC Traffic Mirroring                                                                 |
+|-----------------------|-------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| **Purpose**           | Captures metadata about IP traffic going to and from network interfaces.     | Captures actual network traffic for analysis and monitoring.                        |
+| **Data Captured**     | Source/destination IPs, ports, protocol, bytes transferred, etc.             | Full packet data, including payload, for selected traffic.                          |
+| **Use Cases**         | Troubleshooting, monitoring, and analyzing traffic patterns.                 | Security analysis, performance monitoring, and troubleshooting network issues.      |
+| **Target**            | Logs are sent to Amazon CloudWatch Logs or Amazon S3.                        | Traffic is mirrored to an EC2 instance or network appliance for inspection.         |
+| **Granularity**       | Can be enabled at VPC, subnet, or network interface level.                   | Mirrors traffic from specific Elastic Network Interfaces (ENIs).                    |
+| **Filtering**         | No filtering of specific traffic; captures all traffic metadata.             | Allows filtering based on IP addresses, protocols, and ports.                       |
+| **Performance Impact**| Minimal impact as it only captures metadata.                                 | Higher impact as it processes and mirrors full packet data.                         |
+| **Cost**              | Lower cost due to smaller data volume.                                       | Higher cost due to larger data volume and processing requirements.                  |
