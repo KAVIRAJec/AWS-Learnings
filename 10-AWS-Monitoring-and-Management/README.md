@@ -15,8 +15,9 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
 10. **AWS SQS (Simple Queue Service)**
 11. **AWS Service Health Dashboard**
 12. **AWS Personal Health Dashboard**
-13, **AWS OpsWorks**
+13. **AWS OpsWorks**
 14. **AWS Outposts**
+15. **AWS Inspector**
 
 1. **Amazon CloudWatch**: Amazon CloudWatch is a monitoring and observability service that provides data and insights into your AWS resources and applications. It collects and tracks metrics, collects log files, sets alarms, and automatically reacts to changes in your AWS resources.
     - **Key Features**:
@@ -92,7 +93,13 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
         - Consistent hybrid experience
         - Integration with AWS services and APIs
         - Support for low-latency applications
-        
+15. **AWS Inspector**: AWS Inspector is an automated security assessment service that helps improve the security and compliance of applications deployed on AWS. It automatically assesses applications for vulnerabilities or deviations from best practices and provides a detailed report with findings and recommendations.
+    - **Key Features**:
+        - Automated security assessments
+        - Integration with AWS services (e.g., EC2, Lambda)
+        - Detailed reports and remediation guidance
+        - Support for custom assessment rules
+
 ### AWS data management services:
 1. **Amazon Key Management Service (KMS)**
 2. **AWS Secrets Manager**

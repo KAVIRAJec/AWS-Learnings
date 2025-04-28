@@ -16,6 +16,3 @@
 ### AWS Services to be Added:
 - Data analytics services
 - Machine learning services
-- AWS Inspector
-- Disaster Recovery(Backup and Restore, Pilot Light, Warm Standby, Multi-Site)
-- AWS Well-Architected Framework
