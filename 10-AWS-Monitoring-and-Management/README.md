@@ -13,6 +13,10 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
 8. **AWS Personal Health Dashboard**
 9. **AWS SNS (Simple Notification Service)**
 10. **AWS SQS (Simple Queue Service)**
+11. **AWS Service Health Dashboard**
+12. **AWS Personal Health Dashboard**
+13, **AWS OpsWorks**
+14. **AWS Outposts**
 
 1. **Amazon CloudWatch**: Amazon CloudWatch is a monitoring and observability service that provides data and insights into your AWS resources and applications. It collects and tracks metrics, collects log files, sets alarms, and automatically reacts to changes in your AWS resources.
     - **Key Features**:
@@ -69,7 +73,26 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
         - FIFO (First-In-First-Out) and Standard queues
         - Integration with AWS Lambda and other AWS services
         - Dead-letter queues for error handling 
-
+11. **AWS Service Health Dashboard**: The AWS Service Health Dashboard provides up-to-date information about the status of AWS services. It displays the current status of AWS services and any ongoing issues or outages.(gives insights of all AWS services)
+    - **Key Features**:
+        - Real-time service status
+        - Historical data on service availability
+        - Notifications for service events
+        - Integration with AWS Personal Health Dashboard
+12. **AWS Personal Health Dashboard**: The AWS Personal Health Dashboard provides alerts and remediation guidance when AWS is experiencing events that may impact your AWS resources. It provides a personalized view into the performance and availability of the AWS services underlying your AWS resources.(gives insights of your AWS resources)
+13. **AWS OpsWorks**: AWS OpsWorks is a **configuration management service** that helps you configure and operate applications in a cloud enterprise by using Chef and Puppet. It allows you to automate how nodes are configured, deployed, and managed, whether they are Amazon EC2 instances or on-premises devices.
+    - **Key Features**:
+        - Configuration management with Chef (automate management, configuration, security & CD) and Puppet(automate deployment, configuration, management of applications)
+        - Application lifecycle management
+        - Integration with AWS services(e.g., EC2, RDS)
+        - Support for custom cookbooks and recipes
+14. **AWS Outposts**: AWS Outposts is a fully managed service that extends AWS infrastructure, services, APIs, and tools to virtually any customer site for a truly consistent hybrid experience. It allows you to run AWS services on-premises and seamlessly integrate with the rest of your AWS environment to experience hybrid cloud solutions.
+    - **Key Features**:
+        - Fully managed service on-premises
+        - Consistent hybrid experience
+        - Integration with AWS services and APIs
+        - Support for low-latency applications
+        
 ### AWS data management services:
 1. **Amazon Key Management Service (KMS)**
 2. **AWS Secrets Manager**

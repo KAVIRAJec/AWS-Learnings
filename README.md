@@ -14,13 +14,10 @@
 
 
 ### AWS Services to be Added:
-- AWS Service Health Dashboard
-- AWS Personal Health Dashboard
 - Data analytics services
 - Machine learning services
-- AWS outposts
 - AWS VPC Flow logs
 - AWS Inspector
-- AWS OpsWorks
 - Disaster Recovery(Backup and Restore, Pilot Light, Warm Standby, Multi-Site)
 - AWS Well-Architected Framework
+
