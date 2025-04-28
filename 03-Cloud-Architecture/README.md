@@ -2,9 +2,12 @@
 
 **AWS Cloud Architecture** refers to the design and structure of applications, services, and systems built using Amazon Web Services. It is designed to provide **scalable**, **elastic**, and **highly available** solutions for modern applications. By following best practices, it ensures **reliability**, **performance**, and **cost-efficiency**.
 
+## 6 Advantages of AWS Cloud Architecture:
+![alt text](image-2.png)
+
 ## Key Components of AWS Cloud Architecture
 
-### 1, **Networking Services**
+### 1. **Networking Services**
 These services provide the backbone for communication between AWS resources and external networks:
 - **Amazon VPC (Virtual Private Cloud)**: Isolated network environment for AWS resources.
 - **AWS Direct Connect**: Dedicated network connection from on-premises to AWS.

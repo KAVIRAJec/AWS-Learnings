@@ -14,3 +14,5 @@
 
 
 ### AWS Services to be Added:
+Cognito
+

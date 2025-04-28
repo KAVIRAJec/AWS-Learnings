@@ -46,3 +46,7 @@ The root account in AWS is the AWS account's owner and has unrestricted access t
   - Secure the root account with multi-factor authentication (MFA).
   - Create IAM users with specific permissions for regular operations.
   - Lock away the root account credentials and use them only when absolutely necessary.
+
+#### 6. **IAM Identity Center**
+IAM Identity Center (formerly AWS Single Sign-On) is a service that enables you to manage access to multiple AWS accounts and applications from a single location. It provides a centralized way to manage user identities and permissions across your organization.
+- **Use Case**: Simplify user access management for multiple AWS accounts and applications.

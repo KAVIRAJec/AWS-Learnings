@@ -18,6 +18,7 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
 13. **AWS OpsWorks**
 14. **AWS Outposts**
 15. **AWS Inspector**
+16. **AWS Cognito**
 
 1. **Amazon CloudWatch**: Amazon CloudWatch is a monitoring and observability service that provides data and insights into your AWS resources and applications. It collects and tracks metrics, collects log files, sets alarms, and automatically reacts to changes in your AWS resources.
     - **Key Features**:
@@ -99,11 +100,18 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
         - Integration with AWS services (e.g., EC2, Lambda)
         - Detailed reports and remediation guidance
         - Support for custom assessment rules
+16. **AWS Cognito**: Amazon Cognito is a service that provides authentication, authorization, and user management for web and mobile apps. It enables you to add user sign-up, sign-in, and access control to your applications quickly and easily.
+    - **Key Features**:
+        - Social identity provider integration (e.g., Facebook, Google)
+        - User directory management
+        - Multi-factor authentication (MFA) support
+        - User profile management
 
 ### AWS data management services:
 1. **Amazon Key Management Service (KMS)**
 2. **AWS Secrets Manager**
 3. **AWS Parameter Store**
+4. **AWS CloudHSM**
 
 1. **AWS KMS**: AWS Key Management Service (KMS) is a managed encryption service that makes it easy to create and control the keys used to encrypt your data. It provides a centralized way to manage encryption keys and integrates with other AWS services to help you protect your data at rest and in transit.
     - **Key Features**:
@@ -127,3 +135,11 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
         - Fine-grained access control
 
 ![Parameter store vs AWS Secrets Manager](image.png)
+
+4. **AWS CloudHSM**: AWS CloudHSM is a cloud-based hardware security module (HSM) that allows you to generate and use your encryption keys on the AWS Cloud. It provides a secure and compliant way to manage cryptographic keys and perform cryptographic operations in the cloud.
+    - **Key Features**:
+        - Hardware security module (HSM)
+        - Compliance with industry standards
+        - Integration with AWS services
+        - Fine-grained access control
+        - High availability and scalability
