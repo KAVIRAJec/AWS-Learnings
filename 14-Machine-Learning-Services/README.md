@@ -17,6 +17,7 @@ AWS provides a variety of machine learning services and tools that enable develo
 - **Amazon CodeGuru**
 - **Amazon Deep Learning AMIs**
 - **AWS DeepRacer**
+- **AWS Macie**
 
 1. **Amazon SageMaker**: 
 A fully managed service that provides tools to build, train, and deploy machine learning models quickly. It includes built-in algorithms, Jupyter notebooks, and support for popular frameworks like TensorFlow and PyTorch.
@@ -93,3 +94,8 @@ A fun and educational service that allows developers to learn about reinforcemen
    - **Use Cases**: Reinforcement learning education, hands-on experimentation, and competition.
    - **Key Features**: Simulated racing environment, integration with Amazon SageMaker, and community competitions.
 - **Note**: AWS DeepRacer is a fun and educational service that allows developers to learn about reinforcement learning by training and racing autonomous vehicles in a simulated environment. It includes a 1/18th scale model car that can be programmed and trained using reinforcement learning techniques. This service provides a hands-on experience for understanding machine learning concepts and algorithms.
+
+16. **AWS Macie**:
+A fully managed data security and privacy service that uses machine learning to automatically discover, classify, and protect sensitive data in AWS. It helps organizations identify and manage sensitive data, such as personally identifiable information (PII), in their Amazon S3 buckets.
+   - **Use Cases**: Data security, compliance, and data privacy management.
+   - **Key Features**: Automated data discovery, sensitive data classification, and integration with AWS services.

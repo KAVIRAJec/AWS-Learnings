@@ -14,5 +14,3 @@
 
 
 ### AWS Services to be Added:
-- Data analytics services
-- Machine learning services
