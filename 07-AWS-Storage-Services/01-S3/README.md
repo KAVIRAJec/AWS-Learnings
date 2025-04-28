@@ -26,6 +26,13 @@ AWS S3 is an object storage service that offers high durability, availability, s
 ![alt text](image.png)
 ![alt text](image-1.png)
 
+## Pricing:
+- **Storage Costs**: Charged based on the amount of data stored in S3, measured in GB per month.
+- **Data Transfer Costs**: Charged based on the amount of data transferred out of S3 to the internet or other AWS regions.
+
+- **Requests and Retrieval Costs**: Charged based on the number of requests made to S3 (PUT, GET, LIST, etc.) and the retrieval of data from different storage classes.
+- **Data Transfer In Costs**: No pricing for Data Transfer In bound & between other services within same region, but Data Transfer Out is charged based on the amount of data transferred out of AWS.
+
 ## Interview Questions:
 1. **Difference between Bucket policies and ACLs?**
    - Bucket policies are resource-based policies that apply to the entire bucket and its objects, while ACLs are access control lists that can be applied to individual objects or buckets. Bucket policies are more flexible and powerful than ACLs.

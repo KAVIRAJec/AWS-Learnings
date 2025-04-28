@@ -13,6 +13,7 @@
 - **Network ACLs (Access Control Lists)**
 - **VPC Peering**
 - **VPC Endpoints**
+- **VPC Gateway Endpoint**
 - **VPC Flow Logs**
 - **VPC Traffic Mirroring**
 
@@ -67,14 +68,19 @@
 
     ![alt text](image.png)
 
-9. **VPC Flow Logs**:
+9. **VPC Gateway Endpoint**:
+    - A VPC Gateway Endpoint is a specific type of VPC Endpoint that allows you to connect your VPC to AWS services such as Amazon S3 and DynamoDB without requiring an internet gateway or NAT device.
+    - Gateway Endpoints are used to access S3 and DynamoDB securely and privately from within your VPC.
+    - When you create a Gateway Endpoint, it automatically creates route table entries for the specified service, allowing traffic to flow directly to the service without going through the internet.
+
+10. **VPC Flow Logs**:
     - VPC Flow Logs capture information about the IP traffic going to and from network interfaces in your VPC.
     - You can publish flow logs to Amazon CloudWatch Logs or Amazon S3 for further analysis.
     - Flow logs can be created for a VPC, subnet, or network interface.
     - Flow logs capture information such as source and destination IP addresses, ports, protocol, and the number of bytes transferred.
     - Flow logs can be used to identify traffic patterns, troubleshoot connectivity issues, and monitor network security.
 
-10. **VPC Traffic Mirroring**:
+11. **VPC Traffic Mirroring**:
     - VPC Traffic Mirroring allows you to capture and inspect network traffic in your VPC.
     - You can mirror traffic from Elastic Network Interfaces (ENIs) to a target, such as an Amazon EC2 instance or a network appliance, for analysis and monitoring.
     - Traffic Mirroring is useful for security analysis, performance monitoring, and troubleshooting network issues.

@@ -17,7 +17,7 @@ AWS provides a variety of database services to meet different application needs,
      - Automated backups and snapshots
      - Multi-AZ deployments for high availability
      - Read replicas for scaling read workloads
-     - Security features like encryption at rest and in transit
+     - Encryption at rest and in transit meaning **data is protected while stored and during transmission.**
    - **Use Cases**:
      - Web applications, e-commerce platforms, and any application requiring a relational database.
     

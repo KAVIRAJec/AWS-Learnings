@@ -10,6 +10,10 @@ Amazon Elastic Compute Cloud (EC2) is a web service that provides resizable comp
 - **Integration**: Seamlessly integrates with other AWS services like Amazon S3, RDS, Lambda, ECS, EKS, and more.
 - **Static IP Addresses** (Elastic IPs): This feature is not free.
 - **EBS Volumes**: Persistent block storage for EC2 instances.
+![alt text](image.png)
+
+- **Scale out(Horizontal scaling):** A scale out operation implies you scale by adding more instances to your existing pool of resources. This is Fault Tolerant and High Availability.
+- **Scale up(Vertical scaling):** A scale up operation implies you scale by adding more power (CPU, RAM, memory) to an existing instance. This is not Fault Tolerant and High Availability.
 
 ### EC2 Instance Types
 EC2 instances are categorized into different families based on their use cases. 
@@ -24,6 +28,7 @@ EC2 instances are categorized into different families based on their use cases.
 - **Reserved Instances**: Commit to a one or three-year term for discounted pricing. It is kind of booking an instance for a specific period.(Applies discount upto 70%)
 - **Spot Instances**: Purchase unused EC2 capacity at reduced rates. Ideal for short-term, flexible workloads. Spot instances can be interrupted by AWS with two-minute warning if the capacity is needed elsewhere.(Applies discount upto 90%)
 - **Dedicated Hosts**: Physical servers dedicated to your use, providing control over how instances are placed on the server. Allows you to use software licenses. (Applies discount upto 70%)
+- No pricing for Data Transfer In bound & between other services within same region, but Data Transfer Out is charged based on the amount of data transferred out of AWS.
 
 ## Interview Questions
 1. **Difference between EC2 and Lambda?**

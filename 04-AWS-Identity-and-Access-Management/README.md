@@ -50,3 +50,11 @@ The root account in AWS is the AWS account's owner and has unrestricted access t
 #### 6. **IAM Identity Center**
 IAM Identity Center (formerly AWS Single Sign-On) is a service that enables you to manage access to multiple AWS accounts and applications from a single location. It provides a centralized way to manage user identities and permissions across your organization.
 - **Use Case**: Simplify user access management for multiple AWS accounts and applications.
+
+#### AWS Organizations
+AWS Organizations is a service that allows you to create and manage multiple AWS accounts within a single organization. It provides centralized billing, policy management, and governance across all accounts.
+- **Use Case**: Manage multiple AWS accounts for different departments or projects within an organization.
+- **Key Features**:
+  - Consolidated billing for multiple accounts.
+  - Service control policies (SCPs) to manage permissions across accounts. To remove any account from the organization, you need to make it as a standalone account first.
+  - Organizational units (OUs) to group accounts for easier management.

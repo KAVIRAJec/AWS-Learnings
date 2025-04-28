@@ -17,8 +17,7 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
 12. **AWS Personal Health Dashboard**
 13. **AWS OpsWorks**
 14. **AWS Outposts**
-15. **AWS Inspector**
-16. **AWS Cognito**
+15. **AWS Cognito**
 
 1. **Amazon CloudWatch**: Amazon CloudWatch is a monitoring and observability service that provides data and insights into your AWS resources and applications. It collects and tracks metrics, collects log files, sets alarms, and automatically reacts to changes in your AWS resources.
     - **Key Features**:
@@ -31,8 +30,8 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
     - **Key Features**:
         - Event history of AWS API calls
         - Integration with Amazon S3 and CloudWatch Logs
-        - Data events monitoring
-        - Insights into user activity
+        - Data events monitoring & logging
+        - Encryption of log files by default
 3. **AWS Config**: AWS Config is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. It continuously monitors and records your AWS resource configurations and allows you to automate the evaluation of recorded configurations against desired configurations.
     - **Key Features**:
         - Continuous monitoring of resource configurations
@@ -94,13 +93,7 @@ AWS Monitoring & Management tools help you monitor the health, performance, and 
         - Consistent hybrid experience
         - Integration with AWS services and APIs
         - Support for low-latency applications
-15. **AWS Inspector**: AWS Inspector is an automated security assessment service that helps improve the security and compliance of applications deployed on AWS. It automatically assesses applications for vulnerabilities or deviations from best practices and provides a detailed report with findings and recommendations.
-    - **Key Features**:
-        - Automated security assessments
-        - Integration with AWS services (e.g., EC2, Lambda)
-        - Detailed reports and remediation guidance
-        - Support for custom assessment rules
-16. **AWS Cognito**: Amazon Cognito is a service that provides authentication, authorization, and user management for web and mobile apps. It enables you to add user sign-up, sign-in, and access control to your applications quickly and easily.
+15. **AWS Cognito**: Amazon Cognito is a service that provides authentication, authorization, and user management for web and mobile apps. It enables you to add user sign-up, sign-in, and access control to your applications quickly and easily.
     - **Key Features**:
         - Social identity provider integration (e.g., Facebook, Google)
         - User directory management

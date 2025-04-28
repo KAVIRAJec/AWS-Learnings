@@ -4,6 +4,7 @@ The AWS Global Infrastructure is a combination of data centers, networks, and te
 
 ## Regions
 AWS operates its cloud services across geographic locations called **Regions**. Each Region is a separate geographic area consisting of multiple **Availability Zones (AZs)**, which are isolated locations within the Region.
+**Each region consist of minimum of 3 AZs.**
 
 ### Key Features:
 - **Data sovereignty and compliance**: Users can choose where their data is stored and processed.
@@ -17,7 +18,7 @@ AWS operates its cloud services across geographic locations called **Regions**. 
 ---
 
 ## Availability Zones (AZs)
-**Availability Zones** are isolated locations within a Region. Each AZ consists of one or more data centers and is interconnected with other AZs in the Region using low-latency, high-bandwidth networks.
+**Availability Zones** are isolated locations within a Region. **Each AZ consists of one or more data centers** and is interconnected with other AZs in the Region using low-latency, high-bandwidth networks.
 
 ### Key Features:
 - Independent power, cooling, and physical security.
