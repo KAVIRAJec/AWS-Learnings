@@ -23,6 +23,7 @@ AWS Security Services are designed to help organizations protect their data, app
 
 4. **AWS WAF (Web Application Firewall)**: A web application firewall that helps protect your web applications from common web exploits and bots that can affect availability, compromise security, or consume excessive resources.
    - **Use Cases**: Protecting web applications from SQL injection, cross-site scripting (XSS), and DDoS attacks. It works on Layer 7 of the OSI model.
+   - AWS Web Application Firewall (AWS WAF) can block all requests except the ones that you allow.
    - Web Application Firewall (WAF) can be applied to Amazon CloudFront distributions, Application Load Balancers (ALB), and API Gateway.
 
 5. **AWS Shield**: A managed DDoS protection service that safeguards applications running on AWS. It provides two levels of protection: Standard and Advanced.

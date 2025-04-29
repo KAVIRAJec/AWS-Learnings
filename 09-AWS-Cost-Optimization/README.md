@@ -34,6 +34,7 @@ AWS Cost Management services help you monitor, control, and optimize your cloud 
      - Cost optimization recommendations (e.g., underutilized resources).
      - Performance and security best practices.
      - Fault tolerance and service limit checks.
+     - Used to identify unused or idle resources.
      - Integration with AWS Support plans for additional insights.
 5. **AWS Cost Anomaly Detection**: A machine learning-based service that helps you identify unusual spending patterns in your AWS account. It automatically detects anomalies and sends alerts to help you investigate and take action.
    - **Key Features**:

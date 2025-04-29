@@ -166,7 +166,7 @@ AWS offers four support plans to meet the needs of different customers. Each pla
 - **Features**:
   - All Developer Support features
   - 24/7 technical support via email, chat, and phone
-  - Access to AWS Support API
+  - Access to AWS Support API(programmatic access)
   - Infrastructure event management
   - Proactive guidance and best practices
   - Access to AWS Well-Architected Tool
@@ -180,6 +180,7 @@ AWS offers four support plans to meet the needs of different customers. Each pla
   - 24/7 technical support via email, chat, and phone
   - Dedicated Technical Account Manager (TAM)
   - Infrastructure event management
+  - Access to AWS Support API (programmatic access)
   - Proactive guidance and best practices
   - Access to AWS Well-Architected Tool
   - Access to AWS Trusted Advisor (full checks)

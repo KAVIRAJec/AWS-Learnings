@@ -70,5 +70,6 @@ AWS Organizations is a service that allows you to create and manage multiple AWS
 - **Use Case**: Manage multiple AWS accounts for different departments or projects within an organization.
 - **Key Features**:
   - Consolidated billing for multiple accounts.
+  - RI (Reserved Instance) sharing: the consideration of RI benefit applies only instance created under same AZ.
   - Service control policies (SCPs) to manage permissions across accounts. To remove any account from the organization, you need to make it as a standalone account first.
   - Organizational units (OUs) to group accounts for easier management.
