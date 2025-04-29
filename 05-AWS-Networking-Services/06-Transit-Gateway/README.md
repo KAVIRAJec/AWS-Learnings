@@ -1,4 +1,4 @@
-## AWS Transit Gateway
+## AWS Transit Gateway (centralized router)
 
 AWS Transit Gateway is a network transit hub that connects multiple VPCs, on-premises networks, and AWS services through a central hub (centralized router). Instead of building many-to-many VPC peerings, Transit Gateway enables a hub-and-spoke model.
 ![alt text](image.png)

@@ -1,6 +1,6 @@
 ## IAM(Identity and Access Management) in AWS
 IAM (Identity and Access Management) is a web service that helps you securely control access to AWS services and resources for your users/employees in your organization. IAM enables you to manage permissions and access rights for AWS resources, ensuring that only authorized users can perform specific actions.
-
+![alt text](image.png)
 ### IAM Concepts and Components
 
 #### 1. **IAM User**
@@ -28,6 +28,20 @@ IAM Policies are JSON documents that define what actions are allowed or denied o
   2. **Customer Managed Policies**: Custom policies created by users for specific use cases.
   3. **Inline Policies**: Policies embedded directly into a user, group, or role.
 
+- **Policy Structure**: Policies consist of statements that define the effect (Allow or Deny), action (e.g., s3:ListBucket), resource (e.g., ARN of an S3 bucket), and conditions (optional).
+- **Example Policy**:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::example-bucket"
+    }
+  ]
+}
+```
 - **Best Practices**:
   - Follow the principle of least privilege by granting only the permissions required.
   - Define what actions are allowed or denied (e.g., ec2:StartInstances, s3:GetObject).

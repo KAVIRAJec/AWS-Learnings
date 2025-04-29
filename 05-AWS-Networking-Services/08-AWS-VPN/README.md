@@ -3,7 +3,11 @@
 AWS VPN is a service that allows you to create secure connections between your on-premises networks and AWS cloud resources. It enables hybrid cloud architectures by establishing encrypted tunnels over the public internet or AWS Direct Connect.
 
 There are two main types of VPNs in AWS:
-1. **Site-to-Site VPN**: Connects your on-premises network to an AWS VPC using **IPsec VPN tunnels**. This is typically used for connecting data centers or branch offices to AWS.
+1. **Site-to-Site VPN**: Connects your on-premises network to an AWS VPC & **Encrypted by default** using **IPsec VPN tunnels**. This is typically used for connecting data centers or branch offices to AWS. There are two components of the Site-to-Site VPN:
+   - **Virtual Private Gateway(VGW)**: The VPN concentrator on the AWS side of the VPN connection.
+   - **Customer Gateway(CGW)**: Represents your on-premises network. It can be a physical or software appliance.
+![alt text](image.png)
+
 2. **Client VPN**: Allows users to securely access AWS resources from any location using an OpenVPN-based client (SSL). This is particularly useful for remote work scenarios and provides a secure connection to AWS services.
 
 **Interview Questions:**

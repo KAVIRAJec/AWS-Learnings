@@ -13,7 +13,21 @@ AWS S3 is an object storage service that offers high durability, availability, s
 - **Encryption**: S3 supports server-side encryption (SSE) to protect data at rest. You can use AWS Key Management Service (KMS) or S3-managed keys (SSE-S3) for encryption.
 - **Blocked Public Access**: By default, S3 blocks public access to buckets and objects. You can configure bucket policies or ACLs to allow public access if needed.
 - **Gateway Endpoints**: S3 supports VPC endpoints, allowing you to access S3 without going through the public internet through Internet Gateway. This is useful to access S3 from private subnets securely.
-
+- **S3TA(S3 Transfer Acceleration)**: A feature that speeds up the upload and download of files from S3 bucket to clients by using Amazon CloudFront's globally distributed edge locations. It is useful for transferring large files over long distances.
+- **Sample Bucket Policy**:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-bucket/*"
+    }
+  ]
+}
+```
 **Storage Classes:**
 - **S3 Standard**: General-purpose storage for frequently accessed data. It offers high durability and availability.
 - **S3 Intelligent-Tiering**: Automatically moves data between two access tiers (frequent and infrequent) based on usage. It is cost-effective for data with unpredictable access patterns.

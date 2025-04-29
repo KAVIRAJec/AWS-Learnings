@@ -23,7 +23,7 @@ AWS provides a variety of database services to meet different application needs,
     
 2. **Amazon DynamoDB**: A fully managed NoSQL database service that provides fast and predictable performance with seamless scalability.
    - **Key Features**:
-     - Single-digit millisecond response times
+     - **Single-digit millisecond response times(High Availability by default)**
      - Global tables for multi-region replication
      - Built-in security, backup, and restore features
      - Key-value data model and Transaction support(ACID transactions) with DynamoDB transactions even in NOSQL databases.

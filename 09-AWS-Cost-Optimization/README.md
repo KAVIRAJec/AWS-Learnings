@@ -25,7 +25,7 @@ AWS Cost Management services help you monitor, control, and optimize your cloud 
      - Supports cost allocation tags for better tracking.
 3. **AWS Budgets**: A service that allows you to set custom cost and usage budgets for your AWS account. You can create budgets based on cost, usage, or reservation utilization and receive alerts when you exceed your budgeted amounts.
    - **Key Features**:
-     - Set budgets for cost, usage, or reservation utilization.
+     - Set budgets for **cost, usage, or reservation utilization.**
      - Receive alerts via email or SNS when thresholds are exceeded.
      - Track performance against budgets over time.
      - Integration with AWS Cost Explorer for detailed analysis.
