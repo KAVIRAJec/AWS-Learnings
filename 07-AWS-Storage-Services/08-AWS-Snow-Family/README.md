@@ -9,6 +9,9 @@ The AWS Snow Family consists of physical devices designed to help customers move
 | Snowball Edge Compute Optimized | 42 TB usable     | 52 vCPUs, GPU optional| Edge compute with machine learning or video analytics |
 | Snowmobile                      | Up to 100 PB     | No compute            | Datacenter migration (exabyte-scale)            |
 
+- **OpsHub**: A web-based interface for managing Snow Family devices, allowing users to configure, monitor, and manage data transfer jobs.
+- **OpsWorks**: AWS Snow Family devices can be managed using the AWS OpsWorks service, which provides a way to automate and manage the deployment of applications on these devices.
+
 ### Interview Questions
 1. **Difference between SnowFamily and DataSync?**
    - **AWS Snow Family** is a physical device for transferring large amounts of data, while **AWS DataSync** is a service for automating data transfer between on-premises storage and AWS.

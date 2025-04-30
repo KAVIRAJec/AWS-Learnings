@@ -13,4 +13,6 @@
 ![alt text](images/image-5.png)
 
 
-### AWS Services to be Added:
+### Certifications Covered:
+- AWS Certified Cloud Practitioner
+- AWS Certified Solutions Architect

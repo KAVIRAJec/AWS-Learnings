@@ -30,6 +30,79 @@ EC2 instances are categorized into different families based on their use cases.
 - **Dedicated Hosts**: Physical servers dedicated to your use, providing control over how instances are placed on the server. Allows you to use software licenses. (Applies discount upto 70%)
 - No pricing for Data Transfer In bound & between other services within same region, but Data Transfer Out is charged based on the amount of data transferred out of AWS.
 
+## EC2 Reserved Instances
+- **Standard Reserved Instances**: Provide a significant discount (up to 75%) compared to On-Demand pricing. They are best for steady-state workloads and can be modified to change the Availability Zone, instance type, or network platform.
+- **Convertible Reserved Instances**: Allow you to change the instance type, operating system, and tenancy over the term of the reservation, providing flexibility to adapt to changing needs. Provides a discount of up to 55% compared to On-Demand pricing.
+- **Scheduled Reserved Instances**: Allow you to reserve capacity for specific time periods, such as daily or weekly, providing flexibility for workloads that require predictable capacity at specific times.
+
+## EC2 Saving Plans
+Saving Plans are flexible pricing models that provide significant savings on your AWS compute usage. They offer a flexible pricing model that allows you to save up to 72% on your AWS compute costs compared to On-Demand pricing. There are two types of Saving Plans:
+- **Compute Savings Plans**: Provide the most flexibility and apply to any EC2 instance regardless of region, instance family, operating system, or tenancy. They offer savings of up to 66% compared to On-Demand pricing.
+- **EC2 Instance Savings Plans**: Provide the most savings when you commit to a specific instance family within a region, offering savings of up to 72% compared to On-Demand pricing.
+![alt text](image-2.png)
+## EC2 Spot Instances
+Spot Instances are a cost-effective way to run applications on AWS by taking advantage of unused EC2 capacity. They allow you to bid on spare EC2 capacity at significantly lower prices than On-Demand instances. Spot Instances can be interrupted by AWS with two-minute warning if the capacity is needed elsewhere.
+- **Spot Fleet**: A collection of Spot Instances that are launched and managed as a single unit. Spot Fleet allows you to specify the target capacity, instance types, and pricing strategy for your Spot Instances.
+![alt text](image-1.png)
+
+## EC2 Dedicated Hosts
+Dedicated Hosts are physical servers dedicated to your use, providing control over how instances are placed on the server. They allow you to use your existing server-bound software licenses and provide visibility into the number of sockets, cores, and host ID.**We can use Dedicated Hosts to meet compliance requirements for certain workloads. Also we can create multiple instances as needed.**
+
+## EC2 Dedicated Instances
+Dedicated Instances are EC2 instances that run on hardware dedicated to a single customer. They provide the same level of isolation as Dedicated Hosts but do not provide visibility into the underlying hardware. **Dedicated Instances are charged at a higher rate than standard EC2 instances.**
+
+## EC2 Capacity Reservations
+Capacity Reservations allow you to reserve capacity for your EC2 instances in a specific Availability Zone. This ensures that you have the capacity you need when you need it, even during peak demand periods. Capacity Reservations are charged at the same rate as On-Demand instances even it is not used and can be used in conjunction with other pricing models, such as Reserved Instances and Spot Instances. It does not provide any discount on the pricing.
+
+## EC2 Placement Groups
+Placement Groups are a way to influence the placement of EC2 instances to meet workload requirement. There are three types of placement groups:
+- **Cluster Placement Groups**: Group instances within a single Availability Zone to provide low latency and high throughput. Ideal for applications that require high performance and low latency, such as high-performance computing (HPC) applications.
+- **Spread Placement Groups**: Ensure that each instance is placed on distinct hardware to reduce the risk of simultaneous failures. They are placed in different racks and power sources, also in different Availability Zones. Ideal for applications that require high availability and fault tolerance, such as critical applications or databases. Can only create a maximum of 7 instances per placement group.
+- **Partition Placement Groups**: Similar to Spread Placement Groups but allow you to define partitions within a single Availability Zone. It is limited to single AZ. Each partition can contain multiple instances, and instances in different partitions do not share the same hardware. Ideal for applications that require high throughput and low latency, such as big data applications or distributed databases. Can create a maximum of 200 instances per placement group. Upto 7 partitions (Server rack) can be created in a placement group (per AZ).
+
+## ENI (Elastic Network Interface)
+- An ENI is a virtual network interface that can be attached to an EC2 instance. It provides a way to manage network connectivity and security for your instances.
+- Same as a physical network interface card (NIC) in a physical server or VEth in Docker.
+- An ENI can have 1 primary private IP address and multiple secondary private IP addresses, 1 Elastic private IP address, 1 public IP address, MAC address, and multiple security groups.
+- ENIs can be created and attached to instances in a VPC, allowing you to manage network connectivity and security for your instances.
+- ENIs can be detached from one instance and attached to another instance, allowing you to move network interfaces between instances without changing the IP address.
+- ENI is specific to a single AZ, but can be moved between instances in the same AZ.
+![alt text](image-3.png)
+
+## EC2 Hibernate
+- When you shut down your EC2 instance, the contents of the instance's memory (RAM) are lost, and the instance is stopped. You can start the instance again, but it will not retain any data in memory. When you create or start an instance, the boot volume is created from the AMI, and the instance starts with a clean state.
+- When you stop your EC2 instance, the contents of the instance's memory (RAM) are saved to the EBS root volume, allowing you to resume your work later without losing any data.
+- Hibernate is similar to stopping an instance, but it saves the contents of the instance's memory (RAM) to the EBS root volume instead of shutting down the instance completely.
+- When you hibernate an instance, the instance's state is saved to the EBS root volume, and the instance is stopped. When you start the instance again, it resumes from the saved state from the EBS root volume, allowing you to continue working without losing any data.
+- Hibernate is useful for workloads that require a quick startup time and want to retain the instance's state without losing any data.
+- Condition for Hibernate:
+  - The instance must be an EBS-backed instance.
+  - The instance must have an EBS root volume that is configured for hibernation & must encrypted.
+  - The instance must have sufficient EBS storage to save the contents of the instance's memory (RAM).
+  - The instance must be stopped before it can be hibernated.
+  - The RAM size must be less than 150 GB.
+  - The instance must be in a supported instance type (e.g., T3, M5, C5, R5, etc.).
+  - Available for On-demand, spot and reserved instances.
+  - You cannot hibernate a system for more than 60 days.
+   - **Hibernate is not available for all instance types and regions.**
+
+## EC2 AMI (Amazon Machine Image):
+- An AMI is a pre-configured template that contains the operating system, application server, and software applications required to launch an EC2 instance. It serves as a blueprint for creating new instances and can be customized to meet specific requirements.
+- AMIs can be created from existing EC2 instances or can be obtained from the AWS Marketplace. They can be shared with other AWS accounts or made public for others to use.
+- AMIs are region-specific, meaning they can only be used in the region where they were created. However, you can copy AMIs to other regions if needed.
+- AMIs can be categorized into three types:
+   - **Public AMIs**: Available to all AWS users and can be used to launch instances without any restrictions. These AMIs are created by AWS.
+   - **Private AMIs**: Created by users and are only accessible to the AWS account that created them. Private AMIs can be shared with specific AWS accounts or made public if desired.
+   - **Marketplace AMIs**: Available for purchase from the AWS Marketplace. These AMIs are created by third-party vendors and sold in AWS Marketplace and can include pre-installed software and applications.
+
+## Instance Store:
+- Instance Store is temporary storage that is physically attached to the host (EC2) server. Data is lost when the instance is stopped or terminated.
+- It is suitable for temporary data or caching, and EBS volumes can be backed up using snapshots, while Instance Store data cannot be recovered after instance termination.
+- Instance Store volumes are ephemeral and are not persistent across instance stops or terminations. 
+- The Instance store storage offers very high IOPS. They are ideal for applications that require high IOPS and low latency.
+- Instance Store volumes are physically attached to the host server and are not network-attached like EBS volumes. This means that Instance Store volumes can provide higher performance for certain workloads, such as high-performance computing (HPC) or data-intensive applications.
+
+
 ## Interview Questions
 1. **Difference between EC2 and Lambda?**
    - EC2 is a virtual server that you manage, while Lambda is a serverless compute service that runs code in response to events without provisioning or managing servers.
