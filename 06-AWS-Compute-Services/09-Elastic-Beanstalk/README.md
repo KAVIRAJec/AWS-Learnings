@@ -3,6 +3,7 @@
 - AWS Elastic Beanstalk is a Platform as a Service (PaaS),fully managed service that simplifies the deployment and scaling of web applications and services. 
 - It supports various programming languages, including Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker. 
 - Elastic Beanstalk abstracts the infrastructure layer, allowing developers to focus on writing code without managing the underlying hardware.
+- Internally, the resources are automatically provisioned using AWS CloudFormation, which is a service that allows you to create and manage AWS resources using templates. 
 - You are only charged for the underlying resources you use and no separate charges for Elastic Beanstalk, and you can scale your application up or down based on demand.
 - **Load balancing and auto-scaling** are automatically configured for you.
 - With basic health reporting, Elastic beanstalk doesn't publish logs to CloudWatch.

@@ -137,6 +137,10 @@ Placement Groups are a way to influence the placement of EC2 instances to meet w
    - **Private AMIs**: Created by users and are only accessible to the AWS account that created them. Private AMIs can be shared with specific AWS accounts or made public if desired.
    - **Marketplace AMIs**: Available for purchase from the AWS Marketplace. These AMIs are created by third-party vendors and sold in AWS Marketplace and can include pre-installed software and applications.
 
+## Golden AMI & User Data Scripts:
+- **Golden AMI**: A pre-configured AMI that contains the operating system, application server, and software applications are pre-installed required to launch an EC2 instance. It is used as a standard template for creating new instances and can be customized to meet specific requirements. It is faster to launch instances from a Golden AMI than from a standard AMI.
+- **User Data Scripts**: Scripts that run when an instance is launched. They are used to perform common automated configuration tasks and run only once at launch time. User data scripts can be used to install software, configure settings, and perform other tasks during the instance launch process. They can be written in shell script or cloud-init format and can be passed as a parameter when launching an instance. It is slower than launching from a Golden AMI.
+
 ## Instance Store:
 - Instance Store is temporary storage that is physically attached to the host (EC2) server. Data is lost when the instance is stopped or terminated.
 - It is suitable for temporary data or caching, and EBS volumes can be backed up using snapshots, while Instance Store data cannot be recovered after instance termination.
