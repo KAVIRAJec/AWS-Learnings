@@ -11,7 +11,10 @@ AWS S3 is an object storage service that offers high durability, availability, s
 - **Versioning**: A feature that allows you to keep multiple versions of an object in a bucket. This is useful for data recovery and rollback purposes.
    - If no versioning is enabled, the object will have a version ID of "null".
    - Suspends versioning: stops creating new versions but retains existing ones.
-- **Lifecycle Policies**: Rules that automate the transition of objects between storage classes or delete them after a specified period.
+- **Lifecycle Policies**: Rules that automate the transition of objects between storage classes or delete them after a specified period. This can created in a specific prefix or in particular tags. It is useful for cost optimization and data management.
+   - **Transition**: Move objects to a different storage class after a specified period.
+   - **Expiration**: Permanently delete objects after a specified period and Incomplete multipart uploads.
+   - **Noncurrent Version Expiration**: Permanently delete noncurrent versions of objects after a specified period.
 - **Static website hosting**: S3 can be used to host static websites by serving HTML, CSS, and JavaScript files directly from a bucket.
 - **Replication**: S3 supports replication features to automatically copy objects between buckets in the same or different regions. To enable replication, the versioning must be enabled. These operations are asynchronous. Also, must provide a proper IAM permissions. This includes:
    - **Cross-Region Replication (CRR)**: Automatically replicates objects from one bucket to another bucket in a different region. Use case: Compliance, low latency access & replication across accounts.
@@ -67,6 +70,7 @@ AWS S3 is an object storage service that offers high durability, availability, s
    - **S3 Glacier Deep Archive**: Lowest-cost storage for long-term archival data. Standard(12 hours), Bulk(48 hours). 180 days minimum storage duration.
 
 - **S3 Reduced Redundancy Storage (RRS)(Deprecated)**: Provides lower durability than Standard but at a lower cost. It is suitable for non-critical data that can be easily reproduced.
+- **S3 Analytics**: A feature that provides recommendation for S3 storage usage and access patterns. It helps you understand how your data is being used and can help optimize costs. It works only for Standard and Standard-IA classes. 
 
 ![alt text](image.png)
 ![alt text](image-1.png)
@@ -77,6 +81,38 @@ AWS S3 is an object storage service that offers high durability, availability, s
 
 - **Requests and Retrieval Costs**: Charged based on the number of requests made to S3 (PUT, GET, LIST, etc.) and the retrieval of data from different storage classes.
 - **Data Transfer In Costs**: No pricing for Data Transfer In bound & between other services within same region, but Data Transfer Out is charged based on the amount of data transferred out of AWS.
+
+- **S3 Requester Pays**: A feature that allows the bucket owner to charge the requester for data transfer costs. This is useful for public datasets where the owner wants to share the cost of data transfer with users. The owner pays for the storage costs, and the requester pays for the data transfer costs. The requester must be authenticated in AWS (cannot be anonymous).
+
+## S3 Event Notifications:
+   S3 can send event notifications to other AWS services when certain events occur in a bucket. This allows you to trigger workflows or processes based on S3 events. The supported events such as bucket creation, object creation, deletion, and restoration. The services that can receive notifications include:
+   - **Amazon Simple Notification Service (SNS)**: Sends notifications to subscribers via email, SMS, or other protocols. It requires proper IAM permissions(SNS Resource Access Policy) to access S3 bucket.
+   - **Amazon Simple Queue Service (SQS)**: Sends messages to a queue for processing by other applications or services. It requires proper IAM permissions(SQS Resource Access Policy) to access S3 bucket.
+   - **AWS Lambda**: Triggers a Lambda function to process the event. This is useful for serverless architectures and real-time processing of S3 events. It requires proper IAM permissions(Lambda Resource Access Policy) to access S3 bucket.
+   - **Amazon EventBridge**: Whenever an event occurs in S3, **all event** is sent to EventBridge, Then you can notification to over 18 AWS services(Step function, Kinesis Streams, Firehose..) as destination through AWS EventBridge. It has advanced filtering capabilities and can be used to route events to different targets based on specific criteria(metadata,object size,name,.). It is useful for building event-driven architectures and integrating with other AWS services.
+
+## S3 Baseline Performance:
+   S3 automatically scales to high request rates, latency 100-200ms. Application can achieve **3,500 PUT/POST/DELETE requests per second** and **5,500 GET requests per second** in **per prefix in bucket**. To achieve higher request rates, you can use multiple prefixes in the bucket. 
+   - If you have 2 prefixes, your bucket can achieve **7,000 PUT/POST/DELETE requests per second** and **11,000 GET requests per second**.
+- **S3 Multipart Upload**: A feature that allows you to upload large objects in parts, this makes the file upload faster by parallel uploads. It is **recommended for file > 100 MB** and **must use for file > 5 GB**.
+- **S3 Transfer Acceleration**: A feature that speeds up the upload and download of files from S3 bucket to clients by using Amazon CloudFront's globally distributed edge locations. It is useful for transferring large files over long distances. If uploading a file from India to Bucket on US region, it will be uploaded to the nearest edge location in India by public network, and then transferred to the S3 bucket in US region over AWS backbone network(private network).
+- **S3 Byte Range Fetches**: A feature that allows you to retrieve only a specific range of bytes from an object. This is useful for resuming interrupted downloads or retrieving specific parts of large objects. Each byte fetching is parallel execution and it can be used for partial downloads.
+- **S3 Batch Operations**: A feature that allows you to perform bulk operations on existing S3 bucket using single Request. It is useful for modifying large numbers of objects, such as copying, tagging, or deleting, Encrypting unencrypted objects,etc,. A job consist of list of actions to be performed. We can use Athena to filter the objects and process it using S3 batch operations.
+
+## S3 Storage Lens:
+- A feature that provides visibility into your S3 storage usage and activity. It helps you understand, analyze and optimize entire AWS organization S3 usage. It discovers anomalies, identifies trends, and provides recommendations for cost optimization.
+- It creates a dashboard with metrics and insights about your S3 usage, such as storage class distribution, object size distribution, and access patterns. Can be configure to send daily metrics in .csv format to S3 bucket. Metrics provided for dashboard are:
+   - **Storage Metrics**: Total storage used, number of objects, and storage class distribution.(identify fast growing/not used objects)
+   - **Cost Metrics**: Estimated cost based on storage usage and request activity.(identify incomplete multipart uploads,which object could be transitioned to cheaper storage class)
+   - **Data Protection Metrics**: Percentage of objects with versioning enabled, replication status, and encryption status.(identify unencrypted objects, object not following data protection policies)
+   - **Access Management Metrics**: Provide insights for S3 bucket Ownership, public access, and access control policies.(identify public access buckets, bucket policies, ACLs and Ownership details)
+   - **S3 Event Metrics**: Provides insights into S3 event notifications, including the number of events sent to different AWS services.(identify which events are being triggered and how frequently)
+   - **Performance Metrics**: Provides insights into S3 Transfer Acceleration, S3 Select, and S3 Inventory.(identify which bucket has transfer acceleration enabled)
+   - **Activity Metrics**: Provides insights into S3 object-level operations, including PUT, GET, DELETE, and LIST, downloads,. requests.(identify which objects/request are being accessed frequently)
+   - **Detailed Status Code Metrics**: Provides insights into S3 request status codes, including success and error codes.(identify which requests are failing and why)
+
+   - **Free Metrics**: Automatically available for all customers, contains around 28 metrics. Data is available for 14 days
+   - **Advanced Metrics**: Advanced Metrics (Activity, Advanced cost, Advanced Data Protection, Status code) are available for a fee. Data is available for 15 months. Requires charge for collect per prefix level.
 
 ## Interview Questions:
 1. **Difference between Bucket policies and ACLs?**
