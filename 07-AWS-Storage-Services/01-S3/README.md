@@ -30,7 +30,6 @@ AWS S3 is an object storage service that offers high durability, availability, s
    - **NOTE**: an IAM principal can access S3 object if,
       - IAM User Permissions allowed OR Resource Policy allowed.
       - AND There is no explicit deny in either policy.
-- **Encryption**: S3 supports server-side encryption (SSE) to protect data at rest. You can use AWS Key Management Service (KMS) or S3-managed keys (SSE-S3) for encryption.
 - **Gateway Endpoints**: S3 supports VPC endpoints, allowing you to access S3 without going through the public internet through Internet Gateway. This is useful to access S3 from private subnets securely.
 - **Blocked Public Access**: By default, S3 blocks public access to buckets and objects(Additional layer of security). You can configure bucket policies or ACLs to allow public access if needed. Even while creating bucket you turned off block public access, it will still be blocked by default. You need to explicitly allow public access using bucket policies.
 - **S3TA(S3 Transfer Acceleration)**: A feature that speeds up the upload and download of files from S3 bucket to clients by using Amazon CloudFront's globally distributed edge locations. It is useful for transferring large files over long distances.
@@ -113,6 +112,54 @@ AWS S3 is an object storage service that offers high durability, availability, s
 
    - **Free Metrics**: Automatically available for all customers, contains around 28 metrics. Data is available for 14 days
    - **Advanced Metrics**: Advanced Metrics (Activity, Advanced cost, Advanced Data Protection, Status code) are available for a fee. Data is available for 15 months. Requires charge for collect per prefix level.
+
+## S3 Security:
+### S3 Encryption:
+- **Server-Side Encryption (SSE)**: S3 automatically encrypts data at rest using server-side encryption. It supports three types of encryption:
+   - **SSE-S3(S3 Managed keys)**
+      - S3-managed keys (default). S3 handles the encryption and decryption process.
+      - Objects are encrypted using AES-256 encryption algorithm. So must provide the header `"x-amz-server-side-encryption":"AES256"` while uploading the object.
+      - This is enabled by default for all new objects in S3.
+   - **SSE-KMS**
+      - AWS Key Management Service (KMS) managed keys. Provides additional security and control over encryption keys. You can create, manage, and rotate your own keys.
+      - KMS advantages: user control + audit key on CloudTrail.
+      - Headers should be `"x-amz-server-side-encryption":"aws:kms"` while uploading the object.
+      - The limitation of KMS is that the KMS API is called for download(decryption) and upload(encryption) of the object. So, the KMS API call is charged for each request. The cost of KMS is based on the number of requests and the amount of data processed.
+   - **SSE-DKMS**
+      - AWS Key Management Service (KMS) managed keys with dual layer encryption. It is similar to SSE-KMS but provides an additional layer of security by encrypting the data with a customer-managed key before sending it to S3.
+   - **SSE-C(Customer provided keys)**
+      - You manage the encryption keys and provide them to S3 for encryption and decryption. S3 does not store the keys. You must provide the key for each request(upload/download).
+      - HTTPS must be used to provide the encryption key to S3. The header should be `"x-amz-server-side-encryption-customer-algorithm":"AES256"` while uploading the object.
+- **Client-Side Encryption**
+   - You encrypt data before uploading it to S3. This provides additional security but requires you to manage the encryption cycle and keys. You can use AWS SDKs or third-party libraries to perform client-side encryption.
+- **Encryption in Transit(SSL/TLS)**
+   - Encryption in flight is done using SSL/TLS. 
+   - S# exposes two endpoints: HTTP (non-encrypted) and HTTPS (encrypted). It is recommended to use HTTPS for secure data transfer.
+   - For SSE-C, HTTPS is mandatory to provide the encryption key to S3.
+   - We can use **S3 Bucket Policy** to enforce the use of SSL/TLS for all requests to the bucket. This ensures that all data transferred to and from S3 is encrypted in transit. Example:
+   ```json
+   {
+   "Version": "2012-10-17",
+   "Statement": [
+      {
+         "Effect": "Deny",
+         "Principal": "*",
+         "Action": "s3:*",
+         "Resource": "arn:aws:s3:::example-bucket/*",
+         "Condition": {
+         "Bool": {
+            "aws:SecureTransport": "false"
+         }
+         }
+      }
+   ]
+   }
+   ```
+
+### S3 CORS:
+- Cross-Origin Resource Sharing (CORS) is a mechanism that allows web applications running in one domain to access resources in another domain/region. S3 supports CORS, allowing you to configure CORS rules for your buckets. If your application is hosted on a bucket and needs to access resources from another bucket, you should configure CORS to allow cross-origin requests.
+### MFA on Delete:
+- Multi-Factor Authentication (MFA) Delete is a feature that adds an additional layer of security to S3 buckets with **versioning enabled**. It requires MFA authentication for certain operations, such as permanently deleting objects version(you can delete using delete marker but can't permanently delete with particular object version) or changing the versioning state of a bucket. This helps prevent accidental or malicious deletion of objects. **Only root user/bucket owner can enable MFA delete only using AWS CLI**.
 
 ## Interview Questions:
 1. **Difference between Bucket policies and ACLs?**
