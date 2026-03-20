@@ -2,9 +2,16 @@
 
 The AWS Global Infrastructure is a combination of data centers, networks, and technologies distributed globally to deliver a fast, flexible, and secure cloud experience.
 
+## AWS Service Scopes
+| Scope | Resources |
+|---|---|
+| **Global** | <pre></pre> |
+| **Regional** | <pre>AWS CloudShell(console)<br>EC2<br>S3<br></pre> |
+
 ## Regions
 AWS operates its cloud services across geographic locations called **Regions**. Each Region is a separate geographic area consisting of multiple **Availability Zones (AZs)**, which are isolated locations within the Region.
 **Each region consist of minimum of 3 AZs.**
+- As of April 2025, AWS offers 36 regions and 108 availability zones globally. Each region has at least 2 availability zones, and some regions have up to 6 availability zones. This allows for high availability and fault tolerance in applications deployed on AWS.
 
 ### Key Features:
 - **Data sovereignty and compliance**: Users can choose where their data is stored and processed.
@@ -66,7 +73,3 @@ The **AWS Global Network** is a private fiber-optic network connecting AWS Regio
 - High-speed, low-latency connections between AWS services.
 - Global backbone network for data transfer.
 - Ensures security and reliability for data in transit.
-
-## Interview Questions:
-1. **AWS Availability Zones**  
-    As of April 2025, AWS offers 36 regions and 108 availability zones globally. Each region has at least 2 availability zones, and some regions have up to 6 availability zones. This allows for high availability and fault tolerance in applications deployed on AWS.
