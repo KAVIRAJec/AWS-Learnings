@@ -28,15 +28,27 @@ IAM Policies are JSON documents that define what actions are allowed or denied o
   2. **Customer Managed Policies**: Custom policies created by users for specific use cases.
   3. **Inline Policies**: Policies embedded directly into a user, group, or role.
 
-- **Policy Structure**: Policies consist of statements that define the effect (Allow or Deny), action (e.g., s3:ListBucket), resource (e.g., ARN of an S3 bucket), and conditions (optional).
+- **Policy Structure**: 
+ - **Version & Id** Version is policy language version, and Id is an optional identifier for the policy.
+ - **Statement**: Contains one or more individual statements that define permissions.
+  - **Sid**: An optional identifier for the statement.
+  - **Effect**: Specifies whether the statement allows or denies access (Allow or Deny).
+  - **Principal**: Specifies the user, group, or role to which the policy applies.
+  - **Action**: Lists the actions that are allowed or denied (e.g., s3:ListBucket, ec2:StartInstances).
+  - **Resource**: Specifies the specific AWS resources to which the actions apply (e.g., arn:aws:s3:::example-bucket).
 - **Example Policy**:
 ```json
 {
   "Version": "2012-10-17",
+  "Id": "ExamplePolicy",
   "Statement": [
     {
+      "Sid": "AllowListBucket",
       "Effect": "Allow",
-      "Action": "s3:ListBucket",
+      "Principal": {
+        "AWS": "arn:aws:iam::123456789012:user/ExampleUser"
+      },
+      "Action": ["s3:ListBucket", "s3:GetObject", "s3:Get*"],
       "Resource": "arn:aws:s3:::example-bucket"
     }
   ]
