@@ -5,8 +5,8 @@ The AWS Global Infrastructure is a combination of data centers, networks, and te
 ## AWS Service Scopes
 | Scope | Resources |
 |---|---|
-| **Global** | <pre></pre> |
-| **Regional** | <pre>AWS CloudShell(console)<br>EC2<br>S3<br></pre> |
+| **Global** | <pre>S3<br>EFS(Multi-region)</pre> |
+| **Regional** | <pre>AWS CloudShell(console)<br>EC2,EBS,Snapshot,AMI,Load Balancer<br></pre> |
 
 ## Regions
 AWS operates its cloud services across geographic locations called **Regions**. Each Region is a separate geographic area consisting of multiple **Availability Zones (AZs)**, which are isolated locations within the Region.

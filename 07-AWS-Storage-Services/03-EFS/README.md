@@ -1,14 +1,14 @@
 ## AWS EFS(Elastic File System)
 
-- Amazon EFS is a fully managed, scalable, and elastic network file storage service that provides shared file storage for use with AWS services and on-premises resources. It supports the NFS (Network File System) protocol, making it easy to integrate with applications requiring shared file systems.
+- Amazon EFS is a fully managed, scalable and elastic network file storage service that provides shared file storage for use with AWS services and on-premises resources. It supports the NFS (Network File System) protocol, making it easy to integrate with applications requiring shared file systems.
 - It is linux based and can be accessed concurrently by thousands of EC2 instances, and automatically grows/shrinks as you add/remove files.
 - Used security groups to control access to EFS. EFS is designed for use with Amazon EC2 instances and can be accessed from on-premises resources using AWS Direct Connect or AWS VPN.
-- EFS is higher price than the EBS.
+- EFS is higher price than the EBS.(3x gp2)
 
 ### Key Concepts
-- **File System**: A file system is a collection of files and directories that can be accessed by EC2 instances. It scales automatically.
+- **File System**: A file system(POSIX) is a collection of files and directories that can be accessed by EC2 instances. It scales automatically.
 - **Mount Target**: A mount target is an endpoint in your VPC that allows EC2 instances to access the file system. Each mount target is associated with a specific availability zone and subnet in your VPC.
-- **Protocol**: EFS uses the NFS (Network File System) protocol, which allows multiple EC2 instances to access the file system concurrently. (NFSv4.1 is the default version, but NFSv4.2 is also supported)
+- **Protocol**: EFS uses the NFS (Network File System) protocol, which allows multiple EC2 instances(uptp 1000 clients & 10Gbs+ throughput) to access the file system concurrently. (NFSv4.1 is the default version, but NFSv4.2 is also supported)
 - **OS Support**: EFS is compatible with Linux distributions, allowing for flexible deployment options.
 - **Multi AZ**: EFS is accessible from multiple availability zones, providing high availability and durability for your data. It automatically replicates data across multiple availability zones within a region.
 - **Mount Targets**: EFS uses mount targets to provide access to the file system from EC2 instances. Each mount target is associated with a specific availability zone and subnet in your VPC. You can create multiple mount targets in different availability zones for high availability and redundancy.
@@ -48,12 +48,3 @@
     | **Integration**       | Designed for use with multiple EC2 instances and on-premises resources                               | Designed for use with a single EC2 instance                                           |
     | **Primary Use**       | Shared file systems, web serving, content management, and concurrent access                          | Running applications, databases, and storing data for a single EC2 instance           |
     | **Availability** | EC2 and EFS can be in different VPC & AZs                               | EC2 and EBS should be in the same AZs                                   |
-
-2. **How does EFS integrate with on-premises resources?**
-    - EFS can be accessed from on-premises resources using AWS Direct Connect or AWS VPN.This allows organizations to extend their on-premises applications to the cloud and use EFS as a shared file system for their applications.
-
-3. **Can you access EFS from multiple Availability Zones?**
-    - Yes, EFS is designed to be accessed concurrently from multiple Availability Zones, providing high availability and durability for your data.
-
-4. **What is EFS lifecycle management?**
-    - EFS lifecycle management is a feature that automatically moves files between the Standard and Infrequent Access storage classes based on access patterns (haven't accessed 7–90 days). This helps optimize storage costs by moving infrequently accessed files to the lower-cost Infrequent Access class while keeping frequently accessed files in the Standard class.
