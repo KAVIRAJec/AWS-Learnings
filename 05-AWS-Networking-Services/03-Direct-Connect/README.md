@@ -17,8 +17,3 @@ AWS Direct Connect is a cloud service solution that makes it easy to establish a
 2. **Create a Connection request**: Create a Direct Connect request in the AWS Management Console.
 3. **VIF Configuration**: Configure virtual interfaces (VIFs) to connect to AWS services or VPCs. You can create public, private, or transit VIFs based on your requirements.
 4. **Connect to AWS**: Use Direct Connect to connect to Multiple AWS services, VPCs, or on-premises data centers. You can also use Direct Connect Gateway to connect to multiple VPCs in different regions.
-
-
-**Interview Questions:**
-1. **What is LAG in AWS Direct Connect?**
-   - LAG (Link Aggregation Group) allows you to bundle multiple Direct Connect connections into a single logical connection. This increases bandwidth and provides redundancy.

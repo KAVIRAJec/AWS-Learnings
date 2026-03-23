@@ -23,19 +23,3 @@ It abstracts much of the complexity of traditional AWS services and provides pre
 | Use Case      | Small apps/websites         | Scalable enterprise workloads       |
 | Control       | Limited AWS integration     | Full control over AWS services      |
 | Ideal For     | Beginners, small businesses | Advanced users, complex apps        |
-
-### Interview Questions
-1. **Who should use Lightsail?**
-   - Beginners
-   - Small businesses
-    - Developers looking for a simple solution
-    - Lightweight applications
-    - Websites and blogs
-    
-2. **What are LightSail containers?**
-   - Lightsail offers a simplified platform to deploy containerized applications using Docker images. 
-   - You upload images or pull from public registries, define service parameters, and deploy your applications without managing orchestration layers like ECS or Kubernetes.
-
-3. **Does Lightsail support automatic scaling OR Load balancing?**
-   - Lightsail does not support automatic scaling or load balancing out of the box. 
-   - However, you can manually create multiple instances and set up a load balancer to distribute traffic among them.

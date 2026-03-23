@@ -21,7 +21,3 @@
 2. **Provision Resources:** Elastic Beanstalk automatically provisions resources like EC2, ELB, and Auto Scaling.
 3. **Deploy Application:** The application is deployed to the provisioned environment.
 4. **Monitor and Scale:** Elastic Beanstalk monitors the application and automatically scales resources based on demand.
-
-## Interview Questions
-1. **Why Elastic Beanstalk over EC2?**
-   - Elastic Beanstalk abstracts the infrastructure management, allowing developers to focus on code. It automates deployment, scaling, and monitoring, reducing operational overhead.

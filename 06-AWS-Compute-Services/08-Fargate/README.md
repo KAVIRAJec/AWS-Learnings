@@ -33,13 +33,3 @@
 | Scaling       | Automatic             | Manual or Auto Scaling       | Automatic               |
 | Use Case      | Containerized applications | Full control over infrastructure | Event-driven functions |
 | Pricing       | Per-second billing    | Hourly billing               | Per-invocation billing   |
-
-
-## Interview questions
-1. **How does Fargate handle scaling?**
-   - Fargate automatically scales your containers based on demand. You can set up auto-scaling policies to adjust the number of tasks running in your service based on metrics like CPU and memory usage.
-
-2. **How to optimize costs when using Fargate?**
-   - Choose the appropriate CPU and memory settings for your tasks to avoid over-provisioning resources.
-   - Use spot instances: If your workload is flexible, consider using Fargate Spot to take advantage of lower prices for spare capacity.
-   - Monitor usage: Use AWS CloudWatch to monitor resource usage and adjust your task definitions accordingly.

@@ -33,18 +33,3 @@
 ### Use Cases
 - **Web Serving**: EFS can be used to store and serve web content, allowing multiple EC2 instances to access the same files concurrently. This is useful for web applications that require shared storage for images, videos, and other assets.
 - **Content Management**: EFS can be used as a shared file system for content management systems, allowing multiple users to access and collaborate on files stored in EFS.
-
-### Interview Questions
-1. **Difference between EFS and EBS**
-    | Feature                | EFS                                                                                                   | EBS                                                                                     |
-    |------------------------|-------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
-    | **Type**              | Network Attached Storage (NAS)                                                                       | Block-level storage                                                                     |
-    | **Use Case**          | Shared file storage for multiple EC2 instances                                                       | Persistent block storage for a single EC2 instance                                     |
-    | **Access**            | Can be accessed concurrently by multiple EC2 instances across multiple AZ, region, VPC                                               | Attached to a single EC2 instance at a time within AZ                                          |
-    | **OS Installation**   | Not supported(Network server)                                                                           | Supported(via AMI)                                                                          |
-    | **Scalability**       | Automatically scales as files are added or removed                                                   | Fixed size; requires manual resizing                                                  |
-    | **Protocol**          | Supports linux based NFS (Network File System)                                                                   | Not protocol-based; operates at the block level                                       |
-    | **Analogy**           | Like a Virtual Hard Disk (VHD) that can be shared across multiple EC2 instances                      | Like a physical hard drive attached to a single EC2 instance                          |
-    | **Integration**       | Designed for use with multiple EC2 instances and on-premises resources                               | Designed for use with a single EC2 instance                                           |
-    | **Primary Use**       | Shared file systems, web serving, content management, and concurrent access                          | Running applications, databases, and storing data for a single EC2 instance           |
-    | **Availability** | EC2 and EFS can be in different VPC & AZs                               | EC2 and EBS should be in the same AZs                                   |
