@@ -1,16 +1,16 @@
 ## Route 53
-Amazon Route 53 is a highly available, scalable, fully managed and **authoritative(you can update the DNS)** Domain Name System (DNS) web service designed to route end users to Internet applications. Route 53 is designed to connect user requests to infrastructure running in AWS (like EC2 instances, load balancers, or S3 buckets) or external resources. The 53 in Route53 is because it is the traditional DNS port. It offers
+Amazon Route 53 is a highly available, scalable, fully managed and **authoritative(you can update the DNS)** Domain Name System (DNS) web service designed to route end users to Internet applications. Route 53 is designed to connect user requests to infrastructure running in AWS (like EC2 instances, load balancers, or S3 buckets) or external resources. It is the only AWS Service that provides 100% availability SLA for DNS queries. The 53 in Route53 is because it is the traditional DNS port. It offers
 - **Domain Registration**: Register domain names directly through Route 53.
 - **DNS Service**: Route 53 translates friendly domain names like www.example.com into IP addresses like 192.0.2.1 or AWS resources like EC2.
 - **Health Checking**: Monitor the health of your application and route traffic only to healthy endpoints.
 
-**DNS Domain Registrar**: A domain registrar is an organization or commercial entity that manages the reservation of Internet domain names. Examples include GoDaddy, Namecheap, and AWS Route 53.
+**DNS Domain Registrar**: A domain registrar is an organization orK commercial entity that manages the reservation of Internet domain names. Examples include GoDaddy, Namecheap, and AWS Route 53.
 
 **DNS Record Types:**
 - **A Record**: Maps a domain name to an IPv4 address.
 - **AAAA Record**: Maps a domain name to an IPv6 address.
 - **CNAME Record**: Maps a domain name to another domain name (canonical name). It cannot be used for the **root domain** (sub domain is allowed). The CNAME can again be a A or AAAA record. You cannot have a CNAME record for the root domain (e.g., example.com) because it would conflict with other records like NS or SOA. You can have a CNAME for subdomains (e.g., www.example.com).
-- **Alias Record**: A Route 53-specific extension to DNS that allows you to map a domain or sub domain name only to an AWS resource (like an S3 bucket, CloudFront distribution but you cannot set for **AWS EC2**) without needing to know the IP address. It can only be A/AAAA resources and you can't set the TTL because it is automatically set up Route53. It can be used at the root domain level, unlike CNAME records. Alias records are automatically updated if the underlying resource changes its IP address. It is free of charge and has native health check support.
+- **Alias Record**: A Route 53-specific extension to DNS that allows you to map a domain or sub domain name only to an AWS resource (ELB, CloudFront, API Gateway, Elastic Beanstalk, S3 websites, VPC Interface Endpoints, Global Accelerator, Same hosted Zone Route 53 records but you cannot set for **AWS EC2**) without needing to know the IP address. It can only be A/AAAA resources and you can't set the TTL because it is automatically set up Route53. It can be used at the root domain level, unlike CNAME records. Alias records are automatically updated if the underlying resource changes its IP address. It is free of charge and has native health check support.
 - **NS Record**: Specifies the name servers for a domain. It indicates which DNS servers are authoritative for the domain and can respond to queries about it.
 - **MX Record**: Specifies the mail server responsible for receiving email on behalf of a domain.
 - **TXT Record**: Allows you to associate arbitrary text with a domain name. Commonly used for verification purposes (e.g., Google Search Console, SPF records).
@@ -48,7 +48,7 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
    - Can be used for health checks.
 - **Failover Routing**: Routes traffic to a primary resource unless it becomes unhealthy, in which case it routes to a secondary resource. Useful for disaster recovery scenarios.
 - **Geolocation Routing**: Routes traffic based on the geographic location(Continent, Country or US State) of the user(different from latency). Useful for serving different content to users in different regions. Create "Default" record in case no location is matched.   
-- **Geoproximity Routing**: Routes traffic based on the geographic location of the user and resources, with optional bias. Useful for directing traffic to resources closer to the user.
+- **Geoproximity Routing**: Routes traffic based on the geographic location of the user and resources, with optional bias. Useful for directing traffic to resources closer to the user. The resources can AWS Resources(specify AWS region) or non AWS resources(specify Latitude and Longitude).
    - To change the size of the geographic region, you can use the bias parameter,
       - To expand the region, use a positive bias value(more traffic)
       - To shrink the region, use a negative bias value(less traffic)
@@ -62,6 +62,14 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
    - Route 53 will return up to 8 healthy IP addresses in a random order for each multivalue query.
    - Cannot be used as a substitute for a load balancer. It is not a load balancer.
 
+**Resolvers & Hybrid DNS**
+- **Inbound DNS Resolver**: 
+   - It allows you to resolve DNS queries from your on-premises network to resources in your VPC. It is used in hybrid cloud scenarios where you have resources both on-premises and in AWS.
+   - You can create inbound endpoints in Route 53 Resolver, which are associated with specific VPCs. These endpoints allow DNS queries from your on-premises network to be forwarded to the Route 53 Resolver for resolution.
+- **Outbound DNS Resolver**: 
+   - It allows you to resolve DNS queries from your VPC to resources in your on-premises network. It is used in hybrid cloud scenarios where you have resources both on-premises and in AWS.
+   - You can create outbound endpoints in Route 53 Resolver, which are associated with specific VPCs. These endpoints allow DNS queries from your VPC to be forwarded to your on-premises DNS servers for resolution.
+
 **Health Checks:**
 - It is available for all routing policies except Simple Routing.
 - It has automated DNS failover capabilities.
@@ -70,11 +78,12 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
       - There are about 15 health checkers available in Route 53.
          - By default, Route 53 uses 3 health checkers to check the health of a resource. 
          - We can set the health check interval to 30 seconds, 60 seconds, or 120 seconds. The default is 30 seconds.(lower the interval, higher the cost).
+         - Works on HTTP, HTTPS and TCP protocols.
          - If health check says it has > 18% of health, it will be considered healthy. If it has < 18% of health, it will be considered unhealthy.
       - The health check passes only if the response code is 2xx or 3xx. Health check can also be setup based on the response text in the first 5120 bytes of the response body.
       - **You should always allow your router firewall to allow Route 53(port 53) Health Checkers.**
    - **Calculated Health Check**: Combines the results of multiple health checks to determine the overall health of a resource. It can be used to create complex health check scenarios.
-      - You can combine multiple health checks into a single calculated health check using **OR / AND** operators.
+      - You can combine multiple health checks into a single calculated health check using **OR / AND / NOT** operators.
       - Can monitor upto 256 Child Health Checks and specify parameter to pass in that.
    - **CloudWatch Health Check or Private Hosted Zone Health Check**: Monitors the health of resources within a private hosted zone or VPC using CloudWatch metrics. 
-      - Create CloudWatch metrics and associate a alarm with it. Then create a health check that checks the alarm. 
+      - Create CloudWatch metrics and associate a alarm with it. Then create a health checker that checks the alarm. 
