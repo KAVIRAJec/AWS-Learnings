@@ -5,7 +5,7 @@ The AWS Global Infrastructure is a combination of data centers, networks, and te
 ## AWS Service Scopes
 | Scope | Resources |
 |---|---|
-| **Global** | <pre>EFS(Multi-region)</pre> |
+| **Global** | <pre>EFS(Multi-region)<br>Global Accelerator</pre> |
 | **Regional** | <pre>AWS CloudShell(console)<br>EC2,EBS,Snapshot,AMI,Load Balancer<br>S3<br></pre> |
 
 ## Regions
