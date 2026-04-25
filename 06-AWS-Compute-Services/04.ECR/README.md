@@ -1,16 +1,14 @@
-## Elastic Container Registry (ECR)
+## Amazon ECR (Elastic Container Registry)
 
-ECR is a fully managed Docker container registry by AWS. It allows you to store, manage, share, and deploy container images securely and at scale. It's deeply integrated with ECS, EKS, and Fargate, and supports standard Docker CLI commands.
+Amazon ECR is a fully managed **Docker container image registry** — store, manage, and deploy container images securely. Integrated natively with ECS, EKS, and Fargate.
 
-**Key Features:**
-- Fully managed and highly available. It is similar to Docker Hub but is private and secure.Supports both public and private repositories.
-- Supports Docker CLI commands, making it easy to push and pull images.
-- Supports tagging container images and version management.
-- Lifecycle policies for automatic image cleanup of old images.
-- Image scanning for vulnerabilities to ensure security compliance.
-- Pay for Storage and data transfer.
+**Key Concepts:**
+- **Private Registry**: Each AWS account gets a private registry. Access controlled via **IAM policies**.
+- **Public Registry**: Share images publicly via [gallery.ecr.aws](https://gallery.ecr.aws) — similar to Docker Hub.
+- **Repository**: Stores multiple versions (tags) of a container image.
+- **Image Scanning**: Automatic vulnerability scanning on push using **Amazon Inspector** — detects OS and package-level CVEs.
+- **Lifecycle Policies**: Automatically delete old or untagged images based on rules (e.g., keep only last 10 images) — reduces storage cost.
+- **Cross-region / Cross-account**: Images can be replicated to other regions or accounts for availability and DR.
+- **Encryption**: Images encrypted at rest using KMS. In-transit via HTTPS.
 
-**Use Cases:**
-- Storing and managing Docker images for applications running on ECS, EKS, or Fargate.
-- Enabling CI/CD pipelines to build, test, and deploy containerized applications.
-- AWS native container registry for organizations using AWS services.
+**Pricing:** Pay for storage (GB/month) and data transfer out. No charge for data transfer within the same region to ECS/EKS/Fargate.

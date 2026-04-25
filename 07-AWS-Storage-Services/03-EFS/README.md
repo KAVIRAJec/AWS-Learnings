@@ -6,7 +6,7 @@
 - EFS is higher price than the EBS.(3x gp2)
 
 ### Key Concepts
-- **File System**: A file system(POSIX) is a collection of files and directories that can be accessed by EC2 instances. It scales automatically.
+- **File System**: A file system(POSIX) is a collection of files and directories that can be accessed by EC2 instances. It scales automatically(Serverless)
 - **Mount Target**: A mount target is an endpoint in your VPC that allows EC2 instances to access the file system. Each mount target is associated with a specific availability zone and subnet in your VPC.
 - **Protocol**: EFS uses the NFS (Network File System) protocol, which allows multiple EC2 instances(uptp 1000 clients & 10Gbs+ throughput) to access the file system concurrently. (NFSv4.1 is the default version, but NFSv4.2 is also supported)
 - **OS Support**: EFS is compatible with Linux distributions, allowing for flexible deployment options.

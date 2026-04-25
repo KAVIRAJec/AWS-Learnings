@@ -1,35 +1,21 @@
 ## AWS Fargate
 
-- AWS Fargate is a **serverless compute engine** for containers that allows you to run **Docker containers** without managing the underlying infrastructure. 
-- It works with both Amazon ECS (Elastic Container Service) and Amazon EKS (Elastic Kubernetes Service), enabling you to focus on building and deploying applications without worrying about provisioning or scaling servers.
-- Fargate consumes more cost than EC2 instances, but it is more efficient for short-lived workloads.
+AWS Fargate is a **serverless compute engine for containers** — runs Docker containers without provisioning or managing EC2 instances. Works with both **ECS** and **EKS**.
 
-### Key Features
-- **Serverless**
-- **Pay-as-you-go pricing**
-- **Automatic scaling**: Fargate automatically scales your containers based on demand, ensuring that you have the right amount of resources available at all times.
-- **Secure**: Each task or pod runs in its own isolated environment.
+**How it works:**
+- You define CPU and memory at the task/pod level, not at the instance level.
+- AWS provisions the right compute, runs the container, and tears it down when done.
+- Each task runs in its own **isolated compute environment** (no shared kernel with other tasks).
 
-### Components of Fargate
-- **Task Definitions**: A blueprint for your application, specifying the container images, CPU and memory requirements, networking, and IAM roles.
-- **Tasks**: The instantiation of a task definition. A task can run one or more containers.
-- **Services**: A service is a long-running task that can be scaled up or down based on demand. It ensures that the desired number of tasks are running at all times.
-- **Clusters**: A logical grouping of tasks and services. Clusters can be used to manage resources and monitor the health of your applications.
+**Key Concepts:**
+- **No EC2 to manage**: No instance patching, no cluster capacity planning, no SSH access to nodes.
+- **Per-task billing**: Pay only for the vCPU and memory allocated to each task, billed per second.
+- **Networking**: Each Fargate task gets its own **ENI (Elastic Network Interface)** and private IP — runs in `awsvpc` network mode.
+- **IAM Task Role**: Assign an IAM role per task definition to grant the container access to AWS services.
+- **Storage**: Up to 20 GB ephemeral storage by default, configurable up to 200 GB. EFS supported for persistent shared storage.
 
-### Fargate types
-- **Fargate**: The standard Fargate launch type, which allows you to run containers without managing the underlying infrastructure.
-- **Fargate Spot**: A cost-effective option that allows you to run interruption-tolerant workloads at a lower price.
-  - Fargate Spot uses spare capacity in the AWS cloud, which can be interrupted with a two-minute warning if the capacity is needed for other tasks.
+**Fargate vs Fargate Spot:**
+- **Fargate**: Standard — always-on, suitable for production workloads.
+- **Fargate Spot**: Uses spare AWS capacity at a lower cost (~70% discount). Can be interrupted with a **2-minute warning** — suitable for fault-tolerant, batch, or non-critical workloads.
 
-### Use Cases
-- **Microservices**
-- **Batch processing**: Fargate can be used to run batch jobs without the need to manage servers.
-- **CI/CD pipelines**: Fargate can be integrated into CI/CD pipelines to run tests and deploy applications.
-
-### Fargate vs EC2 vs Lambda
-| Feature       | Fargate               | EC2                          | Lambda                  |
-|---------------|-----------------------|------------------------------|-------------------------|
-| Management    | Serverless            | Fully managed or self-managed| Serverless              |
-| Scaling       | Automatic             | Manual or Auto Scaling       | Automatic               |
-| Use Case      | Containerized applications | Full control over infrastructure | Event-driven functions |
-| Pricing       | Per-second billing    | Hourly billing               | Per-invocation billing   |
+**Use cases:** Microservices, batch jobs, CI/CD task runners, event-driven workloads, any containerized app where you don't want to manage servers.
