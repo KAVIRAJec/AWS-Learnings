@@ -19,3 +19,4 @@
 | 15 | [Secrets Manager](./15-Secrets-Manager/README.md) | Secrets storage with automatic rotation |
 | 16 | [Parameter Store](./16-Parameter-Store/README.md) | Config and secrets storage (SSM) |
 | 17 | [CloudHSM](./17-CloudHSM/README.md) | Dedicated hardware security module |
+| 18 | [EventBridge](./18-EventBridge/README.md) | Serverless event bus for event-driven architectures |
