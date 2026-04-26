@@ -47,7 +47,7 @@ Amazon DynamoDB is a fully managed **serverless NoSQL** database — key-value a
 
 **Backups:**
 - **PITR (Point-in-Time Recovery)**: 
-    - Continuous backups up to 35 days. 
+    - Continuous backups up to x days. 
     - Can recover any point in time within that window. 
     - Backups are stored in S3
 - **On-Demand Backup**: Full backups retained until manually deleted. Does not impact table performance.
@@ -59,3 +59,14 @@ Amazon DynamoDB is a fully managed **serverless NoSQL** database — key-value a
 - **DynamoDB Standard**: Default class — optimized for frequently accessed data. Higher storage cost, lower read/write cost.
 - **DynamoDB Standard-IA (Infrequent Access)**: For tables where data is rarely accessed. Lower storage cost (~60% cheaper), slightly higher read/write cost. Ideal for logs, old records, audit history where data is stored long-term but queried infrequently.
 - Table class can be changed at any time with no downtime.
+
+**Export to S3:**
+- Export DynamoDB table data to **S3 in JSON or Amazon Ion format** — without consuming read capacity (uses PITR).
+- PITR must be enabled. Can export any point in time within the retention window.
+- Exported data can be analyzed with **Athena, Glue, or Redshift Spectrum** directly from S3.
+- Does **not** affect table performance or capacity.
+
+**Import from S3:**
+- Import data from S3 (CSV, JSON, or Amazon Ion) directly into a **new DynamoDB table**.
+- Does not consume write capacity — charged separately per GB imported.
+- Source data must be in S3 before the import begins. Creates a new table — cannot import into an existing table.

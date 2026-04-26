@@ -1,14 +1,56 @@
 ## AWS Database Services
 
-| # | Service | Type | Description |
-|---|---------|------|-------------|
-| 01 | [RDS](./01-RDS/README.md) | Relational | Managed MySQL, PostgreSQL, MariaDB, Oracle, SQL Server |
-| 02 | [DynamoDB](./02-DynamoDB/README.md) | NoSQL | Serverless key-value & document database |
-| 03 | [Aurora](./03-Aurora/README.md) | Relational | MySQL/PostgreSQL-compatible, cloud-optimized |
-| 04 | [Redshift](./04-Redshift/README.md) | Data Warehouse | Petabyte-scale OLAP and analytics |
-| 05 | [ElastiCache](./05-ElastiCache/README.md) | In-Memory | Redis & Memcached managed caching |
-| 06 | [Neptune](./06-Neptune/README.md) | Graph | Property graph & RDF graph database |
-| 07 | [DocumentDB](./07-DocumentDB/README.md) | Document | MongoDB-compatible managed database |
-| 08 | [Timestream](./08-Timestream/README.md) | Time Series | Serverless time series for IoT & metrics |
-| 09 | [Keyspaces](./09-Keyspaces/README.md) | Wide Column | Apache Cassandra-compatible serverless DB |
-| 10 | [QLDB](./10-QLDB/README.md) | Ledger | Immutable, cryptographically verifiable ledger |
+### Relational (SQL)
+| Service | Description |
+|---------|-------------|
+| [RDS](./01-RDS/README.md) | Managed MySQL, PostgreSQL, MariaDB, Oracle, SQL Server |
+| [Aurora](./03-Aurora/README.md) | MySQL/PostgreSQL-compatible, cloud-optimized, 5x faster |
+| [Redshift](./04-Redshift/README.md) | Petabyte-scale data warehouse (OLAP) |
+
+### NoSQL — Key-Value
+| Service | Description |
+|---------|-------------|
+| [DynamoDB](./02-DynamoDB/README.md) | Serverless, single-digit ms, millions of req/sec |
+
+### NoSQL — Document
+| Service | Description |
+|---------|-------------|
+| [DocumentDB](./07-DocumentDB/README.md) | MongoDB-compatible managed document database |
+
+### In-Memory
+| Service | Description |
+|---------|-------------|
+| [ElastiCache](./05-ElastiCache/README.md) | Managed Redis & Memcached for caching |
+| MemoryDB for Redis | Redis-compatible, durable, in-memory primary database (not just cache) |
+
+### Graph
+| Service | Description |
+|---------|-------------|
+| [Neptune](./06-Neptune/README.md) | Property graph (Gremlin) & RDF (SPARQL) |
+
+### Time Series
+| Service | Description |
+|---------|-------------|
+| [Timestream](./08-Timestream/README.md) | Serverless time series for IoT & operational metrics |
+
+### Wide Column (Cassandra-compatible)
+| Service | Description |
+|---------|-------------|
+| [Keyspaces](./09-Keyspaces/README.md) | Managed Apache Cassandra using CQL |
+
+### Ledger
+| Service | Description |
+|---------|-------------|
+| [QLDB](./10-QLDB/README.md) | Immutable, cryptographically verifiable transaction log |
+
+### Search & Analytics
+| Service | Description |
+|---------|-------------|
+| [OpenSearch](../13-Data-Analytics-Services/07-OpenSearch/README.md) | Full-text search, log analytics, real-time monitoring |
+| [Athena](../13-Data-Analytics-Services/01-Athena/README.md) | Serverless SQL queries directly on S3 |
+| [EMR](../13-Data-Analytics-Services/06-EMR/README.md) | Big data processing — Spark, Hadoop, Hive |
+
+### Object Storage / Data Lake
+| Service | Description |
+|---------|-------------|
+| [S3](../07-AWS-Storage-Services/01-S3/README.md) | Object storage — foundation for data lakes, queried via Athena or Redshift Spectrum |

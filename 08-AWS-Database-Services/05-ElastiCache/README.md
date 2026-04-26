@@ -3,8 +3,9 @@
 Amazon ElastiCache is a fully managed **in-memory caching service** supporting **Redis** and **Memcached** — reduces DB load and improves application performance with sub-millisecond latency.
 
 **Redis:**
-- Multi-AZ with auto-failover and read replicas for high availability.
+- Supports clustering, Multi-AZ with auto-failover and read replicas for high availability.
 - Data persistence (RDB snapshots + AOF logs) — survives restarts.
+- Same as RDS - Backup, Snapshots, Point-in-time recovery.
 - Supports **IAM Auth** (AWS-level) and **Redis AUTH** (password at Redis level).
 - Supports sorted sets, pub/sub, Lua scripting.
 - Use cases: Leaderboards, real-time ranking, session store, pub/sub.

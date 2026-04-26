@@ -1,6 +1,6 @@
 ## Amazon DocumentDB
 
-Amazon DocumentDB is a fully managed **document database** compatible with **MongoDB** — stores, queries, and indexes JSON-like documents.
+Amazon DocumentDB is a fully managed **document database** compatible with **MongoDB** — stores, queries, and indexes JSON-like documents. Similar to Aurora for RDS, DocumentDB is for NoSQL document workloads.
 
 **Key Concepts:**
 - MongoDB-compatible APIs — migrate existing MongoDB apps with minimal changes.
