@@ -28,8 +28,11 @@ Amazon Kinesis is a platform for **real-time data streaming and analytics**. It 
 - No data storage — delivers and done.
 - Supports CSV, JSON, Parquet, Avro, ORC, Raw text and binaries. Can convert JSON to Parquet/ORC formats for efficient storage and querying in Redshift or OpenSearch.
 
-### Kinesis Data Analytics:
-- Run **SQL or Apache Flink** queries on streaming data from KDS or Firehose in real time.
+### Kinesis Data Analytics(Amazon managed service for Apache Flink):
+- Run **SQL or Apache Flink** queries on streaming data from KDS, Amazon MSK in real time.(does not support Firehose as source)
+- AWS Provision compute resources, parallel processing and auto-scaling.
+- Application backup and restore.
+- Use flink programming feature to transform, filter, aggregate, and enrich streaming data.
 - Record can be upto 1MB.
 - Output results to S3, Redshift, OpenSearch, or another Kinesis stream.
 - Use case: Real-time dashboards, anomaly detection, metric aggregation.
