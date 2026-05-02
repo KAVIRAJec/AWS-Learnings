@@ -145,6 +145,40 @@ Placement Groups are a way to influence the placement of EC2 instances to meet w
    - **Private AMIs**: Created by users and are only accessible to the AWS account that created them. Private AMIs can be shared with specific AWS accounts or made public if desired.
    - **Marketplace AMIs**: Available for purchase from the AWS Marketplace. These AMIs are created by third-party vendors and sold in AWS Marketplace and can include pre-installed software and applications.
 
+**Sharing an Encrypted AMI to Another AWS Account:**
+
+An encrypted AMI's snapshots are encrypted with a KMS key. To share it cross-account, both the AMI **and** the KMS key must be shared — the target account needs the key to decrypt the snapshot when copying or launching.
+
+- **Constraint**: AMIs encrypted with **AWS Managed Keys** (`aws/ebs`) **cannot be shared** — AWS Managed Keys are account-scoped and cannot be granted to external accounts. Must use a **Customer Managed Key (CMK)**.
+
+```
+─── SOURCE ACCOUNT ───────────────────────────────────────────────────
+
+  1. Encrypt the AMI snapshot with a Customer Managed Key (CMK)
+     (not aws/ebs — that cannot be shared cross-account)
+
+  2. Share the AMI with the target account:
+     EC2 Console → AMI → Modify Image Permissions → Add target Account ID
+
+  3. Update the CMK key policy to grant the target account:
+     - kms:DescribeKey
+     - kms:ReEncrypt*
+     - kms:CreateGrant
+     - kms:Decrypt
+
+─── TARGET ACCOUNT ───────────────────────────────────────────────────
+
+  4. Copy the shared AMI into the target account
+     (specify a CMK in the target account to re-encrypt the snapshot)
+     → This produces a fully owned AMI in the target account
+
+  5. Launch EC2 instances from the copied AMI
+```
+
+- **Why copy instead of launching directly from the shared AMI?** Copying re-encrypts the snapshot with the target account's own CMK — the target account becomes the full owner and no longer depends on the source account's key or permissions.
+- If the source account revokes the CMK share before the target copies the AMI, the target loses access permanently.
+- The copy step is **recommended** — direct launch from a shared encrypted AMI is possible but leaves a dependency on the source account's key.
+
 ## Golden AMI & User Data Scripts:
 - **Golden AMI**: A pre-configured AMI that contains the operating system, application server, and software applications are pre-installed required to launch an EC2 instance. It is used as a standard template for creating new instances and can be customized to meet specific requirements. It is faster to launch instances from a Golden AMI than from a standard AMI.
 - **User Data Scripts**: Scripts that run when an instance is launched. They are used to perform common automated configuration tasks and run only once at launch time. User data scripts can be used to install software, configure settings, and perform other tasks during the instance launch process. They can be written in shell script or cloud-init format and can be passed as a parameter when launching an instance. It is slower than launching from a Golden AMI.

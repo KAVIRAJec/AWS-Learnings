@@ -31,6 +31,10 @@ AWS S3 is an object storage service that offers high durability, availability, s
       - After you enabled replication, only new objects are replicated. If you want to replicate existing objects, you can use S3 Batch Replication to replicate a large number of objects in a single operation. 
       - For delete, it only replicates delete markers(if enabled), not objects with version ID(if particular version is deleted, which means permanent delete which are not replicated). 
       - There is no chaining of replication(i.e. if you have a bucket A and B, and you replicate A to B, and then replicate B to C, it will not replicate A to C).
+   - **S3 Replication Encryption**: 
+      - Unencrypted objects, SSE-S3, SSE-C are replicated by default. For SSE-KMS, you must specify the destination KMS key for replication.
+      - For SSE-KMS, you need to enable it by defining KMS key in target bucket(having proper key policies & IAM Role - KMS decrypt in source bucket and KMS encrypt in target bucket) and then enable replication configuration with KMS encryption.
+      - If you use multi region KMS keys, AWS S3 will consider them as independent keys(so object will still be decrypted and encrypted with the same key in the destination bucket, but it will be different key in the destination bucket).
 - **Security**:
    - **User Based**: IAM policies that define permissions for users and groups to access S3 resources.
    - **Resource Based**:
