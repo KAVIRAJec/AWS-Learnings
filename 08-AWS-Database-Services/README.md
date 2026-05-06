@@ -50,6 +50,11 @@
 | [Athena](../13-Data-Analytics-Services/01-Athena/README.md) | Serverless SQL queries directly on S3 |
 | [EMR](../13-Data-Analytics-Services/06-EMR/README.md) | Big data processing — Spark, Hadoop, Hive |
 
+### Migration
+| Service | Description |
+|---------|-------------|
+| [DMS (Database Migration Service)](./11-DMS/README.md) | Migrate databases to AWS with minimal downtime — supports homogeneous and heterogeneous migrations |
+
 ### Object Storage / Data Lake
 | Service | Description |
 |---------|-------------|

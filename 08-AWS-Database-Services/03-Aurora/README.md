@@ -40,3 +40,95 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 
 **Encryption:**
 - Same as RDS — KMS at rest (must be set at launch), SSL/TLS in transit.
+
+---
+
+## Migrating to Aurora
+
+### MySQL Migrations
+
+**From RDS MySQL → Aurora MySQL:**
+
+Option 1 — DB Snapshot restore:
+```
+RDS MySQL ──► take snapshot ──► restore as Aurora MySQL cluster
+```
+- Simplest method — no extra infrastructure needed.
+- Brief downtime during final cutover.
+
+Option 2 — Aurora Read Replica promotion:
+```
+RDS MySQL (primary, stays live)
+    │  replication
+    ▼
+Aurora MySQL Read Replica
+    │  wait until replication lag = 0
+    ▼
+Promote → standalone Aurora MySQL cluster
+```
+- Near-zero downtime — promote only when lag hits 0.
+- Takes time and costs $ (replica running alongside primary).
+
+**From External MySQL → Aurora MySQL:**
+
+Option 1 — Percona XtraBackup via S3 (faster):
+```
+External MySQL ──► Percona XtraBackup ──► S3 ──► import ──► Aurora MySQL
+```
+- Physical backup — faster than SQL dump for large databases.
+
+Option 2 — mysqldump (simpler, slower):
+```
+External MySQL ──► mysqldump ──► Aurora MySQL
+```
+- Slower than XtraBackup — generates SQL statements instead of raw files.
+- Good for small databases.
+
+> Use **DMS** if both source and target databases are up and running (near-zero downtime with CDC).
+
+---
+
+### PostgreSQL Migrations
+
+**From RDS PostgreSQL → Aurora PostgreSQL:**
+
+Option 1 — DB Snapshot restore:
+```
+RDS PostgreSQL ──► take snapshot ──► restore as Aurora PostgreSQL cluster
+```
+
+Option 2 — Aurora Read Replica promotion:
+```
+RDS PostgreSQL (primary, stays live)
+    │  replication
+    ▼
+Aurora PostgreSQL Read Replica
+    │  wait until replication lag = 0
+    ▼
+Promote → standalone Aurora PostgreSQL cluster
+```
+- Near-zero downtime — same pattern as MySQL.
+
+**From External PostgreSQL → Aurora PostgreSQL:**
+
+```
+External PostgreSQL ──► pg_dump backup ──► S3 ──► import via aws_s3 Aurora extension ──► Aurora PostgreSQL
+```
+- Uses the built-in `aws_s3` Aurora extension to load the backup directly from S3 into Aurora.
+
+> Use **DMS** if both source and target databases are up and running.
+
+---
+
+### Migration Method Summary
+
+| Scenario | Method | Downtime |
+|---|---|---|
+| RDS MySQL → Aurora MySQL | Snapshot restore | Brief |
+| RDS MySQL → Aurora MySQL | Aurora Read Replica + promote (lag = 0) | Near-zero |
+| External MySQL → Aurora MySQL | Percona XtraBackup → S3 → import | Brief |
+| External MySQL → Aurora MySQL | mysqldump (slower) | Brief |
+| RDS PostgreSQL → Aurora PostgreSQL | Snapshot restore | Brief |
+| RDS PostgreSQL → Aurora PostgreSQL | Aurora Read Replica + promote (lag = 0) | Near-zero |
+| External PostgreSQL → Aurora PostgreSQL | pg_dump → S3 → aws_s3 extension import | Brief |
+| Any (both DBs running) | AWS DMS (Full Load + CDC) | Near-zero |

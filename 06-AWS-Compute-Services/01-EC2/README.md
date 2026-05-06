@@ -119,6 +119,17 @@ Placement Groups are a way to influence the placement of EC2 instances to meet w
 - ENI is specific to a single AZ, but can be moved between instances in the same AZ.
 ![alt text](image-3.png)
 
+## ENA (Elastic Network Adapter)
+- **Enhanced networking** interface for EC2 — delivers high bandwidth (up to 100 Gbps), high packet-per-second (PPS) performance, and low latency compared to a standard ENI.
+- No extra cost — enabled by default on most modern instance types (Nitro-based instances).
+- **EFA (Elastic Fabric Adapter)**: A specialized ENA for **HPC (High Performance Computing) and ML** workloads — uses OS-bypass to let applications communicate directly with the hardware, skipping the OS kernel for ultra-low latency. Used with MPI (Message Passing Interface) workloads like distributed ML training and tightly coupled simulations.
+
+| | ENI | ENA | EFA |
+|---|---|---|---|
+| **Use case** | General networking | High bandwidth / low latency | HPC, distributed ML, MPI |
+| **OS bypass** | No | No | Yes |
+| **Max bandwidth** | Varies | Up to 100 Gbps | Up to 100 Gbps |
+
 ## EC2 Hibernate
 - When you shut down your EC2 instance, the contents of the instance's memory (RAM) are lost, and the instance is stopped. You can start the instance again, but it will not retain any data in memory. When you create or start an instance, the boot volume is created from the AMI, and the instance starts with a clean state.
 - When you stop your EC2 instance, the contents of the instance's memory (RAM) are saved to the EBS root volume, allowing you to resume your work later without losing any data.
