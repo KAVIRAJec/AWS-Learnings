@@ -130,6 +130,48 @@ Placement Groups are a way to influence the placement of EC2 instances to meet w
 | **OS bypass** | No | No | Yes |
 | **Max bandwidth** | Varies | Up to 100 Gbps | Up to 100 Gbps |
 
+## SSM Session Manager
+
+**SSM Session Manager** is the modern, keyless way to access EC2 instances — open a shell session directly from the AWS console, CLI, or SDK without SSH, without a Bastion Host, and without opening port 22.
+
+**Requirements:**
+- EC2 instance must have the **SSM Agent** installed and running (pre-installed on Amazon Linux 2, Amazon Linux 2023, Ubuntu 20.04+, Windows Server 2016+).
+- Instance must have an **IAM Instance Profile** with the `AmazonSSMManagedInstanceCore` policy attached.
+- No inbound security group rules needed — the agent initiates an outbound HTTPS connection to the SSM endpoint.
+
+```
+Your browser / AWS CLI
+        │
+        │  HTTPS (port 443) — outbound only from EC2
+        ▼
+AWS Systems Manager endpoint
+        │
+        ▼
+SSM Agent (running on EC2)  ←── no inbound port 22 needed
+        │
+        ▼
+Shell session on EC2
+```
+
+**Key benefits:**
+- **No SSH keys** — access is controlled entirely by IAM permissions.
+- **No open ports** — security group has zero inbound rules needed.
+- **Full audit trail** — every session command is logged to **CloudTrail** and optionally to **S3** or **CloudWatch Logs**.
+- Works for instances in **private subnets** with no public IP — as long as the agent can reach the SSM endpoint (via VPC Endpoint or NAT Gateway).
+- Supports **port forwarding** — tunnel RDS, Redis, or any internal service to your local machine without a Bastion.
+
+**SSM Session Manager vs Bastion Host:**
+
+| | SSM Session Manager | Bastion Host |
+|---|---|---|
+| **Access method** | HTTPS via SSM Agent — no open ports | SSH over port 22 |
+| **SSH keys** | Not needed — IAM controls access | Required |
+| **Public IP on EC2** | Not needed | Required on bastion |
+| **Private subnet access** | Yes | Yes (via bastion in public subnet) |
+| **Audit trail** | CloudTrail + S3/CloudWatch Logs | Manual SSH logs |
+| **Cost** | Free (SSM is free) | EC2 instance cost |
+| **Best for** | Secure, auditable, keyless access | Legacy setups |
+
 ## EC2 Hibernate
 - When you shut down your EC2 instance, the contents of the instance's memory (RAM) are lost, and the instance is stopped. You can start the instance again, but it will not retain any data in memory. When you create or start an instance, the boot volume is created from the AMI, and the instance starts with a clean state.
 - When you stop your EC2 instance, the contents of the instance's memory (RAM) are saved to the EBS root volume, allowing you to resume your work later without losing any data.

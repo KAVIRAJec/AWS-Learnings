@@ -1,29 +1,56 @@
 ## AWS Batch
 
-- AWS Batch is a fully managed service that efficiently runs hundreds to thousands of batch computing jobs on AWS. It dynamically provisions the right compute resources (like EC2 or Spot Instances) and handles job queuing, scheduling, retries, and prioritization, so you don’t need to manage infrastructure.
-- AWS Batch is automatic scalable and serverless.
-- Can be used to run batch jobs on EC2, ECS, or Fargate.
-- Automate the processing of large amounts of data, such as images, videos, or logs at a schedule or in response to events.
+**AWS Batch** is a fully managed service that runs **batch computing jobs** at any scale — you submit jobs, Batch handles provisioning, scheduling, queuing, retries, and scaling automatically.
 
-### Key Use Cases
-- Data Processing
-- Machine learning model training
-- Image/Video Processing
+- No infrastructure to manage — runs jobs on **EC2, Spot Instances, or Fargate**.
+- Batch ≠ serverless — it provisions compute only when jobs are submitted, then terminates it.
+- Jobs are packaged as **Docker containers**.
 
-### How AWS Batch Works (Simplified Flow)
-1. Define a Job Definition (e.g., Docker container with memory and vCPU).
-2. Submit a Job to a Job Queue.
-3. AWS Batch Scheduler selects compute resources.
-4. Job runs in the Compute Environment (EC2, Spot, or Fargate).
-5. Logs and metrics are sent to CloudWatch.
+---
 
-### Types of Compute Environments
-- **Managed Compute(EC2, Fargate, Spot)**
-  - AWS Batch manages the compute resources for you.
-  - You can specify the instance types and other configurations.
-- **Unmanaged Compute Environments(EC2, Spot)**
-  - You manage the compute resources yourself.
-  - You can use your own EC2 instances or Fargate tasks.
-- **Fargate Compute Environments(Fargate)**
-  - AWS Batch provisions and manages the compute resources for you and it is fully serverless and managed by AWS.
-  - You only pay for the resources you use.
+## Key Concepts
+
+- **Job** — the unit of work — a containerized script/application with defined CPU and memory requirements.
+- **Job Definition** — a template for a job: Docker image, vCPU, memory, IAM role, environment variables, retry strategy.
+- **Job Queue** — jobs are submitted here and wait until compute is available. Multiple queues with different priorities.
+- **Compute Environment** — the pool of EC2 / Fargate resources that runs jobs. Can be managed (AWS handles scaling) or unmanaged (you manage EC2 fleet).
+
+```
+Submit Job
+    │
+    ▼
+Job Queue (priority-based)
+    │
+    ▼
+Batch Scheduler
+    │  picks compute based on job requirements
+    ▼
+Compute Environment (EC2 / Spot / Fargate)
+    │  runs Docker container
+    ▼
+CloudWatch Logs (output)
+```
+
+---
+
+## Managed vs Unmanaged Compute
+
+| | Managed | Unmanaged |
+|---|---|---|
+| **Scaling** | AWS auto-scales instances | You manage EC2 fleet |
+| **Instance selection** | AWS picks optimal type | You specify instance types |
+| **Best for** | Most use cases | Custom hardware requirements |
+
+**Fargate compute** — fully serverless, no EC2 instances at all. Best for short jobs with no GPU requirement.
+**Spot compute** — uses Spot Instances for up to 90% cost savings; ideal for fault-tolerant batch workloads.
+
+---
+
+## AWS Batch vs Lambda
+
+| | AWS Batch | Lambda |
+|---|---|---|
+| **Runtime limit** | No limit | 15 minutes max |
+| **Container** | Any Docker image | Limited runtimes |
+| **Resources** | Up to 96 vCPUs, 720 GB RAM | 10 GB RAM max |
+| **Best for** | Long-running, heavy compute jobs | Short event-driven functions |
