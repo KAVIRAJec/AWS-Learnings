@@ -17,7 +17,7 @@ Amazon ECS is a fully managed **container orchestration service** that runs, man
 |-|----------------|---------------------|
 | Infrastructure | You manage EC2 instances | AWS manages compute |
 | Control | Full control (instance type, OS) | No access to underlying host |
-| Cost | Pay for EC2 instances (even idle) | Pay per task vCPU/memory used |
+| Cost | Pay for EC2 instances & storage volumes (even idle) | Pay per task vCPU/memory used |
 | Use case | Predictable workloads, GPU, custom OS | Serverless, variable workloads |
 
 **IAM Roles:**

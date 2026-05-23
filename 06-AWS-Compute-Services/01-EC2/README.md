@@ -58,6 +58,85 @@ Amazon Elastic Compute Cloud (EC2) is a web service that provides resizable comp
   - **Predictive Scaling**: Uses machine learning to predict future demand and automatically adjusts the number of instances in advance. It can help ensure that you have the right number of instances running to handle expected traffic spikes or drops.
 
 - **Scaling Cooldown**: After a scaling activity is triggered, there is a cooldown period during which no further scaling activities will be initiated. This helps prevent rapid fluctuations in the number of instances and allows the system to stabilize after a scaling action. The default cooldown period is 300 seconds (5 minutes), but it can be configured.
+
+### Rebalancing
+
+ASG always tries to keep instances **evenly spread across AZs**. Rebalancing is triggered when the balance breaks:
+
+| Trigger | Why it Breaks Balance |
+|---|---|
+| AZ recovered after outage | ASG had concentrated instances in remaining AZs |
+| Instances manually terminated | One AZ now has fewer instances |
+| New AZ added to ASG | Existing instances are all in old AZs |
+| Spot Capacity Rebalancing | Spot instance at high interruption risk — proactive replacement |
+
+**How rebalancing works — Launch first, terminate second:**
+```
+Before:  AZ-A [3]   AZ-B [1]   ← imbalanced
+
+Step 1:  AZ-A [3]   AZ-B [2]   ← launch in underrepresented AZ first
+Step 2:  AZ-A [2]   AZ-B [2]   ← then terminate from overrepresented AZ
+
+Result:  balanced, capacity never drops below desired
+```
+> ASG launches the replacement **before** terminating the old instance — so you temporarily exceed the max capacity by 10% during rebalancing. This is intentional.
+
+---
+
+### Scaling Activity — Termination Policy (Scale In)
+
+When ASG scales **in** (removes instances), it follows a default sequence to decide which instance to terminate:
+
+```
+Step 1 → Pick the AZ with the MOST instances
+            │
+Step 2 → From that AZ, find instances using the OLDEST launch template / config
+            │
+Step 3 → Tie-break: terminate the instance CLOSEST to the next billing hour
+            │
+           TERMINATE
+```
+
+**Built-in termination policies** (choose one or chain them):
+
+| Policy | Behaviour |
+|---|---|
+| `Default` | Steps 1→2→3 above |
+| `OldestInstance` | Always removes the oldest instance regardless of AZ |
+| `NewestInstance` | Removes the newest — useful to roll back a bad deployment |
+| `OldestLaunchTemplate` | Removes instances using the oldest template version |
+| `ClosestToNextInstanceHour` | Maximise cost savings by removing instances about to be billed |
+| `AllocationStrategy` | Optimise mix of On-Demand + Spot (used with mixed instance groups) |
+
+---
+
+### Instance Refresh
+
+When you update a **Launch Template** (new AMI, new user data, etc.) and want existing running instances to pick up the change — use **Instance Refresh** instead of manually terminating them.
+
+```
+Updated Launch Template v2
+         │
+         ▼
+Instance Refresh starts
+         │
+  ┌──────▼──────────────────────────────┐
+  │  Batch 1: terminate old → launch new │  ← waits for new instance to pass health check
+  │  Batch 2: terminate old → launch new │
+  │  Batch N: ...                        │
+  └──────────────────────────────────────┘
+         │
+         ▼
+All instances now running on Launch Template v2
+```
+
+**Key settings:**
+- **Min Healthy %** — percentage of fleet that must stay healthy during the refresh (e.g., 90% = replace only 10% at a time).
+- **Instance Warmup** — seconds to wait after launch before counting the new instance as healthy and moving to the next batch.
+- If a new instance fails health checks → refresh pauses automatically.
+
+---
+
 - There are 2 main types of scaling the instances:
   - **Vertical Scaling(Scale Up/Down)**: Increasing or decreasing the size of an instance (e.g., RAM, CPU, etc,.) to meet demand. This is not fault-tolerant and does not provide high availability.(Scale up: Increasing the size of an instance, Scale down: Decreasing the size of an instance)
   - **Horizontal Scaling(Scale Out/In)**: Adding or removing instances to meet demand. This is fault-tolerant and provides high availability.(Scale out: Adding more instances, Scale in: Removing instances)
@@ -74,8 +153,30 @@ EC2 instances are categorized into different families based on their use cases.
 - **On-Demand Instances**: Pay-per-use pricing for instances that are launched and terminated as needed. Based on the number of seconds/hours the instance is running.
 - **Reserved Instances**: Commit to a one or three-year term for discounted pricing. It is kind of booking an instance for a specific period.(Applies discount upto 70%)
 - **Spot Instances**: Purchase unused EC2 capacity at reduced rates. Ideal for short-term, flexible workloads. Spot instances can be interrupted by AWS with two-minute warning if the capacity is needed elsewhere.(Applies discount upto 90%)
-- **Dedicated Hosts**: Physical servers dedicated to your use, providing control over how instances are placed on the server. Allows you to use software licenses. (Applies discount upto 70%)
 - No pricing for Data Transfer In bound & between other services within same region, but Data Transfer Out is charged based on the amount of data transferred out of AWS.
+
+## Launch Template vs Launch Configuration
+
+Both define the **instance configuration blueprint** used by Auto Scaling Groups (and direct instance launches) — AMI, instance type, key pair, security groups, user data, and storage settings.
+
+### Launch Configuration *(legacy)*
+- Older, simpler version — **it is not possible to modify a Launch Configuration once it is created**. To change anything (AMI, instance type, SG, user data), you must create a brand new Launch Configuration and update the ASG to point to it.
+- Does **not** support multiple instance types, Spot + On-Demand mix, or placement groups.
+- AWS has stopped adding new features to Launch Configurations — new workloads should use Launch Templates.
+
+### Launch Template *(recommended)*
+- **Versioned** — create multiple versions of the same template; specify which version the ASG uses (latest, default, or a pinned number).
+- Supports **mixed instance types** (e.g., m5.large + m5.xlarge) and **Spot + On-Demand mix** in a single ASG — critical for cost optimization.
+- Supports placement groups, Capacity Reservations, Dedicated Hosts, and T2/T3 unlimited burst mode.
+- Can launch individual instances directly (`aws ec2 run-instances --launch-template`) — not just ASGs.
+
+| | Launch Configuration | Launch Template |
+|---|---|---|
+| **Mutable** | No — recreate for any change | Yes — add a new version |
+| **Versioning** | No | Yes |
+| **Mixed instances / Spot + OD mix** | No | Yes |
+| **Direct instance launch** | No | Yes |
+| **AWS status** | Legacy (no new features) | Recommended |
 
 ## EC2 Reserved Instances
 - **Standard Reserved Instances**: Provide a significant discount (up to 72%) compared to On-Demand pricing. They are best for steady-state workloads and can be modified to change the Availability Zone, instance type, or network platform.

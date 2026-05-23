@@ -90,6 +90,7 @@ AWS S3 is an object storage service that offers high durability, availability, s
 
 ![alt text](image.png)
 ![alt text](image-1.png)
+![Storage class ordering](https://docs.aws.amazon.com/images/AmazonS3/latest/userguide/images/lifecycle-transitions-v4.png)
 
 ## Pricing:
 - **Storage Costs**: Charged based on the amount of data stored in S3, measured in GB per month.
