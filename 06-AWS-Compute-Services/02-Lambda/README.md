@@ -28,7 +28,9 @@ AWS Lambda is a **serverless compute service** that runs code in response to eve
 
 **Layers:**
 - Package shared libraries or dependencies as a **Layer** — reuse across multiple functions without bundling in each deployment package.
-- Up to 5 layers per function.
+- Up to **5 layers per function**.
+- **Size limit**: Each layer is capped at **250 MB unzipped**. The total unzipped size of the function code + all layers combined must stay within the **250 MB deployment limit**.
+- **Immutable once published** — a layer version cannot be edited or overwritten. Any change requires publishing a **new version** with a new version number. Functions must be updated to point to the new version explicitly.
 
 **Lambda in VPC:**
 - By default, Lambda runs outside your VPC. Configure it to run inside a VPC to access private resources (RDS, ElastiCache).

@@ -20,6 +20,28 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 - Only accessible from within a VPC (not public). Enforces IAM auth + stores credentials in Secrets Manager.
 - Supports MySQL, PostgreSQL, MariaDB, SQL Server, and Aurora.
 
+**Exposing RDS to Another VPC / Partner via PrivateLink:**
+
+RDS cannot be directly exposed through AWS PrivateLink — PrivateLink only works with NLB endpoints. So to securely share your RDS with an external account or partner **without VPC Peering**, use this pattern:
+
+```
+Partner VPC                        Your VPC
+───────────                        ────────
+Interface Endpoint (PrivateLink)
+        │                          NLB  (forwards TCP on port 3306/5432)
+        │ ──── private traffic ──▶  │
+                                   RDS Proxy  (pools connections, IAM auth)
+                                    │
+                                   RDS Instance (never directly exposed)
+```
+
+**Why this way:**
+- **RDS Proxy** sits between NLB and RDS — handles connection pooling, IAM authentication, and Secrets Manager. RDS never receives raw connections from outside.
+- **NLB** gives PrivateLink a fixed TCP target to front — it forwards the DB port (3306 for MySQL, 5432 for PostgreSQL) to the proxy.
+- **PrivateLink Interface Endpoint** in the partner's VPC sends traffic privately to your NLB — no internet, no VPC Peering, no CIDR overlap issue.
+
+> The partner only sees the Interface Endpoint IP — they have no knowledge of or access to the RDS instance itself.
+
 **RDS Custom (Oracle & SQL Server):**
 - Managed RDS with access to the underlying OS and DB engine via SSH or SSM Session Manager.
 - Deactivate Automation Mode before making custom changes to prevent AWS from overriding them.

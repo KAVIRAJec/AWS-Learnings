@@ -23,8 +23,42 @@ Amazon EKS is a fully managed **Kubernetes** service — runs Kubernetes on AWS 
 - Supports security groups at the pod level.
 
 **IAM & Security:**
-- **IRSA (IAM Roles for Service Accounts)**: Assign IAM roles directly to Kubernetes service accounts — pods get fine-grained AWS permissions without node-level credentials.
 - Supports Kubernetes RBAC alongside AWS IAM for access control.
+
+### IRSA — IAM Roles for Service Accounts
+
+IRSA is the AWS-recommended method for giving fine-grained IAM permissions to individual Pods in an EKS cluster.
+
+**Problem without IRSA** — all pods on a node inherit the node's IAM role. No pod-level isolation. One compromised pod exposes all permissions the node holds.
+
+**What IRSA does** — binds a specific IAM Role to a specific Kubernetes Service Account. Only pods using that SA get those permissions.
+
+```
+Worker Node (node-role → broad permissions)
+  ├── Pod A  uses SA: s3-reader  → assumes s3-read-only IAM role  ✓
+  └── Pod B  uses SA: default    → no AWS permissions              ✓
+```
+
+**How it works:**
+1. Each EKS cluster has an **OIDC issuer URL** — register it as an IAM Identity Provider so IAM trusts tokens from this cluster.
+2. Create an **IAM Role** whose trust policy allows only a specific `namespace:serviceaccount` to assume it via `sts:AssumeRoleWithWebIdentity`.
+3. **Annotate the Kubernetes Service Account** with the IAM role ARN (`eks.amazonaws.com/role-arn`).
+4. When the pod starts, EKS automatically injects a **short-lived JWT token** and sets `AWS_ROLE_ARN` + `AWS_WEB_IDENTITY_TOKEN_FILE` env vars into the container.
+5. The **AWS SDK** reads those env vars, calls STS with the JWT → gets back temporary credentials. Pod never holds long-lived credentials.
+
+**Key properties:**
+- Trust policy is locked to `namespace + service account` — same SA name in a different namespace cannot assume the role.
+- Credentials are short-lived STS tokens (~1 hour), auto-refreshed by the SDK.
+- Works on Fargate (no node-level role exists on Fargate anyway).
+- Every `AssumeRoleWithWebIdentity` call is logged in CloudTrail with the SA identity.
+
+| | Node IAM Role | IRSA |
+|---|---|---|
+| **Scope** | All pods on the node | Per Service Account |
+| **Least privilege** | Hard to enforce | Fully enforceable |
+| **Credentials** | Long-lived instance profile | Short-lived STS tokens |
+| **Blast radius** | Entire node's permissions | Only that SA's permissions |
+| **Fargate support** | No | Yes |
 
 **Storage:**
 - **EBS**: Block storage per pod (single AZ). Can be added via EBS CSI driver(Add-on).

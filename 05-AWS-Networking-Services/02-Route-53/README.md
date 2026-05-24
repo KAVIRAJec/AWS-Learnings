@@ -63,12 +63,94 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
    - Cannot be used as a substitute for a load balancer. It is not a load balancer.
 
 **Resolvers & Hybrid DNS**
-- **Inbound DNS Resolver**: 
-   - It allows you to resolve DNS queries from your on-premises network to resources in your VPC. It is used in hybrid cloud scenarios where you have resources both on-premises and in AWS.
-   - You can create inbound endpoints in Route 53 Resolver, which are associated with specific VPCs. These endpoints allow DNS queries from your on-premises network to be forwarded to the Route 53 Resolver for resolution.
-- **Outbound DNS Resolver**: 
-   - It allows you to resolve DNS queries from your VPC to resources in your on-premises network. It is used in hybrid cloud scenarios where you have resources both on-premises and in AWS.
-   - You can create outbound endpoints in Route 53 Resolver, which are associated with specific VPCs. These endpoints allow DNS queries from your VPC to be forwarded to your on-premises DNS servers for resolution.
+
+By default, every VPC has a built-in DNS resolver at **VPC CIDR + 2** (e.g., `10.0.0.2` for `10.0.0.0/16`). It resolves:
+- AWS public hostnames (EC2, S3, etc.)
+- Records in Route 53 Public & Private Hosted Zones associated with the VPC
+
+The problem in **hybrid setups** (on-premises + AWS via VPN/Direct Connect):
+- On-premises DNS doesn't know about your AWS private hostnames (e.g., `db.internal.aws`)
+- Route 53 doesn't know about your on-premises hostnames (e.g., `ldap.corp.local`)
+
+**Route 53 Resolver Endpoints** solve this — they are **ENIs placed in your VPC subnets** that act as bridge between on-premises DNS and Route 53.
+
+---
+
+#### Inbound Endpoint — On-premises → AWS
+
+On-premises servers need to resolve **AWS private hosted zone records**.
+
+```
+On-premises app
+    │
+    │  "what is db.internal.aws?"
+    ▼
+On-premises DNS server
+    │
+    │  forwards query to Inbound Endpoint IP (e.g., 10.0.0.10)
+    ▼
+Route 53 Resolver Inbound Endpoint  (ENI in your VPC subnet)
+    │
+    ▼
+Route 53 resolves db.internal.aws → 10.0.5.44  (private hosted zone record)
+    │
+    ▼
+Answer returned to on-premises DNS → to the app
+```
+
+- The **Inbound Endpoint** has one or more ENIs with static private IPs inside your VPC.
+- Your on-premises DNS is configured to **forward** queries for specific AWS domains (e.g., `*.internal.aws`) to those IPs.
+- Traffic travels over **Direct Connect or Site-to-Site VPN** — the endpoint is not internet-accessible.
+
+---
+
+#### Outbound Endpoint — AWS → On-premises
+
+EC2 instances or Lambda in the VPC need to resolve **on-premises hostnames**.
+
+```
+EC2 instance in VPC
+    │
+    │  "what is ldap.corp.local?"
+    ▼
+Route 53 Resolver (VPC+2)
+    │
+    │  matches Forwarding Rule: *.corp.local → forward to on-prem DNS
+    ▼
+Route 53 Resolver Outbound Endpoint  (ENI in your VPC subnet)
+    │
+    │  forwards query over Direct Connect / VPN
+    ▼
+On-premises DNS server (e.g., 192.168.1.53)
+    │
+    ▼
+Answer returned → EC2 instance
+```
+
+- The **Outbound Endpoint** also has ENIs in your VPC.
+- **Resolver Rules** decide which domain queries get forwarded and to which on-premises DNS IP.
+
+---
+
+#### Resolver Rules
+
+Resolver Rules are attached to the **Outbound Endpoint** and define forwarding behaviour:
+
+| Rule Type | What it does |
+|---|---|
+| **Forwarding Rule** | Forward queries for a specific domain (e.g., `corp.local`) to a target IP (on-prem DNS) |
+| **System Rule** | AWS-managed — handles AWS-internal domains (`.amazonaws.com`, reverse DNS, etc.). Cannot be deleted or overridden |
+| **Auto-defined Rule** | Automatically created for private hosted zones associated with the VPC |
+
+- Rules can be **shared across accounts** using **AWS RAM** — central networking team manages one set of rules, all member accounts inherit them.
+
+---
+
+### High Availability
+
+Both Inbound and Outbound endpoints should have ENIs in **at least 2 AZs** — if one AZ goes down, DNS resolution continues through the other AZ's ENI.
+
+---
 
 **Health Checks:**
 - It is available for all routing policies except Simple Routing.

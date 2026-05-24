@@ -294,6 +294,31 @@ Shell session on EC2
 - An AMI is a pre-configured template that contains the operating system, application server, and software applications required to launch an EC2 instance. It serves as a blueprint for creating new instances and can be customized to meet specific requirements.
 - AMIs can be created from existing EC2 instances or can be obtained from the AWS Marketplace. They can be shared with other AWS accounts or made public for others to use.
 - AMIs are region-specific, meaning they can only be used in the region where they were created. However, you can copy AMIs to other regions if needed.
+
+**What happens under the hood when you copy an AMI (Region A → Region B):**
+
+An AMI is not a single file — it is a **metadata record** that points to one or more **EBS snapshots** (the actual data). Copying an AMI means copying those snapshots across regions.
+
+```
+Region A                              Region B
+────────                              ────────
+AMI (ami-aaaa)                        AMI (ami-bbbb)  ← new AMI ID created
+  └── EBS Snapshot (snap-1111)   ──▶  └── EBS Snapshot (snap-2222)  ← full copy of snap-1111
+        (stored in S3 internally)             (now lives in Region B's S3)
+```
+
+**Step-by-step background process:**
+1. AWS reads the source AMI's metadata (block device mappings, permissions, virtualization type).
+2. For each EBS snapshot attached to the AMI, AWS **copies the snapshot data** from Region A's S3 to Region B's S3 — this is the actual data transfer.
+3. New snapshot IDs are created in Region B (`snap-2222`) — completely independent of the source.
+4. A new AMI (`ami-bbbb`) is registered in Region B pointing to those new snapshots.
+5. The source AMI and snapshots in Region A are **unchanged** — copy is non-destructive.
+
+**Key points:**
+- The copy produces **new, independent IDs** (AMI ID + Snapshot ID) in the destination region.
+- Encryption can be changed during copy — you can re-encrypt with a different KMS key in Region B.
+- Data transfer charges apply for moving snapshot data across regions.
+- Instance Store-backed AMIs (not EBS) copy the entire bundle from S3 to the destination region's S3.
 - AMIs can be categorized into three types:
    - **Public AMIs**: Available to all AWS users and can be used to launch instances without any restrictions. These AMIs are created by AWS.
    - **Private AMIs**: Created by users and are only accessible to the AWS account that created them. Private AMIs can be shared with specific AWS accounts or made public if desired.

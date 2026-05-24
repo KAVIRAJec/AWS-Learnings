@@ -31,3 +31,25 @@ Amazon Glue is a fully managed, **serverless ETL (Extract, Transform, Load)** se
 S3 (raw) → Glue Crawler (schema) → Glue Job (transform to Parquet) → S3 (processed) → Athena / Redshift Spectrum (query)
 
 **Use cases:** Data lake ingestion, schema discovery, raw-to-curated data transformation, converting CSV/JSON to Parquet/ORC, incremental data processing.
+
+---
+
+## Glue Studio vs Glue DataBrew
+
+Both are visual, no-/low-code interfaces inside Glue — but they serve very different personas and purposes.
+
+| | Glue Studio | Glue DataBrew |
+|---|---|---|
+| **Who it's for** | Data engineers | Data analysts / business users |
+| **What it builds** | Full ETL pipelines (Spark jobs) | Data preparation recipes |
+| **Code involved** | Visual → generates PySpark/Scala underneath(for advanced users can edit code - need to know the underlying code) | No code at all — 250+ point-and-click transformations |
+| **Data profiling** | No | Yes — shows column stats, missing values, distributions |
+| **Output** | ETL job ready to run at scale on any data size | Cleaned dataset written to S3 or back to source |
+| **Sources** | S3, Redshift, RDS, JDBC, Kinesis, Kafka | S3, Redshift, RDS, Glue Data Catalog |
+| **Scheduling** | Via Glue Workflows / triggers | Built-in job scheduling |
+| **Scale** | Spark cluster (DPUs) — built for large data | Single-node managed environment — suited for samples and mid-size data |
+| **Underlying engine** | Apache Spark | Apache Spark (but abstracted fully) |
+
+**One-line memory trick:**
+- **Glue Studio** = *engineer builds a pipeline* (drag-and-drop Spark ETL)
+- **Glue DataBrew** = *analyst cleans a dataset* (Excel-like transformations, profiling, no code)
