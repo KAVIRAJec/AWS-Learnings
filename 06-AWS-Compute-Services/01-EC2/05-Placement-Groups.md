@@ -1,0 +1,6 @@
+## EC2 Placement Groups
+
+Placement Groups are a way to influence the placement of EC2 instances to meet workload requirement. There are three types of placement groups:
+- **Cluster Placement Groups**: Group instances within a single Availability Zone to provide low latency and high throughput. Ideal for applications that require high performance and low latency, such as high-performance computing (HPC) applications.
+- **Spread Placement Groups**: Ensure that each instance is placed on distinct hardware to reduce the risk of simultaneous failures. They are placed in different racks and power sources, also in different Availability Zones. Ideal for applications that require high availability and fault tolerance, such as critical applications or databases. Limited to 7 instances per AZ per placement group.
+- **Partition Placement Groups**: Similar to Spread Placement Groups but allow you to define partitions within a single Availability Zone. It is limited to single AZ. Each partition can contain multiple instances, and instances in different partitions do not share the same hardware. Ideal for applications that require high throughput and low latency, such as big data applications or distributed databases. Can create a maximum of 200 instances per placement group. Upto 7 partitions (Server rack) can be created in a placement group (per AZ).

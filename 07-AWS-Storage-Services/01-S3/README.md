@@ -229,6 +229,28 @@ AWS S3 is an object storage service that offers high durability, availability, s
    - **Governance Mode**: Most users cannot delete/overwrite, but users with `s3:BypassGovernanceRetention` permission can override.
 - **Legal Hold**: Blocks deletion with no expiry date. Can be set/removed with `s3:PutObjectLegalHold` permission, independent of retention.
 
+**Retention — Default, Custom, and Object-Level:**
+
+Object Lock retention can be configured at three levels — they work together, with the most restrictive winning:
+
+| Level | Where set | What it does |
+|---|---|---|
+| **Default Retention (Bucket-level)** | On the bucket | Automatically applies a retention mode + period to every new object uploaded — no need to set it per object |
+| **Object-level Retention** | On a specific object version | Overrides the bucket default for that specific object — can be longer or shorter depending on mode |
+| **Custom Retention (per upload)** | Set at upload time via API/SDK | Specify a different mode or `retain-until-date` at the time of PutObject — overrides bucket default for that object |
+
+- **Default Retention** — set on the bucket with a mode (Compliance or Governance) and a duration (days or years). Every object uploaded to the bucket inherits this unless overridden.
+- **Object-level override** — you can set a longer retention on a specific object regardless of the bucket default. In **Governance mode**, you can also shorten or remove it with `s3:BypassGovernanceRetention`. In **Compliance mode**, you can only extend it, never shorten.
+- **retain-until-date** — the actual date stored on each object version. This is what S3 checks before allowing delete/overwrite. Setting a new retention on an object updates this date.
+
+```
+Bucket default: Governance, 1 year
+    │
+    ├── Object A  (no override) → inherits Governance, 1 year
+    ├── Object B  (object-level override) → Compliance, 7 years  ← more restrictive
+    └── Object C  (uploaded with custom retain-until-date) → Governance, 90 days
+```
+
 ### S3 Access Points:
 - Named network endpoints attached to a bucket, each with its own access policy. Simplifies managing access when multiple teams/apps share one bucket.
 - Can be **VPC-restricted** — accepts requests only from within a specific VPC.
