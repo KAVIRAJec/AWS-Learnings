@@ -36,28 +36,48 @@ Result:  balanced, capacity never drops below desired
 
 ### Scaling Activity — Termination Policy (Scale In)
 
-When ASG scales **in** (removes instances), it follows a default sequence to decide which instance to terminate:
+When ASG scales **in** (removes instances), AWS runs through a fixed evaluation order before picking which instance to kill. Each step narrows the candidate pool — the next step only applies if there's still a tie.
+
+**Default Termination Order:**
 
 ```
-Step 1 → Pick the AZ with the MOST instances
-            │
-Step 2 → From that AZ, find instances using the OLDEST launch template / config
-            │
-Step 3 → Tie-break: terminate the instance CLOSEST to the next billing hour
-            │
-           TERMINATE
+1. Skip instances with Scale-In Protection enabled
+         │
+         ▼
+2. Pick the AZ with the MOST instances
+   (keeps instances balanced across AZs)
+         │
+         ▼
+3. Within that AZ — find instances using the OLDEST Launch Template or Launch Configuration
+   → If one instance uses a Launch Configuration and another uses a Launch Template,
+     the Launch Configuration instance is always terminated first — LC is always
+     considered older than any LT version, regardless of actual creation date.
+         │
+         ▼
+4. pick the instance CLOSEST to the next full billing hour
+   (avoids paying for an unused partial hour)
+         │
+         ▼
+5. pick at RANDOM
+         │
+         ▼
+      TERMINATE
 ```
+
+> Steps 3 → 4 → 5 are the tie-breakers applied within the AZ selected in step 2.
 
 **Built-in termination policies** (choose one or chain them):
 
 | Policy | Behaviour |
 |---|---|
-| `Default` | Steps 1→2→3 above |
-| `OldestInstance` | Always removes the oldest instance regardless of AZ |
+| `Default` | Full order above (AZ balance → oldest template → billing hour → random) |
+| `OldestInstance` | Always removes the oldest running instance regardless of AZ |
 | `NewestInstance` | Removes the newest — useful to roll back a bad deployment |
-| `OldestLaunchTemplate` | Removes instances using the oldest template version |
+| `OldestLaunchTemplate` | Removes instances using the oldest launch template version |
 | `ClosestToNextInstanceHour` | Maximise cost savings by removing instances about to be billed |
 | `AllocationStrategy` | Optimise mix of On-Demand + Spot (used with mixed instance groups) |
+
+> **Scale-In Protection** — you can mark individual instances as protected. ASG will never terminate them during scale-in, regardless of the policy. Useful for instances running long-running jobs.
 
 ---
 
@@ -143,6 +163,24 @@ ASG processes are background activities the Auto Scaling Group performs. Each ca
 | **InstanceRefresh** | Manages rolling replacement of instances for Launch Template updates | Suspend to pause a rolling refresh mid-way |
 
 > Suspending **Launch** + **Terminate** together effectively freezes the ASG — no new instances added, none removed.
+
+---
+
+### Why ASG Is Not Terminating an Unhealthy Instance
+
+An instance is marked unhealthy but ASG hasn't replaced it yet — here are all the reasons why:
+
+| Reason | What's happening |
+|---|---|
+| **Health Check Grace Period not expired** | After launch, ASG ignores health check failures for the grace period duration (default 300s). Instance may still be booting or initializing. |
+| **Scale-In Protection enabled** | The instance is marked as protected — ASG will never terminate it during scale-in or unhealthy replacement. |
+| **`ReplaceUnhealthy` process is suspended** | ASG detects unhealthy instances but won't act on them while this process is suspended. |
+| **`HealthCheck` process is suspended** | ASG isn't even evaluating health — it can't know the instance is unhealthy. |
+| **Instance is in Standby state** | ASG does not run health checks on Standby instances — they are intentionally excluded. |
+| **Health check type mismatch** | ASG is configured with EC2 health checks only, but the instance is unhealthy at the ELB level. ELB health check results are only used if explicitly enabled on the ASG. |
+| **ASG at minimum capacity, replacement launch failing** | ASG tries to launch a replacement first before terminating the unhealthy one. If the replacement launch fails (e.g., capacity constraints, subnet issues), the unhealthy instance stays until a launch succeeds. |
+| **Lifecycle hook blocking termination** | A `autoscaling:EC2_INSTANCE_TERMINATING` lifecycle hook is pending — the instance stays in `Terminating:Wait` until the hook completes or times out. |
+| **Connection draining in progress** | ELB is still draining active connections from the instance before deregistering it — termination is held until draining completes or the timeout expires. |
 
 ---
 

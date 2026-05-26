@@ -4,8 +4,75 @@ AWS Organizations lets you create and manage multiple AWS accounts under a singl
 - **Management Account**: The account that creates the organization. Has full control. Cannot be restricted by SCPs.
 - **Member Accounts**: All other accounts in the org. Can be grouped into OUs.
 - **Organizational Units (OUs)**: Folders for grouping accounts — e.g., `Prod`, `Dev`, `Finance`. SCPs applied to an OU inherit down to all accounts within it.
-- **Service Control Policies (SCPs)**: Permission guardrails applied at the root, OU, or account level — define the **maximum permissions** any IAM entity in that account can have. SCPs operate under a deny-by-default model, meaning any action not explicitly allowed is implicitly denied(they can have allow statements) and cannot be applied to the management account.
-  - To remove an account from the org, it must first be made a standalone account.
+- To remove an account from the org, it must first be made a standalone account.
+
+---
+
+## Service Control Policies (SCPs)
+
+SCPs are **permission boundaries** applied at the Organization root, OU, or individual account level. They define the **maximum permissions** any IAM entity (user, role, even root user of a member account) inside that account can have.
+
+### The Key Rule — Intersection
+
+An action is only allowed if it is permitted by **both** the SCP and the IAM policy. If either one blocks it, the action is denied.
+
+### Two Strategies — Allow List vs Deny List
+
+**Deny List (default, most common):**
+- AWS attaches a default `FullAWSAccess` SCP to every account/OU — everything allowed.
+- You add explicit **Deny** statements to block specific actions.
+- Easy to manage — only write what you want to restrict.
+
+```json
+{
+  "Effect": "Deny",
+  "Action": ["ec2:DeleteVpc", "s3:DeleteBucket"],
+  "Resource": "*"
+}
+```
+
+**Allow List (strict, zero-trust):**
+- Remove the `FullAWSAccess` SCP.
+- Explicitly allow only the services/actions you want.
+- Anything not listed is implicitly denied — tightest control.
+
+```json
+{
+  "Effect": "Allow",
+  "Action": ["s3:*", "ec2:Describe*"],
+  "Resource": "*"
+}
+```
+
+### Inheritance — How SCPs Flow Down
+
+SCPs stack down the hierarchy. An account receives the **intersection** of all SCPs applied at every level above it.
+
+```
+Root  (SCP: deny us-west-2 region)
+  └── OU: Prod  (SCP: deny ec2:TerminateInstances)
+        └── Account A
+              └── IAM Role with AdministratorAccess
+
+Account A effective permissions:
+  ✗ Cannot use us-west-2  (blocked at Root)
+  ✗ Cannot terminate EC2  (blocked at Prod OU)
+  ✓ Everything else AdministratorAccess allows
+```
+
+If a parent OU removes an allow, child accounts lose it too — even if their own SCP allows it.
+
+### What SCPs Can and Cannot Do
+
+| | SCPs |
+|---|---|
+| Apply to | All IAM users, roles, and the member account root user |
+| **Do NOT apply to** | **Management account** — SCPs never restrict it, ever |
+| Grant permissions? | No — they only restrict. IAM policies still needed to grant access |
+| Affect resource-based policies? | No — S3 bucket policies, KMS key policies are not restricted by SCPs |
+| Affect service-linked roles? | No — service-linked roles bypass SCPs |
+
+> SCPs do **not grant** any permissions on their own — an IAM policy must still explicitly allow the action. SCP just caps what the IAM policy can reach.
 - **Tag Policies**: Enforce consistent tagging standards across accounts — define allowed tag keys and values for resources. Non-compliant resources are flagged but not blocked (unless combined with SCPs). Applied at root, OU, or account level.
 - **Consolidated Billing**: All member account charges roll up to the management account — single invoice, volume discounts aggregated across accounts.
   - **RI & Savings Plans sharing**: Reserved Instance and Savings Plan discounts apply across all accounts in the org (same region, same AZ for RIs).

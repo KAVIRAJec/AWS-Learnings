@@ -32,5 +32,29 @@
  - AWS Certificate Manager (ACM) is a service that provides SSL/TLS certificates for use with AWS services. ACM allows you to easily provision, manage, and deploy SSL/TLS certificates for your applications.
  - SNI(Server Name Indication) is an extension of the TLS protocol that allows multiple SSL/TLS certificates to be associated with a single IP address. This allows you to host multiple secure websites on a single server without requiring a separate IP address for each website. Works with ALB and NLB and Cloudfront
 
+### Cognito-Based Authentication in ALB
+
+ALB can authenticate users **before** forwarding the request to your target — no auth code needed in your app.
+
+```
+Client request
+      │
+      ▼
+ALB Listener Rule  (authenticate-cognito action)
+      │
+      ├── Not logged in? → redirect to Cognito Hosted UI (login page)
+      │         │
+      │         └── User logs in → Cognito issues token → redirects back to ALB
+      │
+      └── Logged in (valid token)? → forward request to target group
+```
+
+- **Supported on ALB only** — not NLB or GLB.
+- ALB checks for a valid session cookie. If absent or expired, it redirects the user to the **Cognito Hosted UI**.
+- After login, Cognito sends an authorization code back to ALB. ALB exchanges it for an ID token, access token, and refresh token.
+- ALB sets an encrypted session cookie on the client — subsequent requests skip re-authentication until the session expires.
+- The target (EC2, Lambda, ECS) receives the request with user identity in the `X-Amzn-Oidc-Identity` header — app knows who the user is without doing any auth itself.
+- Also supports any **OIDC-compliant IdP** (Google, Okta, Active Directory) — not just Cognito.
+
 ### Connection draining/Deregistration delay
 - Connection draining(for CLB) & Deregistration delay(for ALB & NLB) is a feature that allows existing connections to complete while preventing new connections from being established to instances that are being deregistered or unhealthy. The default timeout for connection draining/deregistration delay is 300 seconds (5 minutes), but it can be configured to a value between 1 and 3600 seconds (1 hour) & also can be set to 0(disabled).

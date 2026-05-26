@@ -107,21 +107,46 @@ Instead of sending your data to KMS, you generate a small random **data key**, e
 
 ## Multi-Region Keys
 
-- A primary key replicated to one or more **replica regions** — same key material, same key ID, different ARN per region.
-- Allows encrypting data in one region and decrypting in another **without re-encryption** — useful for disaster recovery and global applications.
-- Each replica is an independent key with its own key policy and billing.
-- Not a global key — must explicitly create replicas per region.(Primary + replicas = multi-region key)
-- Storing encrypted EBS snapshots across regions(assume there is no multi-region key) requires re-encryption during the copy process:
-   - Region A: Create snapshot of EBS volume encrypted with a KMS key.
-   - Region B: Copy snapshot from Region A.
-   - Region B: During the copy process, specify a KMS key in Region B (AWS does not create one automatically).
-   - Region B: The snapshot is re-encrypted using the selected KMS key in Region B.
-   - Region B: Create EBS volume from the re-encrypted snapshot.
-- Storing encrypted DynamoDB backups across regions(Assume multi-region key is used) does not require re-encryption during the copy process:
-   - Region A: Create backup of DynamoDB table encrypted with a multi-region KMS key.
-   - Region B: Copy backup from Region A.
-   - Region B: The backup remains encrypted with the same multi-region KMS key (no re-encryption needed).
-   - Region B: Restore DynamoDB table from the copied backup.
+Multi-Region keys are KMS keys in different AWS Regions that can be used **interchangeably** — same key material, same key ID across regions. This lets you encrypt data in one region and decrypt it in another **without re-encrypting or making a cross-Region KMS call**.
+
+```
+us-east-1 (primary)          eu-west-1 (replica)
+─────────────────────         ──────────────────────
+mrk-abc123 (key ID)   ════▶   mrk-abc123 (same key ID)
+same key material             same key material
+different ARN                 different ARN
+own key policy                own key policy
+own billing                   own billing
+```
+
+**Key properties:**
+- **Same key ID and key material** across all replicas — ciphertext encrypted in one region can be decrypted in another without KMS calls crossing regions.
+- Each replica is managed **independently** — separate key policies, aliases, tags, and billing.
+- **Not auto-replicated** — you must explicitly create replicas per region. AWS never automatically creates or replicates multi-Region keys.
+- **Cannot convert** a single-Region key to a multi-Region key — and vice versa. Existing data encrypted with a single-Region key keeps its data residency properties permanently.
+
+**Use cases:**
+- **Disaster recovery**: Decrypt data in a backup region without interruption if the primary region goes down.
+- **Global data management**: Globally distributed apps encrypt/decrypt with the same key ID in any region — no latency from cross-region KMS calls.
+- **Distributed signing**: Generate identical digital signatures across regions using asymmetric multi-region keys.
+- **Active-active apps**: Workloads spanning multiple regions share the same key material for concurrent encrypt/decrypt.
+
+**Critical caveat — AWS service-managed encryption:**
+> Most AWS services that integrate with KMS (SSE at rest, digital signatures) **treat multi-Region keys as single-Region keys**. They may re-wrap or re-encrypt data when it moves between regions.
+>
+> Example: **S3 cross-region replication** decrypts the object in the source region and re-encrypts it with a KMS key in the **destination region** — even if the source object was protected by a multi-Region key.
+
+This means multi-Region keys give you true cross-region portability **only when your application code calls KMS directly** (e.g., client-side encryption with the AWS Encryption SDK), not when relying on service-managed SSE.
+
+**EBS snapshot copy (no multi-region key):**
+- Region A: Snapshot of EBS volume encrypted with a regional KMS key.
+- Region B: Copy snapshot → must specify a KMS key in Region B — AWS does not select one.
+- Region B: Snapshot is **re-encrypted** using the Region B key during copy.
+
+**DynamoDB backup copy (with multi-region key):**
+- Region A: Backup encrypted with a multi-Region KMS key.
+- Region B: Restore backup → same multi-Region key ID resolves in Region B.
+- **No re-encryption needed** — ciphertext is portable across regions.
 
 ---
 

@@ -8,6 +8,7 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 - **Storage Auto Scaling**: Automatically expands storage when free space < 10%, low for 5 mins, and 6 hours since last modification. You set a max threshold.
 - **Read Replicas**: Up to 15 read replicas per instance — asynchronous replication for read-heavy workloads. Supports within-AZ, cross-AZ, cross-region. Free data transfer within the same region, charged cross-region.
 - **Multi-AZ**: Synchronous standby replica in a different AZ for high availability and failover — not for scaling. To convert single-AZ to Multi-AZ: click modify → no downtime (AWS takes a snapshot, creates standby, establishes sync).
+- **Engine version upgrades**: Require downtime — even in Multi-AZ, both the primary and standby are upgraded at the same time. Downtime duration depends on DB instance size.
 - **Authentication**: Supports IAM database authentication (MySQL, PostgreSQL) — generates temporary auth tokens valid for 15 minutes. Eliminates the need to store DB credentials in your app.
 
 **RDS Encryption:**

@@ -57,7 +57,7 @@ IAM Policies are JSON documents that define what actions are allowed or denied o
 
 - **IAM Permission Boundaries**: A managed policy attached to an IAM user or role that defines the **maximum permissions** that identity can ever have — even if their identity-based policies allow more, the boundary caps it.
   - The effective permissions = **intersection** of the identity-based policy AND the permission boundary. If either doesn't allow an action, it's denied.
-  - Applied per user/role (not at account or OU level — that's SCPs).
+  - Applied to **IAM users and roles only** — cannot be attached to IAM groups.
   - **Key use case**: Safely delegate IAM creation to developers — attach a boundary so they can only create roles/users with permissions up to their own boundary, preventing privilege escalation.
   - Does **not** apply to resource-based policies or SCPs — only limits what the identity-based policy can grant.
 

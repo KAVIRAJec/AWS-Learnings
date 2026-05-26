@@ -14,8 +14,8 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 - **Custom Endpoint**: Route traffic to specific instances (e.g., high-memory instances for analytics).
 
 **Backups:**
-- **Automatic**: Transaction logs every 5 minutes — PITR within 1–35 days. **Cannot be disabled**.
-- **Manual Snapshot**: Stored in S3, retained until deleted.
+- **Automatic**: Continuous and incremental — PITR within 1–35 days. Default retention is **1 day**. **Cannot be disabled** (unlike RDS). No performance impact or interruption while backup data is being written. Stored in S3.
+- **Manual Snapshot**: Take a snapshot to retain data **beyond the retention period** — stored until explicitly deleted. Use to create a new DB cluster from a point-in-time copy.
 - **Restore options**: From snapshot or using **Percona XtraBackup** (from S3).
 
 **Aurora Serverless:**

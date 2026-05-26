@@ -18,6 +18,21 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
 **Hosted Zone Types:**
 - **Public Hosted Zone**: A container for records that define how you want to route traffic for a domain and its subdomains. It is accessible from the internet.
 - **Private Hosted Zone**: A container for records that define how you want to route traffic for a domain and its subdomains within one or more Amazon VPCs. It is not accessible from the internet. Only resources within the specified VPCs can resolve the domain names in the private hosted zone.
+
+  **Required VPC settings for Private Hosted Zones to work:**
+
+  Private hosted zones rely on the **VPC DNS server (VPC CIDR + 2)** to resolve queries. Two VPC settings must be enabled — both are on by default in the default VPC, but **off by default in custom VPCs**.
+
+  | Setting | What it does | Required? |
+  |---|---|---|
+  | **DNS Hostnames** | Assigns DNS hostnames to EC2 instances in the VPC | Yes — without it, private hosted zone records are not resolved |
+  | **DNS Resolution** | Allows the VPC to use the Amazon-provided DNS server (CIDR+2) for resolution | Yes — private hosted zones only accept queries from the VPC DNS server |
+
+  - **DNS Hostnames** — disabled by default on non-default VPCs. If this is off, private hosted zones won't work even if records exist.
+  - **DNS Resolution** — enables use of the VPC DNS server at `<VPC base CIDR + 2>` (e.g., `10.0.0.2` for `10.0.0.0/16`). Keep this **disabled only** if you're using a custom DNS server via DHCP options and not using private hosted zones.
+
+  > Both settings are enabled in the **AWS default VPC** automatically. For any **custom VPC**, go to VPC → Edit DNS settings and enable both.
+
 ![alt text](image-1.png)
 
 **DNS Terminology:**
