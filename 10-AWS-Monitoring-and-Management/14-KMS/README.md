@@ -177,6 +177,7 @@ The server (AWS) encrypts data **after receiving it** and decrypts it **before r
 - Enabled by **default** on all new S3 objects.
 - No additional cost — included with S3.
 - Request header: `"x-amz-server-side-encryption": "AES256"`
+- **How it works under the hood**: Each object is encrypted with its own **unique data key**. That data key is then encrypted with a **root key** managed by S3, which AWS regularly rotates. So even if one object's key were exposed, other objects are unaffected — every object has a different key.
 
 ### SSE-KMS (KMS-Managed Keys)
 - Keys managed in **AWS KMS** — you can create, rotate, disable, and **audit key usage via CloudTrail**.

@@ -20,3 +20,23 @@ Both define the **instance configuration blueprint** used by Auto Scaling Groups
 | **Mixed instances / Spot + OD mix** | No | Yes |
 | **Direct instance launch** | No | Yes |
 | **AWS status** | Legacy (no new features) | Recommended |
+
+---
+
+### Instance Tenancy — Launch Template vs VPC
+
+**Three tenancy options:**
+- **Shared** (default) — instance shares physical hardware with other AWS accounts.
+- **Dedicated Instance** — instance runs on single-tenant hardware, no other AWS customer on the same server.
+- **Dedicated Host** — instance runs on a physical server fully dedicated to you. Required for BYOL (Bring Your Own License) and compliance use cases.
+
+**How Launch Template tenancy interacts with VPC tenancy — dedicated always wins:**
+
+| Launch Template Tenancy | VPC Tenancy | Result |
+|---|---|---|
+| Shared (default) | Default | Shared |
+| Shared (default) | Dedicated | **Dedicated** ← VPC overrides |
+| Dedicated | Default | **Dedicated** ← LT overrides |
+| Dedicated | Dedicated | Dedicated |
+
+> If either the Launch Template or the VPC is set to dedicated, the instance runs as dedicated — **dedicated always wins**.

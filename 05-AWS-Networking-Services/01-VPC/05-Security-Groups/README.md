@@ -9,6 +9,19 @@ A **Security Group** is a virtual firewall that controls inbound and outbound tr
 
 ---
 
+## Source / Destination in Rules
+
+When writing a Security Group rule, the **Source** (inbound) or **Destination** (outbound) tells AWS where the traffic comes from or goes to. You can specify it in 4 ways:
+
+| Type | Example | When to use |
+|---|---|---|
+| **IP / CIDR** | `203.0.113.5/32`, `10.0.0.0/16` | Allow a specific IP or a subnet range |
+| **Anywhere (all traffic)** | `0.0.0.0/0` (IPv4), `::/0` (IPv6) | Open to the entire internet or all outbound |
+| **Another Security Group** | `sg-0abc1234` | Allow traffic only from instances that have this SG attached — no need to know their IPs |
+| **Prefix List** | `pl-xxxxxxxx` | Allow traffic to/from an AWS managed service (e.g., S3, DynamoDB via Gateway Endpoint) |
+
+---
+
 ## Inbound Request Flow (someone calls your EC2)
 
 ```

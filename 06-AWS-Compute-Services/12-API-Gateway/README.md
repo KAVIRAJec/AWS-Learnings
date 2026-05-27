@@ -27,7 +27,16 @@ Amazon API Gateway is a fully managed service for creating, publishing, and mana
 - **Authorizers**:
    - **IAM Authorizer**: Use AWS IAM permissions for authentication and authorization.
    - **Cognito Authorizer**: Validate JWT tokens from a Cognito User Pool.
-   - **Custom Authorizer(Lambda)**: Custom auth logic via a Lambda function (e.g., validate a token from a third-party IdP).
+   - **Custom Authorizer (Lambda)**: Custom auth logic via a Lambda function — used in REST APIs for third-party token validation. Adds latency and cost since every request invokes Lambda.
+   - **JWT Authorizer (HTTP API only)**: Native JWT validation built into HTTP API — no Lambda needed. Automatically validates JWT tokens from any OIDC-compliant provider (Auth0, Okta, Cognito). Lower latency, lower cost than Lambda authorizer. Best choice for modern serverless APIs needing standard JWT + claim-based access control.
+
+   | | HTTP API (JWT Authorizer) | REST API (Lambda Authorizer) | WebSocket API |
+   |---|---|---|---|
+   | **Auth method** | Native JWT — no code needed | Custom Lambda logic | Lambda at `$connect` only |
+   | **IdP support** | Any OIDC provider (Auth0, Okta, Cognito) | Any (you write the logic) | Limited |
+   | **Per-request validation** | Yes | Yes | No — only on connect, not per message |
+   | **Latency / Cost** | Lower | Higher (Lambda invocation) | N/A for REST use cases |
+   | **Use case** | Modern APIs with standard JWT | Complex/custom auth logic | Real-time bidirectional apps only |
 
 **Endpoint Types:**
 - **Edge-Optimized** (default): API is deployed globally and routed through **CloudFront edge locations** — reduces latency for geographically distributed clients. The API still lives in one region but requests are routed via the nearest edge.

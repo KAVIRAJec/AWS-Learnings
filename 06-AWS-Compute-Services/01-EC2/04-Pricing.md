@@ -33,8 +33,72 @@ Saving Plans are flexible pricing models that provide significant savings on you
 ---
 
 ## EC2 Spot Instances
-Spot Instances are a cost-effective way to run applications on AWS by taking advantage of unused EC2 capacity. They allow you to bid on spare EC2 capacity at significantly lower prices(upto 90%) than On-Demand instances. Spot Instances can be interrupted by AWS with two-minute warning if the capacity is needed elsewhere.
-- **Spot Fleet**: A collection of Spot Instances and optional On-Demand instances that are launched and managed as a single unit. Spot Fleet allows you to specify the target capacity, instance types, and pricing strategy for your Spot Instances.
+
+Spot Instances are **unused EC2 capacity** that AWS sells at up to 90% discount compared to On-Demand. AWS sets the **Spot price** per instance type per AZ and adjusts it gradually based on supply and demand.
+
+**How it works — the core idea:**
+```
+AWS data center always has unused capacity sitting idle.
+AWS sells that idle capacity cheap → you get a Spot Instance.
+When AWS needs that capacity back (demand rises) → AWS interrupts your instance.
+```
+
+You don't bid anymore (old model). You just specify a **max price** (optional — defaults to On-Demand price). As long as the current Spot price ≤ your max price, your instance runs.
+
+---
+
+### Interruption
+
+When AWS needs the capacity back, it sends a **2-minute warning** before terminating your Spot Instance. At interruption(after 2 minutes), AWS can:
+- **Terminate** (default) — instance is stopped and deleted.
+- **Stop** — instance state saved to EBS (if EBS-backed).
+- **Hibernate** — RAM state saved to EBS, resumes exactly where it left off.
+
+You choose the interruption behavior when making the Spot request.
+
+> Spot Instances are **not suitable** for workloads that cannot tolerate interruption — databases, critical APIs, long transactions. Best for: batch jobs, data processing, CI/CD, ML training, rendering.
+
+---
+
+### One-Time vs Persistent Request
+
+| | One-Time | Persistent |
+|---|---|---|
+| **On fulfillment** | Instance launches once | Instance launches whenever capacity is available |
+| **On interruption** | Request closes, instance gone | Request **reopens automatically** — new instance launched when capacity returns |
+| **On manual stop** | N/A | Request stays open but does **not** relaunch until you manually start the instance again |
+| **Use case** | Single batch job | Long-running workload that can pause and resume |
+
+**Flow — Persistent request:**
+```
+You submit persistent Spot request
+        │
+        ▼
+Capacity available → Instance launches (request = active)
+        │
+        ▼
+AWS needs capacity → 2-min warning → Instance interrupted (request = open again)
+        │
+        ▼
+Capacity available again → New instance launched automatically
+```
+
+**To fully cancel a persistent Spot request:** cancel the request first, then terminate the instance. If you only terminate the instance, the persistent request will just relaunch a new one.
+
+---
+
+### Spot Fleet
+
+A **Spot Fleet** is a collection of Spot Instances (and optionally On-Demand instances) managed as a single unit to meet a target capacity.
+
+- You define **multiple instance pools** (type + AZ combinations) — Spot Fleet picks from them based on your strategy.
+- **Allocation strategies:**
+  - `lowestPrice` — launch from the cheapest pool (cost-optimized but higher interruption risk).
+  - `diversified` — spread across all pools (reduces interruption impact).
+  - `capacityOptimized` — launch from the pool with most available capacity (lowest interruption risk).
+  - `priceCapacityOptimized` — picks pools with high capacity AND low price (recommended default).
+- Spot Fleet automatically replaces interrupted instances to maintain target capacity.
+
 ![alt text](image-1.png)
 
 ---

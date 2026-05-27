@@ -2,6 +2,11 @@
 
 Amazon ElastiCache is a fully managed **in-memory caching service** supporting **Redis** and **Memcached** — reduces DB load and improves application performance with sub-millisecond latency.
 
+**When to use ElastiCache:**
+- **Read-heavy workloads**: Store frequently read objects in cache instead of hitting the DB every time — social networking, gaming, media sharing, leaderboards, Q&A portals.
+- **Compute-intensive workloads**: Cache the result of expensive computations — recommendation engines, ML inference results.
+- Any workload where the same data is read repeatedly and low latency matters.
+
 **Redis:**
 - Supports clustering, Multi-AZ with auto-failover and read replicas for high availability.
 - Data persistence (RDB snapshots + AOF logs) — survives restarts.

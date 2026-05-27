@@ -1,14 +1,55 @@
 ## EC2 Auto Scaling
 
-- **Auto Scaling**: Automatically adjusts the number of EC2 instances in a group based on demand. It ensures that you have the right number of instances running to handle the load. Auto Scaling can be configured to scale in (remove instances) or scale out (add instances) based on predefined policies, schedules, or health checks. It is free service, only pay for resources created by Auto Scaling.
-- There are 3 types of scaling:
-  - **Dynamic Scaling**: Automatically adjusts the number of instances in response to changing demand. It can scale in or out based on CloudWatch metrics, such as CPU utilization or network traffic.
-      - **Target Tracking Scaling**: Automatically adjusts the number of instances to maintain a specified target value for a specific metric, such as CPU utilization or request count.
-      - **Simple/Step Scaling**: Allows you to define scaling policies based on CloudWatch alarms. You can specify the number of instances to add or remove based on the alarm state (e.g., CPU utilization above a certain threshold). **Step scaling** allows you to define multiple steps for scaling actions based on different alarm states. **Simple scaling** allows you to define a single scaling action for each alarm state.
-  - **Scheduled Scaling**: Allows you to set a schedule for scaling actions based on predictable changes in demand. For example, you can schedule scaling actions to occur at specific times of the day or week.
-  - **Predictive Scaling**: Uses machine learning to predict future demand and automatically adjusts the number of instances in advance. It can help ensure that you have the right number of instances running to handle expected traffic spikes or drops.
+## EC2 Auto Scaling Group (ASG)
 
-- **Scaling Cooldown**: After a scaling activity is triggered, there is a cooldown period during which no further scaling activities will be initiated. This helps prevent rapid fluctuations in the number of instances and allows the system to stabilize after a scaling action. The default cooldown period is 300 seconds (5 minutes), but it can be configured.
+Automatically adds or removes EC2 instances based on demand. Free service — you only pay for the instances it creates.
+
+**Three core settings:**
+- **Minimum** — ASG will never go below this count, even under zero load.
+- **Desired** — the number ASG tries to maintain at all times.
+- **Maximum** — ASG will never exceed this count, even under peak load.
+
+---
+
+### Scaling Types
+
+**1. Dynamic Scaling** — reacts to what's happening right now (CloudWatch metrics)
+
+- **Target Tracking**: You pick a target metric value — ASG automatically adds/removes instances to maintain it.
+  - Example: "Keep average CPU at 50%" → if CPU rises to 70%, ASG scales out; if it drops to 30%, ASG scales in.
+  - Simplest to configure — recommended default.
+
+- **Step Scaling**: You define CloudWatch alarms with multiple steps — different actions at different thresholds.
+  - Example: CPU 60–80% → add 1 instance. CPU >80% → add 3 instances.
+  - More control than Target Tracking for sudden, large traffic spikes.
+
+- **Simple Scaling**: Single CloudWatch alarm → single fixed action. After the action, waits for cooldown before doing anything else.
+  - Older, less flexible than Step Scaling — rarely preferred today.
+
+**2. Scheduled Scaling** — reacts to a known future event (time-based)
+- You set a specific time to scale out or in.
+- Example: "Every weekday at 8AM add 5 instances, at 10PM remove them."
+- Best for predictable, recurring traffic patterns.
+
+**3. Predictive Scaling** — reacts before the load hits (ML-based forecast)
+- AWS analyses historical CloudWatch data and predicts future demand.
+- Pre-launches instances before the load spike arrives — no lag waiting for a metric to breach a threshold.
+- Example: Traffic always spikes on Monday morning → ASG scales out Sunday night automatically.
+- Best combined with Dynamic Scaling (predictive handles the forecast, dynamic handles unexpected deviations).
+
+---
+
+| Type | Trigger | Best for |
+|---|---|---|
+| Target Tracking | Metric drifts from target | General purpose — easiest setup |
+| Step Scaling | Alarm threshold crossed | Workloads needing graduated response |
+| Simple Scaling | Alarm threshold crossed | Simple single-step reactions |
+| Scheduled | Time of day / date | Known recurring patterns |
+| Predictive | ML forecast of future demand | Recurring spikes with historical data |
+
+---
+
+**Scaling Cooldown** — after any scaling action, ASG pauses for **300 seconds (default)** before triggering another. Prevents thrashing — gives newly launched instances time to start handling traffic before ASG decides more are needed.
 
 ### Rebalancing
 
@@ -181,6 +222,37 @@ An instance is marked unhealthy but ASG hasn't replaced it yet — here are all 
 | **ASG at minimum capacity, replacement launch failing** | ASG tries to launch a replacement first before terminating the unhealthy one. If the replacement launch fails (e.g., capacity constraints, subnet issues), the unhealthy instance stays until a launch succeeds. |
 | **Lifecycle hook blocking termination** | A `autoscaling:EC2_INSTANCE_TERMINATING` lifecycle hook is pending — the instance stays in `Terminating:Wait` until the hook completes or times out. |
 | **Connection draining in progress** | ELB is still draining active connections from the instance before deregistering it — termination is held until draining completes or the timeout expires. |
+
+---
+
+### EC2 Instance Status Checks & Impaired Status
+
+EC2 runs two automatic status checks every minute on every instance:
+
+| Check | What it tests | Who fixes it |
+|---|---|---|
+| **System Status Check** | Underlying AWS hardware/network — power, host connectivity, hypervisor | AWS must intervene (hardware failure, host issue) |
+| **Instance Status Check** | OS-level issues — kernel, network config, memory, corrupted filesystem | You must fix (reboot, patch, reconfigure) |
+
+When either check fails, the instance is marked **Impaired**.
+
+**CloudWatch Alarm Actions per Check Type:**
+
+| | System Status Check failure | Instance Status Check failure |
+|---|---|---|
+| **Root cause** | Bad hardware/host (AWS side) | OS crash, kernel issue, bad config (your side) |
+| **CloudWatch metric** | `StatusCheckFailed_System` | `StatusCheckFailed_Instance` |
+| **Alarm action** | **Recover** — migrate to new hardware | **Reboot** — restart on same hardware |
+| **Hardware after action** | New underlying host | Same underlying host |
+| **EBS data** | Preserved (EBS is network-attached, not tied to host) | Preserved |
+| **RAM data** | Lost (reboot happens during migration) | Lost (it's a reboot) |
+| **Instance ID / IPs / metadata** | All preserved | All preserved |
+
+Both alarm actions preserve your EBS data and lose RAM — the only difference is **System recovery moves to new hardware**, while **Instance reboot stays on the same hardware**.
+
+**Constraints:**
+- **Terminated instances cannot be recovered.**
+- Automated recovery only works on instance types that support it (most modern types do).
 
 ---
 
