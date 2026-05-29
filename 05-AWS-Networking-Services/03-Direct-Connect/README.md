@@ -62,8 +62,27 @@ Direct Connect Gateway
     └──► VPC in ap-south-1
 ```
 
+- **Global resource** — works with VPCs in any AWS Region (except China Regions).
 - One Direct Connect Gateway can be associated with up to **10 VGWs** across regions.
-- VPCs connected through the same DX Gateway **cannot communicate with each other** — it's not a transit hub, only on-premises to VPC.
+- VPCs connected through the same DX Gateway **cannot communicate with each other** — it's not a transit hub, only on-premises ↔ VPC.
+
+**Multi-region hybrid pattern — shared DX Gateway:**
+
+When you have multiple DX connections (e.g., two on-premises data centers) and VPCs in multiple regions, connect **both DX links to a single shared DX Gateway** and attach each region's VGW to it:
+
+```
+On-premises DC-1 ──DX link 1──┐
+                               ├──► Direct Connect Gateway (global)
+On-premises DC-2 ──DX link 2──┘        │         │         │
+                                     VGW        VGW        VGW
+                                  us-west-2  eu-central-1  ap-south-1
+                                     │           │             │
+                                   VPC-1       VPC-2         VPC-3
+```
+
+- All on-premises networks can reach all VPCs across regions through one DX Gateway.
+- Lowest operational overhead — no per-region DX connections, no complex peering mesh.
+- **Does not replace Transit Gateway** — DX Gateway only enables on-premises ↔ VPC routing, not VPC ↔ VPC routing. For VPC-to-VPC routing combine with Transit Gateway (using Transit VIF).
 
 ---
 

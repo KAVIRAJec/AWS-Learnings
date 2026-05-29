@@ -43,6 +43,30 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 
 ---
 
+## Aurora Storage Classes
+
+Aurora offers two storage configurations — choose based on your I/O pattern:
+
+| | Aurora Standard | Aurora I/O-Optimized |
+|---|---|---|
+| **Best for** | Workloads where I/O cost < 25% of total Aurora bill | I/O-intensive workloads where I/O cost > 25% of total bill |
+| **I/O cost** | Charged per I/O operation | **Included** — no per-I/O charge |
+| **Storage cost** | Lower | Higher per GB |
+| **Pricing model** | Pay for compute + storage + I/O separately | Pay for compute + storage (I/O bundled) |
+| **Switch** | Can switch to I/O-Optimized at any time | Can switch back to Standard after 30 days |
+
+**When to choose I/O-Optimized:**
+- High read/write throughput workloads — analytics, financial transactions, real-time applications.
+- Your I/O costs are unpredictable or consistently high.
+- You want **predictable pricing** — no surprise I/O bills.
+
+**When to stay on Standard:**
+- Dev/test environments.
+- Workloads with low or intermittent I/O.
+- I/O costs are a small fraction of your total Aurora spend.
+
+---
+
 ## Migrating to Aurora
 
 ### MySQL Migrations

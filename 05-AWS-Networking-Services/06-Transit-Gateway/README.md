@@ -111,6 +111,38 @@ Region: us-east-1          Region: eu-west-1
 
 ---
 
+## Transit VPC (Legacy Pattern)
+
+**Transit VPC** is an older, software-based approach to connect multiple VPCs and on-premises networks — predates Transit Gateway.
+
+```
+On-premises
+     │  (VPN)
+     ▼
+Transit VPC  (a normal VPC with EC2-based VPN router/software — e.g., Cisco CSR)
+     │          │          │
+   VPC-A      VPC-B      VPC-C   ← all spoke VPCs connect via VPN to the transit VPC
+```
+
+- A dedicated **"hub" VPC** runs third-party VPN appliances (e.g., Cisco, Palo Alto) on EC2 instances.
+- All other "spoke" VPCs connect to this hub via VPN tunnels.
+- The hub routes traffic between spokes and to on-premises.
+
+**Why it's legacy:**
+- You manage the EC2 VPN appliances yourself — patching, scaling, failover all on you.
+- Higher cost (EC2 + software licensing) and more complexity than Transit Gateway.
+- **Transit Gateway replaced this pattern** — AWS-managed, no EC2 routers needed, scales automatically.
+
+| | Transit VPC | Transit Gateway |
+|---|---|---|
+| **Managed by** | You (EC2 VPN appliances) | AWS |
+| **Setup complexity** | High | Low |
+| **Routing** | Software-defined on EC2 | Native AWS routing |
+| **Cost** | EC2 + license + data transfer | Per attachment + per GB |
+| **Status** | Legacy | Recommended |
+
+---
+
 ## Transit Gateway vs VPC Peering
 
 | | Transit Gateway | VPC Peering |

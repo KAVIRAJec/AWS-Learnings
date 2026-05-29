@@ -20,10 +20,21 @@ Amazon EBS is a block storage service designed for use with Amazon EC2 instances
 ### EBS Volume Types:
 - **General Purpose SSD (gp2/gp3):** Balanced price and performance for a wide range of workloads. Suitable for boot volumes, small to medium-sized databases, and development/test environments. Max IOPS is 16,000 and max throughput is 1,000 MB/s, if require more IOPS increase the size of the volume.
    - **gp3:** Newer generation of gp2 volumes. Baseline: 3000 IOPS and 125 MB/s throughput. Max IOPS is 16,000 and max throughput is 1,000 MB/s.
-   - **gp2:** Older generation of gp3 volumes. Single small gp2 can burst 3000 IPOS & max is 1600. IOPS is based on volume size (3 IOPS per GB) and max IOPS 5334Gib and throughput is 250 MB/s.
-- **Provisioned IOPS SSD (io1/io2):** Designed for I/O-intensive applications, such as large relational or NoSQL databases. Provides high IOPS and low latency. Max IOPS is 64,000 and max throughput is 1,000 MB/s. No need to increase the size of the volume to increase IOPS. **Provisioned IOPS** supports multi attach feature.
-   - **io1:** Max IOPS is 64,000 and increase IOPS independently of volume size
-   - **io2:** Max IOPS 256,000 and sub millisecond latency.
+   - **gp2:** Older generation. IOPS scales with volume size — **3 IOPS per GiB**, baseline between 100–16,000 IOPS. Uses a **burst credit (bucket) model**:
+      - When usage is below the baseline, credits accumulate (max 5.4 million credits).
+      - During I/O spikes, credits are consumed to burst up to **3,000 IOPS** regardless of volume size.
+      - Once credits are exhausted, IOPS drops back to baseline (3 IOPS/GiB).
+      - Throughput max: 250 MB/s.
+      ```
+      Low I/O   →  credits accumulate
+      I/O spike →  credits consumed → burst to 3,000 IOPS
+      Credits gone → IOPS drops to baseline
+      ```
+- **Provisioned IOPS SSD (io1/io2):** Designed for I/O-intensive applications — delivers provisioned IOPS **99.9% of the time**, no credit model, always-on. IOPS set independently of volume size. **Supports multi-attach**.
+   - **io1:** Max 64,000 IOPS. Charged for provisioned IOPS 24/7 whether used or not.
+   - **io2:** Max 256,000 IOPS, sub-millisecond latency, higher durability (99.999%).
+
+   > **io1 vs gp2 cost decision**: If your io1 volume is **under-utilized with only occasional bursts**, switch to **gp2** — gp2's credit model handles spikes automatically at much lower cost. Use io1 only when you need **sustained, consistent high IOPS** continuously (e.g., production databases with constant heavy I/O).
 - **Throughput Optimized HDD volumes (st1):** Low-cost HDD volume designed for frequently accessed, throughput-intensive workloads. Suitable for big data, data warehouses, and log processing. Max throughtput 500 MiB/s and max IOPS is 500.
 - **Cold HDD (sc1):** Lowest-cost HDD volume designed for less frequently accessed data. Suitable for large-scale data storage, such as infrequently accessed backups and archives. Max throughtput 250 MiB/s and max IOPS is 250.
 - **Magnetic (standard):** Previous generation HDD volume type, now deprecated. Suitable for infrequently accessed data and workloads with lower performance requirements.

@@ -46,6 +46,26 @@ Amazon CloudFront is a **Content Delivery Network (CDN)** that delivers data, vi
 - Country is determined using a third-party **GeoIP database** based on the user's IP.
 - Use case: Copyright laws that restrict content distribution to specific regions.
 
+**Multiple Origins & Content-Based Routing:**
+- A single CloudFront distribution can route requests to **different origins based on content type** — using **cache behaviors** with path patterns.
+- Example: `/static/*` → S3 bucket (static files), `/api/*` → ALB (dynamic content), `/images/*` → another S3 bucket.
+- CloudFront matches path patterns in order — most specific pattern first.
+- **Cannot** route based on price class — price class only controls which edge locations serve traffic, not which origin handles requests.
+
+**Origin Groups — High Availability & Failover:**
+- An **origin group** contains a **primary** and a **secondary** origin.
+- If the primary returns a failure (specific HTTP status codes like 5xx, or is unavailable), CloudFront **automatically fails over** to the secondary origin.
+- Use case: Primary = S3 bucket in us-east-1, Secondary = S3 bucket in eu-west-1 — automatic failover if primary bucket is unavailable.
+- You assign an origin group to a cache behavior the same way you'd assign a regular origin.
+- **Geo restriction is NOT for HA/failover** — it blocks/allows users by country, it has nothing to do with availability.
+
+**Field-Level Encryption:**
+- Encrypts specific **sensitive fields** (e.g., credit card numbers, SSNs) in HTTP POST requests **at the edge**, before the data reaches your origin.
+- Uses **asymmetric encryption (public key)** — you provide a public key to CloudFront, only your application (with the private key) can decrypt the data.
+- Encrypted at the edge, stays encrypted through your entire application stack — web servers, load balancers, and app servers never see plaintext.
+- Can encrypt up to **10 fields** per request — you specify which form fields to encrypt, not the entire request body.
+- **Not KMS** — CloudFront field-level encryption uses its own public/private key pair, not AWS KMS keys.
+
 **Cache Invalidation:**
 - Forces CloudFront to remove cached content from edge locations **before TTL expires**, so the next request fetches fresh content from the origin.
 - Can invalidate specific paths (`/images/photo.jpg`) or all objects (`/*`).
