@@ -38,9 +38,15 @@ Amazon DynamoDB is a fully managed **serverless NoSQL** database — key-value a
 - Many consumers can read the same stream data independently.
 
 **Global Tables:**
-- Multi-region, multi-active(multi-way) replication — read and write from any region.
-- Low-latency global access, built-in conflict resolution (last writer wins).
-- Requires DynamoDB Streams enabled.
+
+Multi-region, **multi-active** replication — every replica region can accept both reads and writes (unlike Aurora Global which has one write region).
+
+- **DynamoDB Streams must be enabled** — replication uses streams to propagate changes between regions.
+- Changes written in one region are **asynchronously replicated** to all other replica regions.
+- **Conflict resolution**: If the same item is updated in two regions at nearly the same time, DynamoDB uses **last writer wins** (based on timestamp) — the most recent write survives.
+- Replication lag is typically **under 1 second** in normal conditions.
+- Each replica is a **full copy** of the table — independent capacity (RCU/WCU) per region.
+- Use cases: Global applications needing low-latency local reads and writes, disaster recovery with zero RPO, active-active multi-region architectures.
 
 **TTL (Time to Live):**
 - Automatically delete items after a specified expiry timestamp — no extra cost.

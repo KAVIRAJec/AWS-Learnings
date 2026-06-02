@@ -63,3 +63,52 @@ Shell session on EC2
 | **Audit trail** | CloudTrail + S3/CloudWatch Logs | Manual SSH logs |
 | **Cost** | Free (SSM is free) | EC2 instance cost |
 | **Best for** | Secure, auditable, keyless access | Legacy setups |
+
+---
+
+## EC2 Instance Connect
+
+**EC2 Instance Connect** provides temporary, one-time SSH access to EC2 instances by injecting an **ephemeral public key** — no long-term SSH key pairs needed.
+
+**How it works:**
+```
+AWS Console / CLI
+        │
+        │  1. Injects a one-time-use public key into instance metadata (valid for 60 seconds)
+        ▼
+EC2 Instance (authorized_keys updated temporarily)
+        │
+        │  2. SSH connection made using the matching private key
+        ▼
+SSH session established → key expires after 60 seconds
+```
+
+**Two modes:**
+
+| | EC2 Instance Connect (direct) | EC2 Instance Connect Endpoint |
+|---|---|---|
+| **When to use** | Instance has a **public IP** | Instance is in a **private subnet** (no public IP) |
+| **Connection path** | Over the internet via public IP | Through a managed VPC endpoint — no internet needed |
+| **Port 22 required** | Yes — inbound from EC2 Instance Connect service IP ranges | Yes — but only from the endpoint, not the internet |
+| **SSM Agent needed** | No | No |
+| **Cost** | Free | Free (data transfer costs apply) |
+
+**Key properties:**
+- **Ephemeral keys** — the injected public key is valid for **60 seconds** only. After the session starts, the key is no longer valid for new connections.
+- **No static key distribution** — developers never hold a long-term SSH key.
+- **Auditable** — every connection is logged in **CloudTrail** (who connected, when, from which IP).
+- **Console access** — connect directly from the AWS Management Console without a terminal.
+- **Private IP from internet** — not supported. Without Instance Connect Endpoint, you need the instance's public IP. Private IPs are not internet-routable.
+
+> **Instance Connect Endpoint** is specifically for private subnet instances. If the instance already has a public IP, use direct Instance Connect — adding an endpoint for public instances adds unnecessary complexity and cost.
+
+**EC2 Instance Connect vs SSM Session Manager:**
+
+| | EC2 Instance Connect | SSM Session Manager |
+|---|---|---|
+| **Protocol** | SSH (port 22) | HTTPS (port 443) |
+| **Key management** | Ephemeral key injected at connect time | No keys — IAM controls access |
+| **SSM Agent** | Not needed | Required |
+| **Private subnet** | Needs Instance Connect Endpoint | Works natively (no endpoint needed) |
+| **Console access** | Yes | Yes |
+| **Best for** | Temporary SSH with audit trail, no key distribution | Keyless, portless shell access to any instance |

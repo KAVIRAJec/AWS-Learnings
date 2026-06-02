@@ -62,7 +62,17 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
    - Routes traffic to the resource with the lowest latency for the user. 
    - Useful for multi-region applications where you want to direct users to the closest resource with latency as priority.
    - Can be used for health checks.
-- **Failover Routing**: Routes traffic to a primary resource unless it becomes unhealthy, in which case it routes to a secondary resource. Useful for disaster recovery scenarios.
+- **Failover Routing**: Active-passive disaster recovery — routes all traffic to the **primary** resource; automatically switches to the **secondary** when the primary fails its health check.
+   - **Requires a health check** on the primary record — failover only triggers when the health check fails.
+   - Secondary record can point to any resource (another region, S3 static website, maintenance page).
+   - Both primary and secondary records must have the **same name and type**.
+   - When the primary recovers and passes the health check, Route 53 automatically routes traffic back.
+   ```
+   Normal:   User → Route 53 → Primary (us-east-1 ALB)  [health check: passing]
+   Failure:  User → Route 53 → Secondary (eu-west-1 ALB) [primary health check: failing]
+   Recovery: User → Route 53 → Primary (us-east-1 ALB)  [health check: passing again]
+   ```
+   > Unlike Global Accelerator (seconds), Route 53 failover depends on **DNS TTL** — clients may still hit the failed primary until the TTL expires. Keep TTL low for faster failover.
 - **Geolocation Routing**: Routes traffic based on the geographic location(Continent, Country or US State) of the user(different from latency). Useful for serving different content to users in different regions. Create "Default" record in case no location is matched.   
 - **Geoproximity Routing**: Routes traffic based on the geographic location of the user and resources, with optional bias. Useful for directing traffic to resources closer to the user. The resources can AWS Resources(specify AWS region) or non AWS resources(specify Latitude and Longitude).
    - To change the size of the geographic region, you can use the bias parameter,

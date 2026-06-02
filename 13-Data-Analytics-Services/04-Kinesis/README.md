@@ -38,6 +38,17 @@ IoT / App                   + Shard N                ──▶  Firehose
 
 > **Enhanced Fan-Out** uses `SubscribeToShard` (HTTP/2 push) instead of `GetRecords` (polling). Use it when multiple consumers need full throughput independently.
 
+**`ProvisionedThroughputExceededException`** — thrown when a shard's write limit (1 MB/s or 1,000 records/s) is exceeded.
+
+| Fix | Effect | Cost |
+|---|---|---|
+| **Use `PutRecords` (batch)** | Send multiple records in one API call — reduces per-call overhead, maximizes shard throughput | No extra cost — best option |
+| Increase shard count | More shards = more capacity | Higher cost per shard-hour |
+| Exponential Backoff | Retries with delay — doesn't fix root cause, fails again under sustained load | No extra cost but doesn't solve the problem |
+| Decrease retention duration | Has no effect on write throughput | Risk of data loss |
+
+> **Root cause**: Calling `PutRecord` (single record) in a loop at high rate burns through the 1,000 records/s limit per shard quickly. Switch to `PutRecords` to batch up to **500 records per API call** — same shard limit but far fewer API calls, higher effective throughput.
+
 ### Data Retention & Replay
 
 - Default retention: **24 hours**. Configurable up to **365 days**.
@@ -72,11 +83,31 @@ If your partition key has low cardinality (e.g., `country` with only a few value
 
 ### Consumers
 
+**Multiple consumers can read the same KDS stream simultaneously and independently** — each consumer maintains its own position (sequence number / shard iterator) in the stream. One consumer reading does not affect another. This is the key difference from SQS, where a message is consumed by only one consumer.
+
+```
+KDS Stream (Shard 1)
+        │
+        ├──▶ Lambda         (reads independently, position A)
+        ├──▶ KCL App        (reads independently, position B)
+        ├──▶ Firehose       (reads independently, position C)
+        └──▶ Custom App     (reads independently, position D)
+```
+
+**Two consumption models:**
+
+| Model | Throughput | How |
+|---|---|---|
+| **Standard (shared)** | 2 MB/s shared across ALL consumers on a shard | `GetRecords` polling — consumers compete for the same 2 MB/s |
+| **Enhanced Fan-Out (dedicated)** | 2 MB/s **per consumer** per shard | `SubscribeToShard` HTTP/2 push — each consumer gets its own pipe |
+
+Use **Enhanced Fan-Out** when you have 2+ consumers and each needs full throughput — without it, consumers share and throttle each other.
+
 | Consumer | Model | Use Case |
 |---|---|---|
-| **AWS SDK** (`GetRecords`) | Pull (polling) | Simple custom consumers |
+| **AWS SDK** (`GetRecords`) | Pull (polling, shared) | Simple custom consumers |
 | **Kinesis Client Library (KCL)** | Pull — handles checkpointing, load balancing across workers | Distributed consumer apps (Java) |
-| **Enhanced Fan-Out** (`SubscribeToShard`) | Push (HTTP/2) | Multiple consumers needing full 2 MB/s each |
+| **Enhanced Fan-Out** (`SubscribeToShard`) | Push (HTTP/2, dedicated) | Multiple consumers each needing full 2 MB/s |
 | **Lambda** | Event-source mapping | Serverless processing per batch of records |
 | **Kinesis Data Firehose** | Managed | Load KDS records into S3, Redshift, etc. |
 | **Kinesis Data Analytics** | Managed | SQL / Flink queries on the stream |

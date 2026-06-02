@@ -67,3 +67,44 @@ IAM Policies are JSON documents that define what actions are allowed or denied o
 | **Set by** | Account admin | Org management account |
 | **Limits** | Max permissions of a specific identity | Max permissions of any identity in the account |
 | **Grants permissions** | No — only restricts | No — only restricts |
+
+---
+
+## IAM Access Analyzer
+
+IAM Access Analyzer identifies resources in your account that are shared with **external principals** (other AWS accounts, the public, or AWS services outside your zone of trust) — helping you detect unintended access.
+
+- Analyzes **resource-based policies** on: S3 buckets, IAM roles, KMS keys, Lambda functions, SQS queues, Secrets Manager secrets, SNS topics.
+- Generates **findings** for any resource accessible from outside the account or organization.
+- **Zone of trust**: You define the boundary — can be a single account or an entire AWS Organization. Any access from outside the zone generates a finding.
+- Findings can be **archived** (expected/intentional) or **resolved** (policy updated to remove external access).
+- Integrates with **Security Hub** to centralize findings.
+
+```
+S3 bucket policy allows: "Principal": "*"
+        │
+        ▼
+IAM Access Analyzer detects external access → generates Finding
+        │
+        ▼
+You review → archive (intentional) or fix the policy (resolve)
+```
+
+**Use case**: Continuously audit your resource policies to catch accidental public exposure or cross-account access you didn't intend.
+
+---
+
+## IAM Access Advisor
+
+IAM Access Advisor shows the **last time each AWS service was accessed** by an IAM user, group, role, or policy — helping you identify and remove unused permissions.
+
+- Shows **service-level** last accessed data (e.g., "S3 last accessed 90 days ago", "EC2 never accessed").
+- Data is available for the **last 400 days**.
+- Use it to enforce **least privilege** — if a user hasn't used a service in months, remove that permission.
+
+| | IAM Access Analyzer | IAM Access Advisor |
+|---|---|---|
+| **Purpose** | Detect unintended **external access** to resources | Identify **unused permissions** for least privilege |
+| **What it analyzes** | Resource-based policies (who can access what) | Service usage history per identity |
+| **Output** | Findings (external access alerts) | Last accessed timestamps per service |
+| **Action** | Fix or archive findings | Remove unused service permissions |

@@ -11,6 +11,21 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 - **Engine version upgrades**: Require downtime — even in Multi-AZ, both the primary and standby are upgraded at the same time. Downtime duration depends on DB instance size.
 - **Authentication**: Supports IAM database authentication (MySQL, PostgreSQL) — generates temporary auth tokens valid for 15 minutes. Eliminates the need to store DB credentials in your app.
 
+**RDS Scope — Region vs AZ:**
+
+| Feature | Scope | Notes |
+|---|---|---|
+| **RDS Instance** | AZ-specific | Runs in one AZ within a region |
+| **Multi-AZ Standby** | Different AZ, same region | Synchronous replica — HA only, not readable |
+| **Read Replica (same region)** | Can be same AZ or different AZ | Asynchronous, readable, free data transfer |
+| **Read Replica (cross-region)** | Different region | Asynchronous, readable, charged data transfer |
+| **Automated Backups** | Region-specific | Stored in S3 within the same region, can be copied to another region manually |
+| **Manual Snapshots** | Region-specific | Stored in S3; can be copied cross-region or shared with another account |
+| **RDS Proxy** | AZ-aware (Multi-AZ) | Deployed across AZs in the same region |
+| **Subnet Group** | Region-specific | Spans multiple AZs within a region |
+
+---
+
 **RDS Encryption:**
 - **At rest**: KMS encryption — must be enabled at launch. If master is unencrypted, replicas cannot be encrypted. To encrypt an existing unencrypted DB: snapshot → copy with encryption → restore.
 - **In transit**: SSL/TLS using AWS TLS root certificates.

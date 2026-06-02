@@ -111,6 +111,34 @@ Timeline:
 
 ### Common Use Cases
 
+**Zero-downtime patching for load-balanced instances — `AWSEC2-PatchLoadBalancerInstance`:**
+
+A pre-built AWS Automation document specifically designed for patching EC2 instances that are part of an ALB target group — without dropping traffic or causing downtime.
+
+```
+Maintenance Window triggers AWSEC2-PatchLoadBalancerInstance
+        │
+        ▼
+Step 1: Deregister instance from ALB target group
+        │
+        ▼
+Step 2: Wait for in-flight requests to drain (connection draining)
+        │
+        ▼
+Step 3: Apply patches via Patch Manager (reboot if required)
+        │
+        ▼
+Step 4: Re-register instance into ALB target group
+        │
+        ▼
+Step 5: Wait for health check to pass → done
+```
+
+- No manual steps — the entire deregister → patch → re-register cycle is automated.
+- Schedule via **Maintenance Window** to run during off-peak hours.
+- Combine with **concurrency control** in the Maintenance Window (e.g., patch one instance at a time) to keep the rest of the fleet serving traffic throughout.
+- All steps logged in CloudTrail for compliance audit.
+
 ```
 Example: Patch with rollback runbook
   Step 1: Create AMI (snapshot before patching)

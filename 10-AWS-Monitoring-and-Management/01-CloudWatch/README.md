@@ -21,6 +21,8 @@ Amazon CloudWatch is AWS's **monitoring and observability service** — collects
 
 **Default vs Custom Metrics:**
 - **Default**: AWS services publish metrics automatically — CPU, network, disk I/O for EC2, invocation count and errors for Lambda, etc. **Memory and disk usage on EC2 are NOT included** — need CloudWatch Agent.
+  - **EC2 Basic Monitoring** (default): metrics published every **5 minutes** — no extra cost.
+  - **EC2 Detailed Monitoring** (opt-in): metrics published every **1 minute** — additional cost. Enable when you need finer granularity for auto scaling reactions or performance analysis.
 - **Custom**: Published via `PutMetricData` API from your application — latency, order count, queue depth, etc.
 
 ---

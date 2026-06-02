@@ -1,7 +1,5 @@
 ## S3 Performance
 
----
-
 ### Baseline Performance
 
 S3 automatically scales to high request rates with **100–200ms latency**.
@@ -58,6 +56,41 @@ Downloads a file in parallel by requesting specific byte ranges simultaneously.
 - Multiple byte ranges downloaded in parallel → faster overall download.
 - If one range download fails, only that range needs to be retried.
 - **Use case**: Large file downloads, partial reads (e.g., reading metadata from the first N bytes of a CSV/Parquet file).
+
+---
+
+### Mountpoint for Amazon S3
+
+**Mountpoint for Amazon S3** is an open-source file client that lets you **mount an S3 bucket as a local file system directory** on Linux — your application reads/writes files as if they were on a local disk, but the data is actually in S3.
+
+```
+EC2 / container
+    │
+    │  reads/writes via local file path  (e.g., /mnt/s3-bucket/data.csv)
+    ▼
+Mountpoint client  (translates POSIX file calls → S3 API calls)
+    │
+    ▼
+S3 Bucket
+```
+
+**Key properties:**
+- **Read-optimized**: Sequential reads and high-throughput parallel reads are fully supported — ideal for ML training, analytics, genomics.
+- **Write support**: Supports sequential writes for new files (create/write/close) — but does **not** support random writes, appends to existing files, or file locking.
+- **Not a full POSIX file system**: Does not support all POSIX operations — no rename, no hard links, no in-place edits.
+- **Use case**: Data science and ML workloads that read large datasets from S3 at high throughput — avoids downloading the full dataset to local disk first.
+
+**Mountpoint vs EFS vs EBS:**
+
+| | Mountpoint for S3 | EFS | EBS |
+|---|---|---|---|
+| **Storage backend** | S3 (object storage) | Managed NFS | Block storage |
+| **Shared across instances** | Yes (same bucket) | Yes | No (single instance) |
+| **Full POSIX** | No | Yes | Yes |
+| **Cost** | S3 pricing (cheapest) | Higher | Medium |
+| **Best for** | Large read-heavy datasets (ML, analytics) | Shared file systems | OS volumes, databases |
+
+> **Cannot replace EFS** for workloads needing full file system semantics (random writes, renames, locking). Use Mountpoint only when reading large files sequentially from S3.
 
 ---
 
