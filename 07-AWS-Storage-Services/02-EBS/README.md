@@ -12,7 +12,12 @@ Amazon EBS is a block storage service designed for use with Amazon EC2 instances
 - **Durability and Availability:** EBS volumes are designed for 99.999% availability and automatically replicated within their Availability Zone to protect against hardware failures.
 - **Volume Types:** EBS offers different volume types optimized for various workloads, including SSD-backed volumes for transactional workloads and HDD-backed volumes for throughput-intensive applications.
 - **Encryption:** When you enable encryption, data is encrypted at rest and in transit, all data in flight is encrypted, and all snapshots are encrypted, all volumes created from the snapshot are encrypted. EBS encryption uses AWS Key Management Service (KMS) to manage encryption keys. Snapshots of non encrypted volumes are not encrypted, but you can create a snapshot of an unencrypted volume and then copy it to create an encrypted snapshot. You can also use the AWS CLI or SDKs to encrypt existing unencrypted volumes and snapshots.
-- **Elasticity:** EBS volumes can be resized and modified without downtime, allowing you to adapt to changing storage needs.
+- **Elastic Volumes (live modification):** EBS supports live configuration changes **while the volume is in use** — no need to detach, stop the instance, or cause any service interruption. You can modify:
+  - **Volume type** (e.g., gp2 → gp3, or gp3 → io2)
+  - **Volume size** (increase only — EBS size cannot be decreased)
+  - **IOPS** (for gp3, io1, io2)
+  - **Throughput** (for gp3)
+  - After modification, the volume may enter an **optimizing** state while changes take effect in the background — I/O continues normally during this period.
 - **Performance:** EBS volumes can deliver high IOPS (Input/Output Operations Per Second) and low latency, making them suitable for a wide range of applications, including databases and big data analytics.
 - **Multi-Attach:** EBS volumes can be attached to multiple EC2 instances in the same Availability Zone, enabling high availability and failover scenarios. It is limited to 16 EC2 instances at a time & IO EBS volumes (io1 and io2) only support multi attach feature.
 - **Boot Volumes:** Only GP2 and GP3 volumes, IO1 and IO2 volumes can be used as boot volumes.
@@ -44,7 +49,32 @@ Amazon EBS is a block storage service designed for use with Amazon EC2 instances
 ### EBS Snapshots:
 - EBS allows you to create point-in-time snapshots of your volumes, which are stored in Amazon S3 and can copy across AZ/regions.
 - Snapshots can be used for backup, disaster recovery, and creating new volumes. (Organizations use EBS snapshots to create AMIs and launch their software configured in the AMI). 
-- To automatically create EBS snapshots, you can use **AWS Data Lifecycle Manager**. Snapshots are stored in S3 and available at the regional level rather than availability zone level like EBS.
+- To automatically create EBS snapshots, you can use **Amazon Data Lifecycle Manager (DLM)**.
+
+**Amazon DLM (Data Lifecycle Manager):**
+- Automates the creation, retention, copying, and deletion of **EBS snapshots and EBS-backed AMIs** on a schedule — no custom scripts or Lambda functions needed.
+- Defined using **lifecycle policies** — specify what to back up, how often, how many copies to keep, and where to copy them.
+
+**Key concepts:**
+- **Target resources**: Tag-based — DLM identifies EBS volumes or instances by resource tags (e.g., `Environment=prod`).
+- **Schedule**: Cron-based frequency — hourly, daily, weekly, or custom cron expression.
+- **Retention**: Keep the last N snapshots (count-based) or snapshots within the last N days (age-based) — older ones are automatically deleted.
+- **Cross-region copy**: Automatically copy snapshots to another region for disaster recovery.
+- **Cross-account copy**: Share and copy snapshots to another AWS account.
+- **Fast Snapshot Restore (FSR)**: Can be enabled on target snapshots within DLM policy — pre-warms snapshots for immediate full performance on restore.
+
+**DLM policy types:**
+
+| Policy Type | What it manages |
+|---|---|
+| **EBS snapshot policy** | Automates snapshots of individual EBS volumes |
+| **EBS-backed AMI policy** | Automates AMI creation from EC2 instances (includes all attached volumes) |
+| **Cross-account copy event policy** | Automates copying of snapshots shared from another account |
+
+**DLM vs manual snapshots:**
+- DLM handles the full lifecycle — create, copy, retain, and delete — automatically.
+- Without DLM, you must write Lambda + EventBridge rules to replicate the same behavior.
+- No additional cost for DLM itself — you pay only for the snapshot storage.
 #### The below are under EBS snapshots(not S3):
 - To save EBS snapshot costs(upto 75%), Setup EBS snapshot archive (takes 12 to 72 hours to restore), and use EBS snapshot lifecycle policies to automate the deletion of old snapshots.
 - Can also enable EBS snapshot recycle bin to recover deleted snapshots. EBS snapshot recycle bin is a feature that allows you to recover deleted EBS snapshots within a specified retention period(1 day to 1 year). When you delete a snapshot, it is moved to the recycle bin instead of being permanently deleted. You can restore the snapshot from the recycle bin within the retention period.

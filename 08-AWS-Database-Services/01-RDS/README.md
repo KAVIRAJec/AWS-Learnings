@@ -7,7 +7,15 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 - **Manual Snapshots**: Stored in S3, retained indefinitely — used for long-term backup.
 - **Storage Auto Scaling**: Automatically expands storage when free space < 10%, low for 5 mins, and 6 hours since last modification. You set a max threshold.
 - **Read Replicas**: Up to 15 read replicas per instance — asynchronous replication for read-heavy workloads. Supports within-AZ, cross-AZ, cross-region. Free data transfer within the same region, charged cross-region.
-- **Multi-AZ**: Synchronous standby replica in a different AZ for high availability and failover — not for scaling. To convert single-AZ to Multi-AZ: click modify → no downtime (AWS takes a snapshot, creates standby, establishes sync).
+- **Multi-AZ**: Synchronous standby replica in a different AZ for high availability and failover — **not for read scaling** (standby cannot serve read requests). To convert single-AZ to Multi-AZ: click modify → no downtime (AWS takes a snapshot, creates standby, establishes sync).
+  - **Replication**: **Synchronous** — every write to primary is replicated to standby before the write is acknowledged. Never asynchronous for Multi-AZ.
+  - **Automatic failover**: If the primary fails (AZ failure, hardware issue, DB crash), RDS automatically promotes the standby — no manual intervention needed. The DNS endpoint stays the same; applications reconnect automatically.
+  - **Automated backups**: Taken from the **standby** — no I/O suspension on the primary during the backup window. This is a key Multi-AZ benefit over single-AZ (where backups suspend I/O on primary).
+  - **OS/patch maintenance order**: RDS performs OS updates in this order to minimize downtime:
+    1. Patch the **standby** first
+    2. Promote standby → new primary
+    3. Patch the **old primary** (now the new standby)
+    > This means OS maintenance causes only a brief failover, not full downtime. **Exception**: engine version upgrades shut down both primary and standby at the same time — causing actual downtime.
 - **Engine version upgrades**: Require downtime — even in Multi-AZ, both the primary and standby are upgraded at the same time. Downtime duration depends on DB instance size.
 - **Authentication**: Supports IAM database authentication (MySQL, PostgreSQL) — generates temporary auth tokens valid for 15 minutes. Eliminates the need to store DB credentials in your app.
 
@@ -36,6 +44,11 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 - Only accessible from within a VPC (not public). Enforces IAM auth + stores credentials in Secrets Manager.
 - Supports MySQL, PostgreSQL, MariaDB, SQL Server, and Aurora.
 
+**RDS Event Subscriptions:**
+- Subscribe to **infrastructure-level** RDS events and receive notifications via **SNS** — e.g., instance failover, backup completed, low storage, DB instance restarted, parameter group change.
+- **Does NOT capture data changes** (INSERT, UPDATE, DELETE) — RDS event subscriptions only track operational/infrastructure events, not SQL-level activity.
+- Event categories: `availability`, `backup`, `configuration change`, `deletion`, `failover`, `failure`, `maintenance`, `notification`, `recovery`, `restoration`.
+
 **Exposing RDS to Another VPC / Partner via PrivateLink:**
 
 RDS cannot be directly exposed through AWS PrivateLink — PrivateLink only works with NLB endpoints. So to securely share your RDS with an external account or partner **without VPC Peering**, use this pattern:
@@ -57,6 +70,24 @@ Interface Endpoint (PrivateLink)
 - **PrivateLink Interface Endpoint** in the partner's VPC sends traffic privately to your NLB — no internet, no VPC Peering, no CIDR overlap issue.
 
 > The partner only sees the Interface Endpoint IP — they have no knowledge of or access to the RDS instance itself.
+
+**RDS Enhanced Monitoring:**
+- Provides **real-time OS-level metrics** collected by an agent running directly on the DB instance — not from the hypervisor.
+- Captures per-process and per-thread metrics: **CPU bandwidth %, memory % consumed by each process/thread**, disk I/O, network I/O, and OS-level details not visible through the hypervisor.
+- Standard CloudWatch metrics come from the **hypervisor** — they show aggregate CPU for the entire instance, not broken down by process. Enhanced Monitoring fills this gap.
+- Metrics are published to **CloudWatch Logs** under the `RDSOSMetrics` log group — retained for **30 days** by default (adjustable).
+- Enable per instance with a granularity of **1–60 seconds** (1s for most detailed, 60s default).
+- Requires an IAM role (`AmazonRDSEnhancedMonitoringRole`) attached to the RDS instance.
+
+| | Standard CloudWatch | Enhanced Monitoring |
+|---|---|---|
+| **Data source** | Hypervisor | Agent on the DB instance |
+| **Granularity** | 1 min (detailed) / 5 min (basic) | 1–60 seconds |
+| **Per-process metrics** | No | Yes — CPU% and MEM% per process/thread |
+| **Stored in** | CloudWatch Metrics | CloudWatch Logs (`RDSOSMetrics`) |
+| **Use when** | General CPU/network trends | Need to see which DB process is consuming resources |
+
+> You do **not** have direct access to RDS instances (unlike EC2), so you cannot install a CloudWatch Agent — Enhanced Monitoring is the only way to get OS-level per-process visibility on RDS.
 
 **RDS Custom (Oracle & SQL Server):**
 - Managed RDS with access to the underlying OS and DB engine via SSH or SSM Session Manager.

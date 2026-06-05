@@ -57,4 +57,43 @@ Amazon API Gateway is a fully managed service for creating, publishing, and mana
 - **Edge-Optimized endpoint**: Certificate must be in **us-east-1** (CloudFront requirement).
 - **Regional endpoint**: Certificate must be in the **same region** as the API.
 
+---
+
+**Canary Release Deployment (REST API):**
+
+A built-in traffic-splitting mechanism for deploying new API versions with zero downtime and controlled rollout — without provisioning a separate environment.
+
+**How it works:**
+```
+         Route 53 Alias → api.myapp.com
+                  │
+           API Gateway Stage (prod)
+          ┌───────┴──────────┐
+       90% traffic        10% traffic (canary)
+          │                    │
+   existing backend       new backend (v2)
+```
+
+1. Deploy the new API version to the **same prod stage** as a canary.
+2. Set a **canary traffic %** (e.g., 10%) — that portion of prod requests go to the canary.
+3. Monitor errors and latency in the canary.
+4. Gradually increase the % until confident.
+5. **Promote canary** → makes the canary version the new prod baseline (0% canary traffic).
+6. If issues found → **delete canary** → 100% traffic reverts to the original version instantly.
+
+**Key properties:**
+- Same stage, same domain — no DNS changes, no Route 53 updates needed.
+- Stage variables can differ between canary and base stage — lets you point canary to a different Lambda alias or backend.
+- Only available for **REST APIs** (not HTTP APIs).
+
+**Why canary over blue-green for API Gateway:**
+- Blue-green requires provisioning and running two full environments simultaneously — doubles cost.
+- Canary splits traffic within a single stage — no extra API Gateway, no separate infrastructure.
+- DNS propagation delay is avoided entirely — canary is controlled at the API Gateway level, not at the DNS level.
+
+**Import-to-Update (not recommended for safe deployments):**
+- `import-to-update` in **overwrite** mode replaces the entire API definition — all routes, integrations, and models replaced at once. If something breaks, all customers are affected simultaneously.
+- `import-to-update` in **merge** mode adds/updates only the specified paths — existing paths not in the import file remain unchanged. Less risky than overwrite, but still no traffic control or rollback isolation.
+- Neither mode provides traffic splitting or staged validation — use canary release instead.
+
 **Use cases:** Serverless APIs (with Lambda), microservice routing, WebSocket real-time apps, exposing AWS services as HTTP endpoints.

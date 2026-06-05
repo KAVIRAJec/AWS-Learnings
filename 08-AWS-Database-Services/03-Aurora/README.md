@@ -9,9 +9,18 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 - **Read Replicas**: Up to 15 read replicas with auto-scaling support.
 
 **Cluster Endpoints:**
-- **Writer Endpoint**: Points to the primary instance — handles reads and writes.
-- **Reader Endpoint**: Load-balances across all read replicas.
-- **Custom Endpoint**: Route traffic to specific instances (e.g., high-memory instances for analytics).
+- **Writer Endpoint**: Points to the primary instance — handles reads and writes (DDL + DML). On failover, automatically re-points to the new primary.
+- **Reader Endpoint**: Load-balances read traffic across **all** read replicas — no control over which replica handles a connection.
+- **Custom Endpoint**: Route traffic to a **specific subset** of instances you define — by instance class, parameter group, or any criteria. Aurora load-balances within that subset.
+  - Use case: Direct production traffic to **high-capacity instances** via one custom endpoint, and reporting/analytics queries from internal staff to **low-capacity instances** via another custom endpoint.
+  - The reader endpoint does not support this — it always distributes across all replicas with no capacity-based routing.
+  - Aurora does **not** do capacity-based routing automatically — you must create custom endpoints explicitly.
+
+| Endpoint | Points to | Use when |
+|---|---|---|
+| Writer | Primary instance only | Writes, DDL statements |
+| Reader | All replicas (load-balanced) | Read-only queries, no capacity preference |
+| Custom | Subset of instances you define | Route by capacity class, workload type, or user group |
 
 **Backups:**
 - **Automatic**: Continuous and incremental — PITR within 1–35 days. Default retention is **1 day**. **Cannot be disabled** (unlike RDS). No performance impact or interruption while backup data is being written. Stored in S3.
@@ -31,6 +40,23 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 **Aurora Database Cloning:**
 - Creates a copy of the cluster faster than snapshot/restore.
 - Uses **copy-on-write** — new cluster shares original data until changes are made, then allocates separate storage.
+
+**Aurora Native Lambda Invocation:**
+- Aurora MySQL can invoke a Lambda function **directly from within the database** using built-in native functions — triggered by SQL events like row inserts, updates, or deletes.
+- Two functions:
+  - `lambda_sync(function_arn, payload)` — **synchronous** call, waits for Lambda response before continuing.
+  - `lambda_async(function_arn, payload)` — **asynchronous** call, fires and forgets — does not wait for Lambda.
+- Use case: Capture data changes (INSERT, UPDATE, DELETE) at the database level and push them to downstream systems (SQS, SNS, another service) — without polling or CDC pipelines.
+
+```sql
+-- Example: invoke Lambda when a vehicle listing is deleted
+CALL mysql.lambda_async(
+  'arn:aws:lambda:us-east-1:123:function:ProcessDeletedListing',
+  JSON_OBJECT('listing_id', OLD.id, 'model', OLD.model)
+);
+```
+
+> **RDS Event Subscriptions** are for **infrastructure-level events** (instance failover, backup completed, storage full) — they do NOT capture data changes like INSERT/UPDATE/DELETE. Use Aurora native functions for data-level triggers.
 
 **Aurora Machine Learning:**
 - Run ML models within SQL queries. Integrates with **SageMaker** (general ML) and **Comprehend** (sentiment analysis).

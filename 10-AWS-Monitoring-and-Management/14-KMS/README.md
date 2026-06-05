@@ -14,7 +14,22 @@ AWS KMS is a managed service to **create, store, control, and rotate encryption 
 **By key material origin:**
 - **KMS-generated**: AWS generates and manages the key material inside HSMs(Hardware Security Modules) — default and recommended.
 - **Imported key material**: You generate key material outside AWS and import it into KMS. You are responsible for keeping a copy. Automatic rotation is **not supported** — must rotate manually.
-- **Custom Key Store (CloudHSM)**: Key material generated and stored in your **dedicated CloudHSM cluster** — KMS operations are proxied to your HSM. Highest isolation, highest cost. See [CloudHSM](../17-CloudHSM/README.md) for full details.
+- **Custom Key Store (CloudHSM)**: Key material generated and stored in your **dedicated CloudHSM cluster** — KMS operations are proxied to your HSM. Highest isolation, highest cost.
+  - Key material is **non-extractable** — never leaves the HSM in plaintext. All KMS cryptographic operations using these keys happen only inside your CloudHSM cluster.
+  - **Immediate key removal**: Because you own and control the CloudHSM cluster, you can immediately remove key material by deleting it from the cluster — without waiting for KMS key deletion schedules (7–30 day minimum for regular CMKs).
+  - **Independent audit**: Key usage is logged in your CloudHSM cluster audit logs — independently of AWS KMS and AWS CloudTrail. Useful when compliance mandates auditing beyond CloudTrail.
+  - **Full control**: You manage the lifecycle of keys in your CloudHSM cluster independently of AWS KMS.
+
+  **When to use Custom Key Store (vs regular CMK):**
+
+  | Requirement | Custom Key Store (CloudHSM) | Regular CMK |
+  |---|---|---|
+  | Keys in dedicated single-tenant HSM | ✓ | ✗ (shared AWS HSM) |
+  | Immediately remove key material from AWS | ✓ | ✗ (min 7-day deletion wait) |
+  | Audit key usage independently of CloudTrail | ✓ | ✗ (CloudTrail only) |
+  | Full key lifecycle control | ✓ | Partial |
+  | AWS service integration (S3, RDS, EBS…) | ✓ | ✓ |
+  | Cost | High (CloudHSM cluster + KMS) | $1/key/month |
 
 **By key spec:**
 - **Symmetric (AES-256)**: Single key used for both encrypt and decrypt — default. Used by all AWS services that integrate with KMS.

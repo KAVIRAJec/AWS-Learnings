@@ -162,8 +162,20 @@ Applied per object version.
 - **Governance Mode**: Most users cannot delete/overwrite. Users with `s3:BypassGovernanceRetention` permission can override.
 
 **Legal Hold:**
-- Blocks deletion indefinitely with **no expiry date**.
-- Set/removed independently of retention using `s3:PutObjectLegalHold` permission.
+- Blocks deletion and overwrite indefinitely — **no expiry date**, no retention period.
+- Set and removed independently of any retention mode — an object can have both a retention period AND a legal hold at the same time.
+- Requires `s3:PutObjectLegalHold` permission to set or remove.
+- Use case: Preserve evidence during a legal investigation — hold cannot expire automatically, must be explicitly removed.
+
+**Retention Period vs Legal Hold — key differences:**
+
+| | Retention Period | Legal Hold |
+|---|---|---|
+| **Expiry** | Fixed date (`retain-until-date`) | No expiry — indefinite |
+| **Mode** | Compliance or Governance | No mode — always hard block |
+| **Who removes it** | Nobody (Compliance) / privileged user (Governance) | Any user with `s3:PutObjectLegalHold` |
+| **Can coexist** | Yes — both can be active on the same object version | Yes |
+| **Use case** | Regulatory data retention (e.g., keep 7 years) | Legal hold during investigation or litigation |
 
 **Retention — Default, Custom, and Object-Level:**
 

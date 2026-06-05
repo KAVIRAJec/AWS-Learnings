@@ -1,10 +1,35 @@
 ## ENI (Elastic Network Interface)
 - An ENI is a virtual network interface that can be attached to an EC2 instance. It provides a way to manage network connectivity and security for your instances.
 - Same as a physical network interface card (NIC) in a physical server or VEth in Docker.
-- An ENI can have 1 primary private IP address and multiple secondary private IP addresses, 1 Elastic private IP address, 1 public IP address, MAC address, and multiple security groups.
-- ENIs can be created and attached to instances in a VPC, allowing you to manage network connectivity and security for your instances.
-- ENIs can be detached from one instance and attached to another instance, allowing you to move network interfaces between instances without changing the IP address.
-- ENI is specific to a single AZ, but can be moved between instances in the same AZ.
+- An ENI can have 1 primary private IP address and multiple secondary private IP addresses, 1 Elastic IP address, 1 public IP address, MAC address, and multiple security groups.
+- ENI is specific to a single AZ — can only be moved between instances **in the same AZ**.
+
+**Primary vs Secondary ENI:**
+
+| | Primary ENI (`eth0`) | Secondary ENI (`eth1`, `eth2`…) |
+|---|---|---|
+| **Created by** | AWS automatically on instance launch | You create manually |
+| **Detachable** | **No — cannot be detached** from a running or stopped instance | Yes — can be detached and re-attached to another instance |
+| **Deleted on termination** | Yes (by default) | Controlled by you |
+
+**Failover pattern using secondary ENI:**
+
+When an application's domain name points to the **private IP of a secondary ENI**, you can move that ENI to a standby instance if the primary fails — traffic resumes with no DNS changes, no route table updates.
+
+```
+Normal:
+  Domain → private IP (secondary ENI) → attached to Instance A (primary)
+
+On failure:
+  Detach secondary ENI from Instance A
+  Attach secondary ENI to Instance B (hot standby)
+  Domain → same private IP → now Instance B handles traffic
+```
+
+- The secondary ENI **retains its private IP, Elastic IP, and MAC address** when moved — no changes needed anywhere else.
+- Users experience only a brief interruption during the detach/attach window.
+- This pattern works for critical services (databases, NAT instances, dashboards) where you want quick failover without DNS propagation delay.
+
 ![alt text](image-3.png)
 
 ---

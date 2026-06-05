@@ -146,7 +146,11 @@ Direct PUT (SDK), Kinesis Data Streams, Amazon MSK, CloudWatch Logs, CloudWatch 
 ### Data Transformation
 
 - Invoke a **Lambda function** inline — convert format, enrich with lookups, filter records.
+- Lambda invocation is **synchronous** and constrained to a **5-minute (300s) timeout** — if the Lambda takes longer, the record fails.
+- Combined with Firehose's buffering (minimum ~60s), complex processing logic is a brittle fit for Firehose.
 - **Format conversion** (no Lambda needed): JSON → Parquet or ORC using a Glue Data Catalog schema — output is columnar and query-optimized in S3.
+
+> **Firehose Lambda vs KDS Lambda consumer**: If you need flexible, long-running, or stateful processing logic, use a **Lambda function as a KDS consumer** instead — it has a 15-minute timeout, full access to the stream, and can fan out results anywhere. Firehose Lambda transformation is only suited for lightweight, fast record-level transforms.
 
 ### Failed Records
 

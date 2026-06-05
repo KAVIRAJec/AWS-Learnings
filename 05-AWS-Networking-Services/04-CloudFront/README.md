@@ -22,6 +22,46 @@ Amazon CloudFront is a **Content Delivery Network (CDN)** that delivers data, vi
 - **AWS WAF (Web Application Firewall)**: Can be attached to a CloudFront distribution to filter malicious HTTP/S traffic — block SQL injection, XSS, bad bots, or specific IPs/geo locations using rules.
 - **HTTPS**: Supports SSL/TLS with custom certificates via AWS Certificate Manager (ACM). Can enforce HTTPS-only or redirect HTTP → HTTPS.
 - **Geo Restriction**: Block or allow users from specific countries.
+- **Signed URLs & Signed Cookies**: Restrict access to private content — only users with a valid signed URL or cookie can access the content.
+
+**CloudFront Signed URLs vs Signed Cookies:**
+
+Both use a **key pair** (trusted key group) to sign access tokens — CloudFront verifies the signature before serving content.
+
+| | Signed URL | Signed Cookie |
+|---|---|---|
+| **Scope** | One specific file per URL | Multiple files / entire distribution |
+| **Use case** | Share a single private file (e.g., a paid video download) | Restrict access to a whole section (e.g., all premium content for a subscriber) |
+| **Client support** | Works for all clients including those that don't support cookies | Requires cookie support in the browser |
+| **URL change** | Yes — URL contains the signature | No — URL stays clean, cookie carries the token |
+
+**Signed URL flow:**
+```
+User purchases access
+        │
+        ▼
+Your app generates a Signed URL (with expiry, IP restriction, path)
+        │
+        ▼
+User requests content using the Signed URL
+        │
+        ▼
+CloudFront verifies signature → serves content if valid, 403 if not
+```
+
+**Key parameters in a signed token:**
+- **Expiry date/time** — URL/cookie is invalid after this time.
+- **IP restriction** (optional) — lock access to a specific IP address.
+- **Path/resource** — which file(s) or path patterns are accessible.
+
+**Signed URL vs S3 Presigned URL:**
+
+| | CloudFront Signed URL | S3 Presigned URL |
+|---|---|---|
+| **Served via** | CloudFront edge locations (cached, fast) | Directly from S3 |
+| **Caching** | Yes — edge caches the content | No caching |
+| **OAC/OAI** | Works with private S3 bucket (bucket stays closed) | Bypasses CloudFront entirely |
+| **Use case** | Private content delivery at scale via CDN | Temporary direct S3 object access |
 
 **CloudFront Origins:**
 - **S3 Bucket**:

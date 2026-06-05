@@ -59,6 +59,36 @@ Downloads a file in parallel by requesting specific byte ranges simultaneously.
 
 ---
 
+### S3 Select
+
+**S3 Select** lets you retrieve only a **subset of data from an object** using simple SQL expressions — without downloading the entire object first. The filtering happens **inside S3**, so less data is transferred to your application.
+
+```
+Without S3 Select:
+  S3 → downloads entire 5 GB CSV → your app filters 10 rows  ← wasteful
+
+With S3 Select:
+  S3 → SQL runs inside S3 → returns only the 10 matching rows → your app  ← efficient
+```
+
+- Supports **CSV, JSON, and Parquet** objects (with GZIP/BZIP2 compression for CSV and JSON).
+- SQL is limited to simple `SELECT` with `WHERE` — no JOINs, no aggregations across objects.
+- Reduces data transfer cost + latency — you pay only for the data scanned and returned.
+- **Use case**: Extract specific columns/rows from a large log file or dataset stored in S3 without loading it entirely into memory.
+
+**S3 Select vs Byte-Range Fetches:**
+
+| | S3 Select | Byte-Range Fetches |
+|---|---|---|
+| **Filtering** | By content (SQL WHERE clause) | By byte position only |
+| **Format awareness** | Yes — understands CSV/JSON/Parquet | No — raw bytes only |
+| **Use case** | Query specific rows/columns from structured data | Download a portion of any file (e.g., file header) |
+| **Parallelism** | Single query per object | Multiple ranges in parallel |
+
+> For complex queries across many S3 objects, use **Amazon Athena** — S3 Select is for filtering within a single object.
+
+---
+
 ### Mountpoint for Amazon S3
 
 **Mountpoint for Amazon S3** is an open-source file client that lets you **mount an S3 bucket as a local file system directory** on Linux — your application reads/writes files as if they were on a local disk, but the data is actually in S3.

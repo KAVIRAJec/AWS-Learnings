@@ -22,12 +22,21 @@ Rules that automate transitions and deletions. Can be scoped to a prefix or obje
 - **Incomplete Multipart Upload**: Auto-delete stale incomplete uploads after N days.
 
 **Static Website Hosting:**
-- S3 can serve HTML, CSS, and JavaScript directly from a bucket.
-- Bucket must be **publicly accessible** for static website hosting to work.
+- S3 can serve HTML, CSS, and JavaScript directly from a bucket as a static website.
+- Bucket must be **publicly accessible** — Block Public Access must be disabled and a bucket policy allowing `s3:GetObject` for `"Principal": "*"` must be attached.
+- Enable via S3 console → Properties → Static website hosting → specify index and error documents.
+- S3 generates a **website endpoint URL**: `http://<bucket-name>.s3-website-<region>.amazonaws.com`
+
+**Routing Route 53 to an S3 static website — prerequisites:**
+1. **Registered domain name** — you must own the domain (via Route 53 or any registrar).
+2. **Bucket name must exactly match the domain name** — if your domain is `www.example.com`, the bucket must be named `www.example.com`. Route 53 uses the bucket name to resolve the correct S3 website endpoint.
+3. **Static website hosting must be enabled** on the bucket.
+4. In Route 53, create an **A record (Alias)** pointing to the S3 website endpoint.
+site from S3 directly is not cross-origin.
 
 **Security (overview):**
 - **User-Based**: IAM policies for users and roles.
-- **Resource-Based**: Bucket policies (JSON, cross-account), ACLs (legacy, can be disabled), Object ACLs.
+- **Resource-Based**: Bucket policies (JSON, cross-account, max **20 KB** in size), ACLs (legacy, can be disabled), Object ACLs.
 - **Access Rule**: An IAM principal can access an S3 object if the IAM policy **OR** the resource policy allows it — AND there is no explicit deny in either.
 - **Block Public Access**: Enabled by default on all buckets — additional layer on top of bucket policies and ACLs.
 - **Gateway Endpoint**: Access S3 from private subnets without going through the internet.

@@ -30,6 +30,19 @@ Amazon SQS is a fully managed **message queuing** service that decouples and sca
   - **Default throughput**: 300 msg/s (send, receive, or delete operations per second).
   - **With batching** (up to 10 messages per operation): 300 operations × 10 = **3,000 msg/s**.
   - High-throughput mode (optional): up to 9,000 msg/s without batching, 90,000 msg/s with batching.
+- **Delay Queue**: Postpones the delivery of **new messages** to consumers for a specified duration — messages are invisible to consumers for the delay period after being sent.
+  - Delay period: **0 to 15 minutes** (configurable at queue level or per-message using `DelaySeconds`).
+  - Use case: Give downstream systems time to initialize before processing a message, or introduce a cooldown between events.
+  - **Not the same as Visibility Timeout** — delay applies when the message first arrives (before any consumer sees it). Visibility Timeout applies after a consumer has already received the message.
+
+**Delay Queue vs Visibility Timeout vs DLQ — quick distinction:**
+
+| | Delay Queue | Visibility Timeout | Dead Letter Queue |
+|---|---|---|---|
+| **When it applies** | On message arrival — before any consumer sees it | After a consumer receives the message | After max receive count is exceeded |
+| **Purpose** | Postpone delivery of new messages | Hide message while being processed to prevent duplicate processing | Isolate failed messages for inspection |
+| **Duration** | 0–15 minutes | 0 seconds–12 hours | N/A (messages moved here permanently) |
+| **Use case** | Delay processing of newly queued tasks | Prevent other consumers picking up an in-flight message | Debug and inspect repeatedly failing messages |
 
 **Encryption**
 - SSE with SQS managed keys (SSE-SQS) for automatic encryption at rest(default).

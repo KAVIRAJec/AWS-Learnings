@@ -14,5 +14,6 @@ AWS Security Services are designed to help organizations protect their data, app
 | 07 | [Security Hub](./07-Security-Hub/README.md) | Centralized findings aggregator and compliance dashboard across services and accounts |
 | 08 | [Macie](./08-Macie/README.md) | ML-based sensitive data discovery and classification in S3 (PII, credentials, financial data) |
 | 09 | [Network Firewall](./09-Network-Firewall/README.md) | Managed stateful L3–L7 firewall and IDS/IPS deployed inside a VPC |
+| 10 | [Artifact](./10-Artifact/README.md) | Self-service portal for AWS compliance reports (SOC, ISO, PCI) and legal agreements (BAA, GDPR DPA) |
 
 ---

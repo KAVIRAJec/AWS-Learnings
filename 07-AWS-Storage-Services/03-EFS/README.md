@@ -69,7 +69,10 @@ Idle again        →  credits refill
 > **Important**: Storage class (Standard / IA / One Zone) and throughput mode are **completely independent** — switching to One Zone does NOT change your throughput mode, and enabling IA does NOT affect throughput. These are separate configurations.
     
 ### EFS Lifecycle Management
-- EFS lifecycle management is a feature that automatically moves files between the Standard and Infrequent Access storage classes based on access patterns. This is done by describing the access patterns of files and moving them to the appropriate storage class while creation.
+- Automatically moves files between storage classes (Standard → IA → Archive) based on the number of days since last access.
+- Available thresholds: **1, 7, 14, 30, 60, 90, 180, 270, or 365 days** since last access.
+- **Maximum is 365 days** — you cannot set a policy to move files older than 1 year using lifecycle management alone.
+- If your requirement is beyond 365 days (e.g., move files not accessed in 2 years / 730 days), EFS lifecycle policies cannot meet it. You would need a custom solution — e.g., an AWS Lambda function triggered on a schedule that checks file access timestamps and moves files using the AWS SDK or AWS DataSync.
 
 ### Storage Classes
 - **Standard**: The default storage class for EFS, designed for frequently accessed files. It provides low-latency access and high throughput, making it suitable for a wide range of applications.(~$0.30/GB/month)

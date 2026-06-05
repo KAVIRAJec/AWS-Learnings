@@ -12,3 +12,4 @@ IAM is a web service that helps you securely control access to AWS services and 
 | 06 | [IAM Identity Center](./06-IAM-Identity-Center/README.md) | SSO, identity sources, Active Directory types, permission sets |
 | 07 | [AWS Organizations](./07-AWS-Organizations/README.md) | Multi-account management, SCPs, tag policies, consolidated billing |
 | 08 | [AWS Control Tower](./08-AWS-Control-Tower/README.md) | Landing zone, account factory, guardrails, reserved accounts |
+| 09 | [AWS STS](./09-STS/README.md) | Temporary credentials — AssumeRole, SAML/WebIdentity federation, GetSessionToken |

@@ -87,6 +87,43 @@ If a parent OU removes an allow, child accounts lose it too — even if their ow
 
 ---
 
+## AWS Services That Integrate with Organizations
+
+Many AWS services support **delegated administrator** or **organization-wide** features — you enable them once in the management account and they apply across all member accounts automatically.
+
+| Service | What it does across the org |
+|---|---|
+| **IAM Identity Center** | Centralized SSO and access management across all accounts from one place |
+| **AWS Control Tower** | Sets up and governs a secure multi-account environment with guardrails (SCPs + Config rules) |
+| **AWS RAM** | Share resources (subnets, Transit Gateways, License Manager configs) across accounts without VPC Peering |
+| **AWS CloudTrail** | **Organization trail** — single trail that captures API activity across all accounts in all regions; logs delivered to a central S3 bucket |
+| **AWS Config** | **Aggregator** — collect compliance and configuration data from all accounts into one view |
+| **AWS Security Hub** | Aggregate security findings (GuardDuty, Inspector, Macie, etc.) from all accounts into a delegated admin account |
+| **Amazon GuardDuty** | Delegated admin sees threat findings from all member accounts — members cannot disable GuardDuty |
+| **Amazon Inspector** | Delegated admin runs vulnerability scans across EC2 and ECR images in all accounts |
+| **Amazon Macie** | Delegated admin manages sensitive data discovery (S3) across all member accounts |
+| **AWS Firewall Manager** | Centrally manage WAF rules, Shield Advanced, Security Groups, and Network Firewall policies across all accounts |
+| **AWS Backup** | **Backup policies** — define and enforce backup plans across all accounts from a central policy |
+| **S3 Storage Lens** | Organization-wide S3 storage visibility and analytics across all accounts and regions |
+| **Amazon Security Lake** | Aggregate security logs (CloudTrail, VPC Flow Logs, GuardDuty) from all accounts into a central lake |
+| **AWS Trusted Advisor** | Organization-level view of cost, performance, security, and fault tolerance recommendations across accounts |
+| **Consolidated Billing** | Single invoice for all accounts — volume discounts and RI/Savings Plan sharing across all accounts |
+
+**Common pattern — delegated administrator:**
+- Instead of doing everything from the management account, designate a **member account** as the delegated admin for a specific service (e.g., Security Hub, GuardDuty).
+- The delegated admin account gets full visibility and control over that service across the org.
+- Keeps the management account clean — only used for org-level governance, not operational work.
+
+```
+Management Account
+  └── delegates Security Hub admin → Security Account
+  └── delegates GuardDuty admin   → Security Account
+  └── delegates CloudTrail        → Logging Account (central S3 bucket)
+  └── delegates Config Aggregator → Audit Account
+```
+
+---
+
 ## VPC Sharing
 
 VPC Sharing lets multiple AWS accounts within the **same AWS Organization** launch resources into **shared subnets** from a centrally managed VPC — without needing VPC Peering or a complex network topology.
