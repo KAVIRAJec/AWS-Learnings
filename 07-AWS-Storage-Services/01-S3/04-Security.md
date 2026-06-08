@@ -210,5 +210,29 @@ Named network endpoints attached to a bucket — each with its own access policy
 - Can be **VPC-restricted** — accepts requests only from within a specific VPC (no internet access).
 
 **S3 Object Lambda Access Point:**
-- Runs a Lambda function on-the-fly to transform object data **before** returning it to the caller.
-- **Use cases**: Redact PII from documents, convert formats, add watermarks — without storing multiple versions of the same object.
+- Runs a Lambda function on-the-fly to transform object data **before** returning it to the caller — no need to store multiple copies or versions of the same object.
+- The Lambda is triggered on S3 **GET requests** made through the Object Lambda Access Point (not the standard S3 endpoint).
+
+**How it works:**
+```
+Application
+    │  GET request via Object Lambda Access Point
+    ▼
+Lambda function invoked
+    │  receives: bucket name + object key (identifies which object to fetch)
+    │  fetches the original object from S3
+    │  applies transformation (filter, redact, convert)
+    ▼
+Transformed data returned to the application
+(original object in S3 is unchanged)
+```
+
+**What the Lambda uses to process the request:**
+- **Bucket name + object key** — these uniquely identify the specific object to retrieve and transform.
+
+**Use cases:**
+- Filter rows from a large CSV before returning it (only return columns/rows the caller needs)
+- Redact PII (SSNs, credit card numbers) from documents
+- Convert data format (XML → JSON, CSV → Parquet) on-the-fly
+- Add watermarks to images
+- Resize images dynamically based on the caller's request

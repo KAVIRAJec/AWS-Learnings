@@ -125,6 +125,83 @@ Built-in functions used inside templates to reference values dynamically:
 
 ---
 
+## Resource Attributes
+
+Attributes added to a resource block to control its creation, update, and deletion behavior.
+
+**DependsOn:**
+- Forces a resource to be created only after another resource completes — explicit ordering beyond what CloudFormation infers automatically.
+- Example: Create the RDS instance before the EC2 instance that connects to it.
+- Does **not** wait for the resource to be fully configured/operational — only waits for the resource's CloudFormation status to reach `CREATE_COMPLETE`.
+
+**CreationPolicy:**
+- Prevents a resource from reaching `CREATE_COMPLETE` until CloudFormation receives a specified number of **success signals** — or the timeout is exceeded.
+- Used when you need to wait for software to be fully installed and running inside an EC2 instance before the stack proceeds.
+- Supported resources: `AWS::EC2::Instance`, `AWS::AutoScaling::AutoScalingGroup`, `AWS::CloudFormation::WaitCondition`.
+- Signal sent using the **cfn-signal** helper script or `SignalResource` API.
+
+```yaml
+MyEC2:
+  Type: AWS::EC2::Instance
+  CreationPolicy:
+    ResourceSignal:
+      Count: 1           # wait for 1 success signal
+      Timeout: PT15M     # wait up to 15 minutes
+```
+
+**UpdatePolicy:**
+- Controls how CloudFormation handles updates to specific resources — mainly **Auto Scaling Groups**.
+- Example: `AutoScalingRollingUpdate` — replace instances in batches rather than all at once during an ASG update.
+- Also used for ASG replacement during stack updates (`AutoScalingReplacingUpdate`).
+
+**UpdateReplacePolicy:**
+- Controls what happens to the **old physical resource** when CloudFormation replaces it during a stack update (e.g., you change a property that requires resource replacement).
+- Options: `Delete` (default — old resource deleted), `Retain` (old resource kept), `Snapshot` (take a snapshot before deleting — for RDS, EBS, ElastiCache).
+
+| Attribute | Purpose |
+|---|---|
+| `DependsOn` | Explicit creation ordering — resource A created after resource B |
+| `CreationPolicy` | Wait for success signals before marking resource as created |
+| `UpdatePolicy` | Control how ASG instances are replaced during updates |
+| `UpdateReplacePolicy` | Retain, snapshot, or delete the old resource when replaced |
+
+---
+
+## CloudFormation Helper Scripts
+
+Scripts pre-installed on Amazon Linux and Windows AMIs that allow EC2 instances to communicate with CloudFormation during bootstrapping.
+
+**cfn-init:**
+- Reads **AWS::CloudFormation::Init** metadata from the template and executes it — installs packages, creates files, starts services.
+- One-time configuration at instance launch.
+- Does **not** signal CloudFormation — it only performs setup tasks.
+
+**cfn-signal:**
+- Sends a **success or failure signal** to a `CreationPolicy` or `WaitCondition` in CloudFormation.
+- Called after `cfn-init` (or any setup script) completes — signals that the instance is fully configured and ready.
+- If it sends a failure signal (or the timeout expires with no signal), the stack creation fails and rolls back.
+
+```bash
+# Typical UserData pattern on EC2:
+/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource MyEC2 --region ${AWS::Region}
+/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource MyEC2 --region ${AWS::Region}
+# $? = exit code of cfn-init (0 = success, non-zero = failure)
+```
+
+**cfn-hup:**
+- A daemon that detects changes to resource metadata and re-runs `cfn-init` when the stack is updated — keeps instances in sync with template changes without replacing them.
+
+**cfn-get-metadata:**
+- Retrieves metadata for a specific resource from a running stack — used for debugging or custom scripts.
+
+| Script | What it does | Signals CloudFormation? |
+|---|---|---|
+| `cfn-init` | Installs packages, creates files, starts services from template metadata | No |
+| `cfn-signal` | Sends success/failure signal to CreationPolicy or WaitCondition | **Yes** |
+| `cfn-hup` | Daemon — re-runs cfn-init when stack metadata changes | No |
+
+---
+
 ## Rollback Behaviour
 
 - On **stack creation failure**: CloudFormation rolls back and deletes all resources created so far (default).

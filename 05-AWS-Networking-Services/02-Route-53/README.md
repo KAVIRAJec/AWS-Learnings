@@ -29,7 +29,7 @@ Amazon Route 53 is a highly available, scalable, fully managed and **authoritati
   | **DNS Hostnames** (`enableDnsHostnames`) | Assigns DNS hostnames to EC2 instances in the VPC | Yes — without it, private hosted zone records are not resolved |
   | **DNS Resolution** (`enableDnsSupport`) | Allows the VPC to use the Amazon-provided DNS server (CIDR+2) for resolution | Yes — private hosted zones only accept queries from the VPC DNS server |
 
-  - **`enableDnsHostnames`** — disabled by default on non-default VPCs. If this is off, private hosted zones won't work even if records exist.
+  - **`enableDnsHostnames`** — disabled by default on non-default VPCs. If this is off, private hosted zones won't work even if records exist. Also, EC2 instances in a non-default VPC will only receive a **private DNS hostname** — they do **not** get a public DNS hostname unless both `enableDnsHostnames` and `enableDnsSupport` are enabled and the instance has a public IPv4 address.
   - **`enableDnsSupport`** — enables use of the VPC DNS server at `<VPC base CIDR + 2>` (e.g., `10.0.0.2` for `10.0.0.0/16`). Keep this **disabled only** if you're using a custom DNS server via DHCP options and not using private hosted zones.
 
   > Both settings are enabled in the **AWS default VPC** automatically. For any **custom VPC**, go to VPC → Edit DNS settings and enable both.

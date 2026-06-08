@@ -4,6 +4,9 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 
 **Key Concepts:**
 - **Automated Backups**: Transaction logs backed up every 5 minutes — point-in-time recovery within 1–35 days retention. Set to 0 to disable.
+  - **Maximum retention is 35 days** — you cannot configure automated backups beyond this limit.
+  - For retention beyond 35 days (e.g., 90 days, 1 year), use **AWS Backup** — create a backup plan with any retention period you need.
+  - **Cannot automatically export automated snapshots to S3** — automated snapshots are managed by RDS internally. To move one to S3, you must first **copy it** (which turns it into a manual snapshot), then export that manual snapshot to S3.
 - **Manual Snapshots**: Stored in S3, retained indefinitely — used for long-term backup.
 - **Storage Auto Scaling**: Automatically expands storage when free space < 10%, low for 5 mins, and 6 hours since last modification. You set a max threshold.
 - **Read Replicas**: Up to 15 read replicas per instance — asynchronous replication for read-heavy workloads. Supports within-AZ, cross-AZ, cross-region. Free data transfer within the same region, charged cross-region.

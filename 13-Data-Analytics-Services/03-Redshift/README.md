@@ -24,10 +24,15 @@ Amazon Redshift is a fully managed **petabyte-scale cloud data warehouse** — d
 - **Result Caching**: Identical queries return cached results instantly — no compute cost.
 
 **Backup & Recovery:**
-- **Point-in-time recovery**: Rretained for 1–35 days. Stored in S3 internally.
-- **Automatic snapshots**: Every 8 hours or every 5 GB of data change or scheduled. Retained 1–35 days.
-- **Manual snapshots**: Retained until deleted. Can be copied to other regions and create new clusters from snapshots.
-- Can configure automatic snapshot copy to another region for disaster recovery.
+- **Point-in-time recovery**: Retained for 1–35 days. Stored in S3 internally.
+- **Automatic snapshots**: Every 8 hours or every 5 GB of data change or scheduled. Retained 1–35 days. Stored in the **same region** as the cluster — not sufficient alone for region-level disaster recovery.
+- **Manual snapshots**: Retained until deleted. Can be copied to other regions to create new clusters.
+
+**Cross-Region Snapshot Copy (for disaster recovery):**
+- Explicitly configure Redshift to **copy snapshots to another region** — both automatic and manual snapshots are copied to the destination region.
+- Must be enabled **per cluster** — not enabled by default.
+- Configure: which region to copy to, and how long to retain copied automatic snapshots in the destination region.
+- In the event of a full region outage, restore the cluster from the copied snapshot in the destination region.
 
 **Security:**
 - **Enhanced VPC Routing**: Forces all COPY/UNLOAD traffic through your VPC instead of the internet.

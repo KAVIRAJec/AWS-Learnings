@@ -30,7 +30,19 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 **Aurora Serverless:**
 - On-demand, auto-scaling — automatically starts, shuts down, and scales based on load.
 - Accessed via a proxy endpoint managed by AWS.
-- Use case: Infrequent or unpredictable workloads.
+- Use case: Infrequent or unpredictable workloads (flash sales, dev/test, variable traffic).
+
+**Migrating from Provisioned Aurora to Aurora Serverless:**
+- **Cannot convert in-place** — changing the instance class from Provisioned to Serverless is not supported. You cannot simply modify the cluster.
+- **Options and their trade-offs:**
+
+| Method | Downtime | Notes |
+|---|---|---|
+| **AWS DMS (Full Load + CDC)** | Near-zero | Source stays live; CDC keeps target in sync until cutover — recommended |
+| Snapshot restore | Yes — app must stop until new cluster is ready | Simple but causes full downtime |
+| Aurora Read Replica promotion | Brief write unavailability during failover | Valid but app cannot write during the failover window |
+
+> For minimal downtime, use **DMS with Full Load + CDC** — the source provisioned cluster stays fully operational while DMS continuously replicates changes to the new Aurora Serverless cluster. Cut over by updating the application's connection string when the target is in sync.
 
 **Aurora Global Database:**
 - Single Aurora DB spanning multiple regions — primary (1) + secondary read-only regions (up to 10).
@@ -66,6 +78,55 @@ CALL mysql.lambda_async(
 
 **Encryption:**
 - Same as RDS — KMS at rest (must be set at launch), SSL/TLS in transit.
+
+---
+
+## Aurora Parallel Query
+
+Aurora Parallel Query pushes down the computation of analytical queries to the **Aurora storage layer** — the query is processed across thousands of storage nodes in parallel instead of pulling all data up to the DB instance first.
+
+**How it works without Parallel Query:**
+```
+DB Instance
+    │  pulls raw data from storage
+    ▼
+All filtering, aggregation, and processing happen on the DB instance CPU/RAM
+    → bottleneck on the instance for large scans
+```
+
+**How it works with Parallel Query:**
+```
+DB Instance
+    │  sends query plan to storage layer
+    ▼
+Aurora Storage Nodes (thousands)
+    │  each node scans its local data in parallel
+    │  filtering and aggregation happen in storage
+    ▼
+DB Instance receives pre-processed, reduced result set
+    → much less data transferred, much less CPU used on instance
+```
+
+**Key properties:**
+- Speeds up analytical queries that scan **large amounts of data** (full table scans, aggregations, joins) — typically 10–100x faster.
+- Works on the **same data as transactional queries** — no ETL, no separate data copy, no replication lag.
+- Does **not** require a separate read replica — parallel query runs on the primary or existing replicas.
+- Available for **Aurora MySQL** only (not Aurora PostgreSQL).
+- Must be enabled at the DB cluster parameter group level.
+
+**When to use:**
+- OLAP-style queries on large Aurora MySQL tables alongside transactional (OLTP) workloads.
+- Avoid spinning up a separate data warehouse (Redshift) for occasional large analytical queries.
+- Use cases: reporting, aggregations, log analysis, business intelligence queries directly on Aurora.
+
+**Parallel Query vs Aurora Serverless vs Read Replicas:**
+
+| | Parallel Query | Read Replica | Separate Redshift |
+|---|---|---|---|
+| **Purpose** | Speed up large analytical queries | Scale read throughput | Full data warehouse |
+| **Data freshness** | Real-time (same data as primary) | Near real-time (replica lag) | ETL delay |
+| **Setup** | Enable in parameter group | Launch replica instance | Full ETL pipeline |
+| **Best for** | Occasional large scans on existing Aurora | High read concurrency | Complex ongoing analytics |
 
 ---
 

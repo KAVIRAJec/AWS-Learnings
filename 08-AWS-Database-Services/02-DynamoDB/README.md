@@ -11,6 +11,9 @@ Amazon DynamoDB is a fully managed **serverless NoSQL** database — key-value a
 
 **Capacity Modes:**
 - **Provisioned**: You specify read/write capacity units (RCU/WCU). Supports Auto Scaling. Cost predictable.
+  - **Auto Scaling is NOT enabled by default** when you create a table via the **AWS CLI or SDK** — you must explicitly enable it or set it manually.
+  - Auto Scaling is enabled by default when creating a table via the **AWS Management Console**.
+  - Without Auto Scaling, a provisioned table has fixed RCU/WCU — if traffic spikes, requests will be throttled.
 - **On-Demand**: Automatically scales to any traffic level. Pay per request. No capacity planning — best for unpredictable workloads.
 
 **Read Consistency:**

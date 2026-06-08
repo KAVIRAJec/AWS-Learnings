@@ -9,11 +9,56 @@ EC2 instances are categorized into different families based on their use cases.
 
 ---
 
+## EC2 Instance Lifecycle & Billing
+
+EC2 instances transition through these states:
+
+| State | Description |
+|---|---|
+| **pending** | Launching or restarting — not yet running |
+| **running** | Active and ready for use |
+| **stopping** | Preparing to stop or hibernate |
+| **stopped** | Shut down, can be restarted |
+| **shutting-down** | Preparing to terminate |
+| **terminated** | Permanently deleted, cannot be restarted |
+
+**Billing per state — what you are charged for:**
+
+| State | On-Demand | Spot | Reserved |
+|---|---|---|---|
+| **pending** | No | No | Yes (term runs) |
+| **running** | Yes | Yes | Yes |
+| **stopping** (preparing to stop) | No | No | Yes (term runs) |
+| **stopping** (preparing to hibernate) | **Yes** | No | Yes (term runs) |
+| **stopped** | No | No | Yes (term runs) |
+| **terminated** | No | No | **Yes — billed until end of term** |
+
+**Key rules to remember:**
+- **pending** = not billed for On-Demand or Spot — instance hasn't started yet.
+- **stopping to stop** = not billed — instance is shutting down compute.
+- **stopping to hibernate** = **still billed** — instance RAM is being saved to EBS, compute is still active.
+- **Reserved Instances on terminated instances** = **still billed until the end of the reserved term** regardless of instance state — you committed to the term, not the instance.
+
+---
+
 ## EC2 Pricing Models
 - **On-Demand Instances**: Pay-per-use pricing for instances that are launched and terminated as needed. Based on the number of seconds/hours the instance is running.
 - **Reserved Instances**: Commit to a one or three-year term for discounted pricing. It is kind of booking an instance for a specific period.(Applies discount upto 70%)
 - **Spot Instances**: Purchase unused EC2 capacity at reduced rates. Ideal for short-term, flexible workloads. Spot instances can be interrupted by AWS with two-minute warning if the capacity is needed elsewhere.(Applies discount upto 90%)
 - No pricing for Data Transfer In bound & between other services within same region, but Data Transfer Out is charged based on the amount of data transferred out of AWS.
+
+**EC2 On-Demand Instance Limits (vCPU-based):**
+- AWS enforces a **vCPU-based limit on On-Demand instances per region** — not per Availability Zone, not per instance count.
+- The limit is measured in **total vCPUs** across all running On-Demand instances in the region (e.g., launching 50 × 4-vCPU instances = 200 vCPUs consumed).
+- New AWS accounts start with lower limits by default.
+- If you hit the limit, subsequent launch requests fail — switching to a different AZ within the same region does **not** help since the limit is region-wide.
+- **Resolution**: Submit a **Service Quotas limit increase request** to AWS for the specific region, then retry once approved.
+
+| Limit type | Scope | Can be increased? |
+|---|---|---|
+| vCPU-based On-Demand limit | Per region | Yes — via Service Quotas |
+| Reserved Instances | 20 per region (legacy count-based) | Yes — via limit increase |
+| Spot Instances | Dynamic per region | Yes — via limit increase |
 
 ---
 

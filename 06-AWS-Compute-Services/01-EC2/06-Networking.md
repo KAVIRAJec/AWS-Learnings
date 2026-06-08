@@ -37,7 +37,7 @@ On failure:
 ## ENA (Elastic Network Adapter)
 - **Enhanced networking** interface for EC2 — delivers high bandwidth (up to 100 Gbps), high packet-per-second (PPS) performance, and low latency compared to a standard ENI.
 - No extra cost — enabled by default on most modern instance types (Nitro-based instances).
-- **EFA (Elastic Fabric Adapter)**: A specialized ENA for **HPC (High Performance Computing) and ML** workloads — uses OS-bypass to let applications communicate directly with the hardware, skipping the OS kernel for ultra-low latency. Used with MPI (Message Passing Interface) workloads like distributed ML training and tightly coupled simulations.
+- **EFA (Elastic Fabric Adapter)**: A specialized ENA for **HPC (High Performance Computing) and ML** workloads — uses OS-bypass to let applications communicate directly with the hardware, skipping the OS kernel for ultra-low latency. Used with MPI (Message Passing Interface) workloads like distributed ML training and tightly coupled simulations. **OS-bypass is not supported on Windows instances** — attaching an EFA to a Windows instance makes it behave as a regular ENA without the EFA capabilities.
 
 | | ENI | ENA | EFA |
 |---|---|---|---|

@@ -60,9 +60,25 @@ All storage classes provide **99.999999999% (11 9's) durability**.
 - **Use case**: Data accessed occasionally but needs immediate access when required.
 
 #### S3 Glacier Flexible Retrieval *(formerly S3 Glacier)*
-- Retrieval options: **Expedited** (1–5 min), **Standard** (3–5 hrs), **Bulk** (5–12 hrs — free).
 - Minimum storage duration: **90 days**.
 - **Use case**: Long-term archival, backups, compliance data.
+
+**Retrieval tiers:**
+
+| Tier | Time | Notes |
+|---|---|---|
+| **Expedited** | 1–5 minutes | Best-effort — not guaranteed under high demand unless provisioned capacity is purchased |
+| **Standard** | 3–5 hours | Reliable but slow |
+| **Bulk** | 5–12 hours | Cheapest (free) — slowest, not compatible with provisioned capacity |
+
+**Provisioned Capacity:**
+- Guarantees that **Expedited retrieval capacity is available when you need it** — not just best-effort.
+- Without provisioned capacity, Expedited retrievals are accepted except during rare periods of unusually high demand — no SLA guarantee.
+- **Required when compliance or business rules mandate retrieval under all circumstances** (e.g., surprise audits, regulatory requirements).
+- Each unit of provisioned capacity provides:
+  - At least **3 Expedited retrievals every 5 minutes**
+  - Up to **150 MB/s** of retrieval throughput
+- Only works with **Expedited** tier — Standard and Bulk retrievals are not covered by provisioned capacity.
 
 #### S3 Glacier Deep Archive
 - Lowest-cost storage class in all of AWS.

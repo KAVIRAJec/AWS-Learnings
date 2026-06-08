@@ -35,9 +35,11 @@ Rules that automate transitions and deletions. Can be scoped to a prefix or obje
 site from S3 directly is not cross-origin.
 
 **Security (overview):**
-- **User-Based**: IAM policies for users and roles.
-- **Resource-Based**: Bucket policies (JSON, cross-account, max **20 KB** in size), ACLs (legacy, can be disabled), Object ACLs.
+- **Private by default**: All S3 resources — buckets, objects, and subresources — are private when created. Only the AWS account that created them (the resource owner) has access. Access to others must be explicitly granted via policies.
+- **User-Based**: IAM policies attached to users or roles — called **user policies**.
+- **Resource-Based**: Policies attached directly to the resource — called **resource-based policies**. Includes bucket policies (JSON, cross-account, max **20 KB** in size), ACLs (legacy, can be disabled), and Object ACLs.
 - **Access Rule**: An IAM principal can access an S3 object if the IAM policy **OR** the resource policy allows it — AND there is no explicit deny in either.
+- **Public permissions on upload**: You can grant public read access to objects **at upload time** — applicable for use cases like static websites where objects need to be publicly accessible.
 - **Block Public Access**: Enabled by default on all buckets — additional layer on top of bucket policies and ACLs.
 - **Gateway Endpoint**: Access S3 from private subnets without going through the internet.
 

@@ -84,11 +84,29 @@ EC2 Instance  ←── response received
 
 When a client connects to a server, the **response** is sent back to a random high port on the client (ephemeral port) — not the same port the request was sent on.
 
-- Linux: `32768–60999`
-- Windows: `49152–65535`
-- AWS recommends allowing `1024–65535` inbound on NACLs to cover all client OS ranges.
-
 Since NACLs are stateless, **forgetting to allow ephemeral ports** is the most common reason responses get blocked at the NACL even when the inbound rule looks correct.
+
+**OS and service-specific ephemeral port ranges:**
+
+| Client / Source | Ephemeral Port Range |
+|---|---|
+| **Amazon Linux kernel** | 32768 – 61000 |
+| **Windows (through Server 2003)** | 1025 – 5000 |
+| **Windows Server 2008 and later** | 49152 – 65535 |
+| **Elastic Load Balancing (ELB)** | 1024 – 65535 |
+| **NAT Gateway** | 1024 – 65535 |
+| **AWS Lambda** | 1024 – 65535 |
+
+> AWS recommends allowing `1024–65535` outbound on NACLs to safely cover all client OS ranges. Use `32768–65535` if you only need to cover Linux-based clients.
+
+**When your EC2 is the SERVER (e.g. web server on port 443):**
+- NACL must allow **inbound** on port 443 (client request arrives).
+- NACL must allow **outbound** on ephemeral ports 32768–65535 (response sent back to the Linux client's random port).
+- Security Groups are stateful — only the inbound rule on port 443 is needed; the outbound response is auto-allowed.
+
+**When your EC2 is the CLIENT (e.g. calling an external API):**
+- NACL must allow **outbound** on the destination port (e.g. 443).
+- NACL must allow **inbound** on ephemeral ports 32768–65535 (response arrives on a random local port).
 
 ---
 

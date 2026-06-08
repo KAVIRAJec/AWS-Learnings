@@ -15,6 +15,7 @@
 | 11 | [App2Container](./11-App2Container/README.md) | Containerize existing Java/.NET apps |
 | 12 | [API Gateway](./12-API-Gateway/README.md) | Managed REST, HTTP, and WebSocket APIs |
 | 13 | [Step Functions](./13-Step-Functions/README.md) | Serverless workflow orchestration |
+| 14 | [AppSync](./14-AppSync/README.md) | Managed GraphQL API — real-time subscriptions, multi-source data aggregation |
 
 ---
 

@@ -16,6 +16,26 @@ AWS offers purpose-built storage for every workload — object, block, file, arc
 
 ---
 
+## Storage Services — Protocol Reference
+
+| Service | Protocol(s) | Access From | Notes |
+|---|---|---|---|
+| **Amazon S3** | HTTPS (REST API) | Any HTTP client, AWS SDK, CLI | Object storage — no mount, no file system. Mountpoint for S3 adds POSIX-style read mount via FUSE |
+| **Amazon EBS** | Block device (NVMe / network block) | EC2 only (same AZ) | No network protocol visible to user — behaves like a local disk attached to one EC2 instance |
+| **Amazon EFS** | **NFS** (NFSv4.1, NFSv4.2) | EC2, Lambda, ECS, on-prem (via DX/VPN) | Linux only — shared across multiple instances simultaneously |
+| **FSx for Windows** | **SMB** (Server Message Block) | Windows EC2, on-prem via DX/VPN | Active Directory integration, Windows ACLs |
+| **FSx for Lustre** | **Lustre** (parallel file system) | Linux EC2 | High-performance parallel I/O for HPC/ML; direct S3 integration |
+| **FSx for NetApp ONTAP** | **NFS, SMB, iSCSI** | Linux + Windows + VMware | Multi-protocol NAS — all three simultaneously |
+| **FSx for OpenZFS** | **NFS** (NFSv3, NFSv4) | Linux EC2 | ZFS-based, sub-millisecond latency |
+| **Storage Gateway — File** | **NFS, SMB** | On-premises apps | Files stored as S3 objects behind the scenes |
+| **Storage Gateway — Volume** | **iSCSI** | On-premises apps | Block volumes backed by S3 (cached or stored mode) |
+| **Storage Gateway — Tape** | **iSCSI** (VTL) | On-premises backup software | Virtual tape library — replaces physical tape, data lands in S3 Glacier |
+| **AWS DataSync** | NFS, SMB, HDFS, S3 API, EFS, FSx | On-premises → AWS | Agent-based; reads from source using native protocol |
+| **AWS Snow Family** | **NFS** (Snowcone), **NFS + S3 API** (Snowball Edge) | On-premises | Physical devices — data loaded locally then shipped to AWS |
+| **AWS Transfer Family** | **SFTP, FTPS, FTP, AS2** | Any SFTP/FTP client | Managed endpoints — files land in S3 or EFS |
+
+---
+
 ## Service Overviews
 
 ### Amazon S3

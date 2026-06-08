@@ -28,9 +28,22 @@
 - **Cross-Zone Load Balancing**: Distributes incoming traffic across all registered targets in all enabled Availability Zones. This helps ensure that traffic is evenly distributed across all targets, regardless of their Availability Zone. Cross-Zone Load Balancing is enabled by default for Application Load Balancers(No extra charges). It is not enabled by default for NLB and Gateway Load Balancers(if enabled: extra charge applies, Classic LB is exemption).
 
 ### SSL/TLS Certificates
- - In AWS, SSL/TLS certificates are used to secure communication between clients and servers. They are used to encrypt data in transit and ensure the authenticity of the server.
- - AWS Certificate Manager (ACM) is a service that provides SSL/TLS certificates for use with AWS services. ACM allows you to easily provision, manage, and deploy SSL/TLS certificates for your applications.
- - SNI(Server Name Indication) is an extension of the TLS protocol that allows multiple SSL/TLS certificates to be associated with a single IP address. This allows you to host multiple secure websites on a single server without requiring a separate IP address for each website. Works with ALB and NLB and Cloudfront
+- SSL/TLS certificates encrypt data in transit and authenticate the server. Managed via **AWS Certificate Manager (ACM)**.
+- **SNI (Server Name Indication)**: A TLS extension that allows the client to tell the server which hostname it is connecting to during the handshake — the server can then pick the correct certificate for that domain.
+  - Allows **multiple certificates on a single HTTPS listener** with a single IP address — no separate IP per domain.
+  - Supported by **ALB, NLB, and CloudFront** — not supported on CLB (Classic Load Balancer).
+  - **Free on ALB** — bind multiple certificates to the same secure listener at no additional charge. ALB automatically selects the optimal certificate for each client.
+
+**Multiple domain SSL strategies — comparison:**
+
+| Approach | How | Limitation |
+|---|---|---|
+| **SNI on ALB** (recommended) | Upload each domain's cert to ALB, bind all to one HTTPS listener — ALB picks the right cert per request | Modern clients only (SNI requires TLS 1.0+) |
+| **Wildcard certificate** (`*.example.com`) | One cert covers all subdomains | Covers subdomains only — **cannot cover multiple different domains** (e.g., `i-love-manila.com` and `i-love-boracay.com` are different domains, not subdomains) |
+| **SAN (Subject Alternative Name)** | Add multiple domains to one certificate | Must **reauthenticate and reprovision the certificate** every time you add a new domain — not scalable |
+| **CloudFront dedicated IP** | One dedicated IP per edge location per domain | Valid but incurs an **additional monthly charge per distribution** — not cost-effective |
+
+> **Best practice for multiple different domains on one ALB**: Use SNI — upload a certificate per domain, bind all to the same HTTPS listener. No re-provisioning needed when adding new domains, and no extra cost.
 
 ### Cognito-Based Authentication in ALB
 

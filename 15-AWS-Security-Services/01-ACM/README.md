@@ -54,9 +54,33 @@ ACM certificates can only be deployed on **AWS managed load points** — not dir
 
 ---
 
+## ACM Private CA (AWS Private Certificate Authority)
+
+A separate service for building a **private PKI (Public Key Infrastructure)** inside AWS — for issuing certificates to internal resources, not for public internet use.
+
+- Issues **private certificates** for internal users, servers, microservices, IoT devices, and applications inside your organization.
+- **Certificates issued by ACM Private CA are trusted only within your organization** — they are NOT trusted by browsers or public clients on the internet.
+- You create your own **CA hierarchy** (root CA + subordinate CAs) — you control the chain of trust.
+- Charged per CA per month + per certificate issued (unlike ACM public certificates which are free).
+- ACM can manage issuance and renewal of certificates from a Private CA — automates the lifecycle.
+
+**ACM Public vs ACM Private CA:**
+
+| | ACM (Public Certificate) | ACM Private CA |
+|---|---|---|
+| **Trust** | Publicly trusted — browsers, internet clients | Privately trusted — within your organization only |
+| **Use case** | Public websites, APIs, ALB/CloudFront HTTPS | Internal services, microservices, IoT, mTLS |
+| **Cost** | Free | Charged per CA + per certificate |
+| **Least overhead** | Yes — issue, deploy, auto-renew automatically | More setup — create CA hierarchy first |
+| **Root CA control** | Amazon's root CA | Your own root CA |
+
+---
+
 ## Key Limits & Gotchas
 
 - **Cannot install ACM public certs on EC2 directly** — only on supported AWS services (ALB, CloudFront, API Gateway, etc.). For EC2, use an imported cert or terminate SSL at the load balancer.
+- **Third-party certificates cannot be directly associated to ALB** — they must be imported into ACM first before they can be used with any AWS load balancer or service.
+- **Imported certificates are not auto-renewed** — you must manually reimport them before expiry. ACM sends expiry notifications via EventBridge but does not renew them.
 - **CloudFront certificates must be in `us-east-1`** — even if your origin or distribution is in another region.
 - **Wildcard certificates**: ACM supports `*.example.com` — covers all first-level subdomains but not the root domain or nested subdomains (`sub.sub.example.com`).
 - **Private key never exposed**: For ACM-issued public certs, the private key is managed entirely by ACM — you cannot export or download it.

@@ -8,10 +8,18 @@ Both define the **instance configuration blueprint** used by Auto Scaling Groups
 - AWS has stopped adding new features to Launch Configurations — new workloads should use Launch Templates.
 
 ### Launch Template *(recommended)*
-- **Versioned** — create multiple versions of the same template; specify which version the ASG uses (latest, default, or a pinned number).
+- **Versioned** — create multiple versions of the same template; specify which version the ASG uses (`$Latest`, `$Default`, or a pinned number).
+- **Individual versions are immutable** — once a version is created, you cannot edit it. To change any setting (AMI, instance type, user data), you must create a **new version** of the template.
 - Supports **mixed instance types** (e.g., m5.large + m5.xlarge) and **Spot + On-Demand mix** in a single ASG — critical for cost optimization.
 - Supports placement groups, Capacity Reservations, Dedicated Hosts, and T2/T3 unlimited burst mode.
 - Can launch individual instances directly (`aws ec2 run-instances --launch-template`) — not just ASGs.
+
+**Updating an ASG to use a new AMI:**
+1. Create a **new version** of the existing launch template (or a brand new launch template) with the updated AMI ID.
+2. Update the ASG to point to the new template version.
+3. Existing running instances are not replaced automatically — they continue using the old AMI until replaced (via instance refresh or natural scale-in/scale-out).
+
+> You cannot start using a new AMI by modifying the existing template version — versions are immutable. A new version (or new template) is always required.
 
 | | Launch Configuration | Launch Template |
 |---|---|---|
