@@ -58,11 +58,21 @@ AWS uses **Edge Locations** for services like **Amazon CloudFront (CDN)**, **Rou
 ---
 
 ## Wavelength
-**AWS Wavelength** integrates AWS infrastructure with telecommunications networks, enabling developers to build applications requiring ultra-low latency and high bandwidth. It is designed for mobile edge computing and integrates with **5G networks**.
+**AWS Wavelength** embeds AWS compute and storage services within **telecommunications providers' data centers at the edge of 5G networks** — application traffic reaches your servers without leaving the mobile carrier's network, eliminating internet hops and achieving **single-digit millisecond latency**.
 
-### Key Features:
-- Ideal for applications like **IoT**, **AR/VR**, and **real-time gaming**.
-- Provides ultra-low latency by running applications on telecom networks.
+### Key Concepts:
+- **Wavelength Zones**: AWS infrastructure deployments inside telecom providers' 5G data centers — appear as an extension of an AWS Region (like an AZ, but at the carrier edge).
+- Traffic from 5G devices goes directly to Wavelength Zones over the carrier network — **never traverses the public internet**.
+- You can deploy EC2 instances, EKS node groups, and ECS tasks **into Wavelength Zones** to place compute at the 5G edge.
+
+### Use Cases:
+- Real-time AI/ML inference at the edge (e.g., medical diagnostics, autonomous vehicles)
+- **IoT**, **AR/VR**, real-time gaming, live video streaming
+- Any application requiring ultra-low latency to mobile 5G users
+
+### EKS + Wavelength:
+- Create EKS **node groups in Wavelength Zones** to run Kubernetes workloads at the 5G edge.
+- Worker nodes run inside the Wavelength Zone; the EKS control plane remains in the parent AWS Region.
 
 ---
 

@@ -39,7 +39,11 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
 
 **RDS Encryption:**
 - **At rest**: KMS encryption — must be enabled at launch. If master is unencrypted, replicas cannot be encrypted. To encrypt an existing unencrypted DB: snapshot → copy with encryption → restore.
-- **In transit**: SSL/TLS using AWS TLS root certificates.
+- **In transit**: SSL/TLS using AWS TLS root certificates. Two ways to enforce SSL for SQL Server (and other engines):
+  1. **Force all connections**: Set the `rds.force_ssl` parameter to `true` in the DB parameter group → reboot the instance (static parameter — reboot required). Transparent to the client.
+  2. **Client-specific SSL**: Download the **Amazon RDS Root CA certificate**, import it to your application servers, and configure the application to use SSL when connecting. Only that client encrypts its connection.
+- **TDE (Transparent Data Encryption)**: Available for **SQL Server and Oracle** via an RDS option group. Encrypts data **at rest** (stored data on disk) — does NOT encrypt in-transit data. Use SSL/TLS for in-flight encryption.
+- **IAM DB Authentication**: Supported only for **MySQL, PostgreSQL, and Aurora** — NOT available for SQL Server or Oracle. Generates a short-lived token (15 min) instead of a password.
 
 **RDS Proxy:**
 - Fully managed, serverless, highly available (Multi-AZ) database proxy.

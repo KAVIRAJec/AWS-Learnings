@@ -196,3 +196,75 @@ CloudWatch Network Synthetic Monitor (NSM) is a **network reachability and perfo
 **Use cases:** Diagnosing intermittent packet loss between VPCs, monitoring Direct Connect or VPN path latency, proactively detecting network degradation before users report issues, validating network changes after infrastructure updates.
 
 ---
+
+## AWS X-Ray
+
+AWS X-Ray is a **distributed tracing** service — tracks requests as they flow through your application across multiple services (Lambda, EC2, ECS, API Gateway, SQS, SNS, DynamoDB, etc.) and visualizes the full end-to-end path.
+
+**Key Concepts:**
+- **Trace**: A single end-to-end request journey — collected from entry point (e.g., API Gateway) all the way to downstream services.
+- **Segment**: One service's contribution to a trace — records timing, metadata, and any errors for that service.
+- **Subsegment**: A subdivision of a segment — e.g., a specific DynamoDB call within a Lambda function's segment.
+- **Sampling**: X-Ray does **not** record every request by default — uses a sampling rule (default: 1 req/sec + 5% of additional requests) to reduce cost. Custom sampling rules configurable.
+- **X-Ray Daemon**: A background process running on EC2/ECS that collects trace data from the SDK and batches it to the X-Ray API. Not needed for Lambda — Lambda runs the daemon automatically.
+
+**How it works:**
+```
+Request enters (API Gateway)
+    │  SDK injects trace header (X-Amzn-Trace-Id)
+    ▼
+Lambda (Segment 1)
+    │  calls DynamoDB → Subsegment
+    │  calls SQS → Subsegment
+    ▼
+EC2 service (Segment 2)
+    │  calls RDS → Subsegment
+    ▼
+X-Ray assembles all segments into one trace → Service Map + Timeline
+```
+
+**Service Map**: Visual graph of all services involved in a request — shows latency, error rates, and dependencies between services.
+
+**Integration points:**
+- **Lambda**: Enable active tracing in function config — Lambda runs the daemon, no installation needed.
+- **EC2 / ECS / Elastic Beanstalk**: Install X-Ray Daemon + instrument code with X-Ray SDK.
+- **API Gateway**: Enable X-Ray tracing per stage — no code changes needed.
+- **Elastic Beanstalk**: Include `xray-daemon` config or enable in EB console.
+
+**Annotations vs Metadata:**
+- **Annotations**: Key-value pairs indexed by X-Ray — **searchable and filterable** in trace queries (e.g., `userId`, `orderId`). Use for things you want to filter traces by.
+- **Metadata**: Key-value pairs **not indexed** — stored with the trace for debugging context but cannot be used in filter expressions.
+
+**Errors, Faults, Throttles:**
+- **Error** (4xx): Client-side errors (400, 404) — request was malformed or not found.
+- **Fault** (5xx): Server-side errors (500) — service failed.
+- **Throttle** (429): Rate limiting — Too Many Requests.
+
+**Use cases:** Debugging latency in microservices, identifying bottleneck services, finding root cause of errors across service chains, visualizing service dependencies.
+
+---
+
+## CloudWatch ServiceLens
+
+CloudWatch ServiceLens **unifies metrics, logs, and traces into a single view** — integrates CloudWatch metrics/logs with X-Ray traces so you can go from a high-level service health view down to an individual request trace without switching tools.
+
+**What it provides:**
+- **Service Map**: Same as X-Ray Service Map but enriched with CloudWatch metrics (latency, error rates, request counts) overlaid on each node.
+- **Trace list**: Linked from the service map — click a node to see recent traces for that service.
+- **Metric correlation**: Jump from a CloudWatch alarm or metric spike directly to the traces that were happening at the same time.
+
+**How it differs from raw X-Ray:**
+
+| | X-Ray | CloudWatch ServiceLens |
+|---|---|---|
+| **Traces** | Yes | Yes (via X-Ray integration) |
+| **Metrics** | No | Yes — CloudWatch metrics overlaid |
+| **Logs** | No | Yes — CloudWatch Logs linked |
+| **Entry point** | X-Ray console | CloudWatch console |
+| **Use case** | Distributed tracing, latency breakdown | End-to-end observability from one console |
+
+**Requirement:** X-Ray tracing must be enabled on your services — ServiceLens consumes the X-Ray trace data and enriches it with CloudWatch context.
+
+**Use case:** A latency alarm fires → open ServiceLens → see the service map with the degraded node highlighted → drill into traces for that node → identify which downstream call is slow — all without leaving CloudWatch.
+
+---

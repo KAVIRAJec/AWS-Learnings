@@ -76,6 +76,30 @@ A separate service for building a **private PKI (Public Key Infrastructure)** in
 
 ---
 
+---
+
+## IAM Certificate Store
+
+The **IAM Certificate Store** is a legacy mechanism for storing SSL/TLS certificates in IAM — predates ACM and is still used in specific scenarios where ACM is not available.
+
+- Store certificates using the AWS CLI: `aws iam upload-server-certificate`
+- Certificates stored in IAM can be used with **Elastic Load Balancers** and **CloudFront**.
+- **Use IAM Certificate Store when:**
+  - You need to deploy certificates in **AWS regions where ACM is not supported**.
+  - You need to use certificates with **CloudFront and your region is not us-east-1** — CloudFront requires certs in us-east-1, but if you must use a non-ACM cert, IAM is the alternative.
+  - You have existing certificates you cannot or do not want to move to ACM.
+- Certificates stored in IAM are **not auto-renewed** — you must upload a new certificate manually before expiry.
+- ACM is the **recommended** replacement for new setups — use IAM Certificate Store only when ACM is not an option.
+
+| | ACM | IAM Certificate Store |
+|---|---|---|
+| **Issuance** | AWS issues or you import | You upload only (no issuance) |
+| **Auto-renewal** | Yes (for ACM-issued, DNS-validated) | No — manual |
+| **Regions** | Most AWS regions | All regions (legacy fallback) |
+| **Recommended** | Yes — for all new setups | No — legacy only |
+
+---
+
 ## Key Limits & Gotchas
 
 - **Cannot install ACM public certs on EC2 directly** — only on supported AWS services (ALB, CloudFront, API Gateway, etc.). For EC2, use an imported cert or terminate SSL at the load balancer.

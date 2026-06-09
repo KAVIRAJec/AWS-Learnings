@@ -83,6 +83,33 @@ This is how you enforce **network segmentation** without separate VPCs or accoun
 
 ---
 
+## ECMP — Scaling VPN Throughput
+
+**Equal Cost Multi-Path (ECMP)** routing allows Transit Gateway to distribute traffic across multiple VPN tunnels simultaneously — scaling throughput beyond the single-tunnel limit.
+
+- A single Site-to-Site VPN tunnel is capped at **1.25 Gbps**. Each VPN connection has 2 tunnels (for redundancy), but both tunnels together still serve one connection's worth of traffic.
+- By attaching **multiple VPN connections** to an **ECMP-enabled Transit Gateway**, traffic is distributed across all tunnels in parallel — aggregate throughput scales linearly.
+- **ECMP must be enabled on the Transit Gateway** — it is not enabled by default.
+- **VGW does NOT support ECMP** — this scaling approach only works with Transit Gateway.
+- **One VGW per VPC** — you cannot attach multiple VGWs to a VPC to increase throughput.
+
+```
+On-premises Customer Gateway
+    │  VPN Connection 1 (tunnel 1 + tunnel 2) → 1.25 Gbps
+    │  VPN Connection 2 (tunnel 1 + tunnel 2) → 1.25 Gbps
+    │  VPN Connection 3 (tunnel 1 + tunnel 2) → 1.25 Gbps
+    ▼
+Transit Gateway (ECMP enabled)
+    → aggregate throughput: ~3.75 Gbps+
+    ├── VPC-A
+    ├── VPC-B
+    └── VPC-C
+```
+
+**Use case:** Company with multiple VPCs and remote employees experiencing VPN bottleneck — attach VPCs to a TGW, enable ECMP, add more VPN connections to multiply available bandwidth.
+
+---
+
 ## Multicast Support
 
 Transit Gateway supports **IP multicast** — send a single packet to multiple destinations simultaneously.

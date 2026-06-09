@@ -39,6 +39,29 @@ Single merged response returned to client
 - **Resolver**: Connects each field in the schema to a data source — translates GraphQL requests into the data source's native language (DynamoDB expression, Lambda invocation, SQL, etc.).
 - **Data source**: The backend AppSync fetches data from.
 
+**Resolver Types:**
+
+| | Unit Resolver | Pipeline Resolver |
+|---|---|---|
+| **Data sources** | One per resolver | Multiple — chains N functions in sequence |
+| **Use case** | Simple single-table fetch | Aggregate data from multiple tables/sources in one query |
+| **How** | Direct mapping to one data source | Each pipeline function calls a different data source; output flows to next |
+
+**Pipeline Resolvers** — chain multiple **pipeline functions** in sequence within a single resolver, each calling a different data source:
+```
+GraphQL query (single client call)
+    ▼
+Pipeline Resolver
+    ├── Function 1 → DynamoDB table: patients
+    ├── Function 2 → DynamoDB table: appointments
+    └── Function 3 → DynamoDB table: prescriptions
+    ▼
+Merged result returned to client
+```
+- Eliminates the need for the client to make multiple API calls or for a Lambda function to aggregate data.
+- Server-side aggregation — **no impact on baseline application performance** from multiple round-trips.
+- Each function is reusable across multiple resolvers.
+
 ---
 
 ## Data Sources

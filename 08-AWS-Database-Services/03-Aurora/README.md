@@ -5,7 +5,15 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 **Key Concepts:**
 - **Storage**: Auto-increments in 10 GB steps up to 128 TB — shared across all instances in the cluster.
 - **Availability**: 6 copies of data across 3 AZs. 4/6 needed for writes, 3/6 for reads. Self-healing storage, auto-expanding.
-- **Failover**: Automatic failover to a read replica in < 30 seconds.
+- **Failover**: Automatic — no manual intervention needed. Behavior depends on your cluster configuration:
+
+  | Scenario | Failover Behavior |
+  |---|---|
+  | **Aurora Replica exists** | Aurora flips the **CNAME** of the DB instance to point at the healthy replica → replica is promoted to primary. Completes in **< 30 seconds**. |
+  | **Single instance (no replica), not Serverless** | Aurora attempts to create a new DB instance in the **same AZ** as the original — best-effort, may not succeed if the AZ itself has issues. |
+  | **Aurora Serverless** | Aurora automatically recreates the DB instance in a **different AZ**. |
+
+  > Aurora flips the **CNAME** record (not an A record / IP address) to redirect traffic to the new primary — applications reconnect via the same endpoint without any DNS change on their side.
 - **Read Replicas**: Up to 15 read replicas with auto-scaling support.
 
 **Cluster Endpoints:**

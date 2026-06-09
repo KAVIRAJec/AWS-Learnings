@@ -10,7 +10,18 @@ Amazon SQS is a fully managed **message queuing** service that decouples and sca
 - Unlimited throughput with unlimited number of messages.
 - Low latency (<10ms) for message delivery.
 - Limitation of 1048 KB(1 MiB) per message size.
-**Long Polling**: Consumer waits up to 1 to 20 seconds for a message — reduces empty responses and cost vs short polling. It reduces the number of API requests and improves efficiency by waiting for messages to arrive instead of returning immediately with an empty response when no messages are available.
+**Short Polling** (default): SQS queries only a **subset** of servers immediately and returns a response right away — even if no messages are available (empty response). Can cause false empty responses (messages exist but weren't on the queried servers). Controlled by `ReceiveMessageWaitTimeSeconds = 0`.
+
+**Long Polling**: SQS waits until a message is available (up to 1–20 seconds) before returning a response, and queries **all** servers — eliminating false empty responses. Configured by setting `ReceiveMessageWaitTimeSeconds` to a value **greater than zero** (max 20 seconds).
+
+| | Short Polling | Long Polling |
+|---|---|---|
+| **`ReceiveMessageWaitTimeSeconds`** | 0 (default) | 1–20 seconds |
+| **Servers queried** | Subset only | All servers |
+| **Empty responses** | Frequent — returned immediately when no messages found | Eliminated — waits for a message to arrive |
+| **False empty responses** | Possible — messages exist but not on queried servers | Eliminated |
+| **API call cost** | Higher — tight polling loops waste calls | Lower — fewer calls, each returns messages |
+| **Use case** | High-throughput, latency-sensitive | Cost-efficient polling, reducing CPU/API overhead |
 
 **Functionality:**
 - **Producer**: SendMessage, SendMessageBatch

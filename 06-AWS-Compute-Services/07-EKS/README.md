@@ -23,7 +23,36 @@ Amazon EKS is a fully managed **Kubernetes** service — runs Kubernetes on AWS 
 - Supports security groups at the pod level.
 
 **IAM & Security:**
-- Supports Kubernetes RBAC alongside AWS IAM for access control.
+- **IAM** handles **authentication** — verifies who you are.
+- **Kubernetes RBAC** handles **authorization** — controls what you can do inside the cluster.
+- IAM users/roles are NOT automatically granted Kubernetes permissions — they must be explicitly mapped via the `aws-auth` ConfigMap.
+
+### aws-auth ConfigMap — IAM to RBAC Mapping
+
+The `aws-auth` ConfigMap is how EKS grants IAM users and roles access to the Kubernetes cluster.
+
+- Lives in the `kube-system` namespace on every EKS cluster.
+- **Auto-created** when a managed node group is created — initially allows worker nodes to join the cluster.
+- You add IAM user/role entries to this ConfigMap to grant Kubernetes RBAC permissions to those identities.
+- The **AWS IAM Authenticator** runs on the EKS control plane — it reads `aws-auth` to resolve which Kubernetes RBAC role an IAM caller maps to.
+
+```yaml
+# aws-auth ConfigMap example
+mapRoles:
+  - rolearn: arn:aws:iam::123456789:role/MyDevRole
+    username: dev-user
+    groups:
+      - system:masters        # full cluster admin
+mapUsers:
+  - userarn: arn:aws:iam::123456789:user/alice
+    username: alice
+    groups:
+      - developers            # custom RBAC group
+```
+
+**Fargate pod execution role:**
+- EKS Fargate requires a separate **pod execution IAM role** (`AmazonEKSFargatePodExecutionRole`) — used by the Fargate infrastructure to pull images, write logs, etc.
+- This role must be **different** from the EC2 node group IAM role — Fargate profiles and EC2 node groups should not share the same IAM role.
 
 ### IRSA — IAM Roles for Service Accounts
 
@@ -59,6 +88,53 @@ Worker Node (node-role → broad permissions)
 | **Credentials** | Long-lived instance profile | Short-lived STS tokens |
 | **Blast radius** | Entire node's permissions | Only that SA's permissions |
 | **Fargate support** | No | Yes |
+
+---
+
+## EKS Autoscaling
+
+EKS supports two levels of autoscaling — **pod-level** (scale pods within existing nodes) and **node-level** (scale the number of EC2 nodes in the cluster).
+
+### Pod-Level Autoscaling
+
+Requires the **Kubernetes Metrics Server** to be installed — collects CPU/memory metrics from nodes and pods, which HPA and VPA use to make scaling decisions.
+
+**Horizontal Pod Autoscaler (HPA) — scale out/in:**
+- Automatically increases or decreases the **number of pod replicas** based on observed CPU utilization (or custom metrics).
+- "Scale out and in" — adds/removes pods horizontally.
+- Use case: traffic surges that need more instances of the same pod to handle load.
+
+**Vertical Pod Autoscaler (VPA) — scale up/down:**
+- Automatically adjusts the **CPU and memory requests/limits** of existing pods — resizes the pods rather than adding more.
+- "Scale up and down" — changes resource allocation per pod.
+- Use case: right-sizing pods that are under- or over-provisioned.
+- **Not suitable** when the requirement is to scale in and out — VPA does not add new pods.
+
+### Node-Level Autoscaling
+
+**Cluster Autoscaler:**
+- Native Kubernetes tool that adjusts the number of nodes when pods fail to schedule (not enough capacity) or nodes are underutilized.
+- Uses **Auto Scaling Groups** under the hood.
+- Slower to respond to changes and requires manual configuration and tuning — higher operational overhead.
+
+**Karpenter (recommended):**
+- AWS-built, high-performance cluster autoscaler — directly provisions EC2 instances without needing ASG configuration.
+- Automatically selects the **right instance type and size** for pending pods — optimizes cost and performance.
+- Faster to respond than Cluster Autoscaler — provisions nodes in seconds.
+- Less operational overhead — no need to pre-configure ASGs or manage node group instance types.
+
+**Autoscaling options comparison:**
+
+| | HPA | VPA | Cluster Autoscaler | Karpenter |
+|---|---|---|---|---|
+| **What it scales** | Number of pods | Pod resource requests | Number of nodes (via ASG) | Number of nodes (direct EC2) |
+| **Direction** | Horizontal (out/in) | Vertical (up/down) | Horizontal (nodes) | Horizontal (nodes) |
+| **Requires Metrics Server** | Yes | Yes | No | No |
+| **Response speed** | Fast | Moderate (pod restart) | Slower | Fast |
+| **Operational overhead** | Low | Low | Medium | **Lowest** |
+| **Best for** | Traffic spikes needing more pods | Right-sizing pod resources | Basic node scaling | Dynamic workloads needing fast, optimized node provisioning |
+
+---
 
 **Storage:**
 - **EBS**: Block storage per pod (single AZ). Can be added via EBS CSI driver(Add-on).

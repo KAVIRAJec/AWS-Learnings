@@ -2,7 +2,9 @@
 
 AWS Storage Gateway is a hybrid cloud storage service that connects on-premises environments to AWS storage. It acts as a bridge — on-premises apps use standard protocols (NFS, SMB, iSCSI) while data is stored in AWS.
 
-Can be deployed as a **VM appliance** (VMware, Hyper-V, KVM) or an **AWS hardware appliance**.
+**Deployment options:**
+- **VM Appliance**: Run Storage Gateway as a virtual machine on VMware, Hyper-V, or KVM — for environments with existing virtualization infrastructure.
+- **AWS Hardware Appliance**: A physical 1U server with Storage Gateway software pre-installed — for environments that **do not use virtualization** (bare-metal / dedicated physical servers). Can be configured as File, Volume, or Tape gateway after activation.
 
 ### S3 File Gateway:
 - Exposes an **NFS/SMB** interface to on-premises apps. Files are stored as objects in **S3**.

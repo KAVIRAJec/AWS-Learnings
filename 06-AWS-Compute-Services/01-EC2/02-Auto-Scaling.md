@@ -51,6 +51,18 @@ Automatically adds or removes EC2 instances based on demand. Free service — yo
 
 **Scaling Cooldown** — after any scaling action, ASG pauses for **300 seconds (default)** before triggering another. Prevents thrashing — gives newly launched instances time to start handling traffic before ASG decides more are needed.
 
+**Instance Warm-Up** — time (in seconds) given to a newly launched instance to warm up before it is counted in Auto Scaling metrics.
+- Used with **Target Tracking** and **Step Scaling** policies.
+- During warm-up, the instance is **not counted toward the group's current capacity** for scaling metric calculations — prevents ASG from triggering another scale-out before the new instance is actually serving traffic.
+- **Warm-up vs Cooldown**: Warm-up applies to the individual new instance (excluded from metrics until ready); cooldown applies to the entire ASG (pauses all scaling actions after a scale event).
+
+| | Instance Warm-Up | Scaling Cooldown |
+|---|---|---|
+| **Applies to** | Individual new instance | Entire ASG |
+| **Effect** | Exclude instance from metric until ready | Pause all scaling actions |
+| **Used with** | Target Tracking, Step Scaling | Simple Scaling (default), all policies |
+| **Purpose** | Prevent premature scale-out triggered by a still-booting instance | Prevent rapid consecutive scaling actions (thrashing) |
+
 ### Rebalancing
 
 ASG always tries to keep instances **evenly spread across AZs**. Rebalancing is triggered when the balance breaks:

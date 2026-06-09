@@ -144,10 +144,32 @@ A time-limited, signed URL that grants temporary access to a **private** S3 obje
 
 ### S3 Glacier Vault Lock
 
-Enforces a **WORM (Write Once Read Many)** policy on a Glacier vault.
+Enforces a **WORM (Write Once Read Many)** compliance policy on a Glacier vault — designed for regulatory and long-term retention requirements.
 
-- Once locked, the policy **cannot be changed or deleted** — even by the root account.
-- **Steps**: Initiate policy → validate and test within **24 hours** → complete lock (irreversible after this).
+**Two policies on a Glacier vault:**
+- **Vault Access Policy**: A regular resource-based policy controlling who can access the vault — can be changed at any time.
+- **Vault Lock Policy**: A vault access policy that you **lock** — once locked it becomes **immutable and cannot be changed or deleted by anyone, including the root account**. Used to enforce compliance requirements.
+
+**How Vault Lock works:**
+1. **Initiate** — attach a Vault Lock policy (sets it in "InProgress" state).
+2. **Validate and test** — you have **24 hours** to verify the policy behaves correctly.
+3. **Complete lock** — call `CompleteVaultLock` to make the policy permanent and immutable. After this step, the policy cannot be changed under any circumstances.
+
+> If you do not complete the lock within 24 hours, the policy is automatically removed.
+
+**Example — enforce 5-year retention:**
+- Create a Vault Lock policy that **denies `DeleteArchive`** unless the archive has existed for at least 5 years (1825 days).
+- Once locked, no user — not even root — can delete archives before the 5-year period expires.
+
+**Key properties:**
+- **Archives in Glacier are immutable** — once uploaded, they cannot be modified, only downloaded or deleted (subject to the Vault Lock policy).
+- A vault can have **one** Vault Lock policy and **one** Vault Access policy.
+- Vault Lock is the correct solution for compliance mandates requiring tamper-proof, time-locked data retention.
+
+**Why other options don't work for compliance retention:**
+- **EBS snapshots** — can be deleted by anyone with IAM permissions; data on the volume can be modified.
+- **S3 MFA Delete** — still allows deletion with valid MFA credentials; does not enforce time-based retention.
+- **EFS with NFSv4 file locking** — file locks can be overridden; provides no immutability or compliance enforcement.
 
 ---
 

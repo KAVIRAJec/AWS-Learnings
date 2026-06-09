@@ -13,12 +13,19 @@ Amazon ECS is a fully managed **container orchestration service** that runs, man
 
 **Launch Types:**
 
-| | EC2 Launch Type | Fargate Launch Type |
-|-|----------------|---------------------|
-| Infrastructure | You manage EC2 instances | AWS manages compute |
-| Control | Full control (instance type, OS) | No access to underlying host |
-| Cost | Pay for EC2 instances & storage volumes (even idle) | Pay per task vCPU/memory used |
-| Use case | Predictable workloads, GPU, custom OS | Serverless, variable workloads |
+| | EC2 Launch Type | Fargate Launch Type | ECS Anywhere |
+|-|----------------|---------------------|--------------|
+| Infrastructure | You manage EC2 instances | AWS manages compute | Your own servers (on-prem, VMs, other clouds) |
+| Control | Full control (instance type, OS) | No access to underlying host | Full control — your hardware |
+| Cost | Pay for EC2 instances & storage volumes (even idle) | Pay per task vCPU/memory used | Pay per managed external instance/hour |
+| Use case | Predictable workloads, GPU, custom OS | Serverless, variable workloads | Extend ECS to on-premises or hybrid environments |
+
+**ECS Anywhere:**
+- Run ECS tasks on **your own on-premises servers, VMs, or instances in other clouds** — managed from the same ECS control plane.
+- Register external instances with ECS using the **SSM Agent + ECS Agent** — AWS manages orchestration, you manage the physical/virtual hardware.
+- Use case: Regulatory requirements to keep data on-premises, hybrid deployments, extending containerized workloads to edge locations.
+- **No VPC required** for external instances — communicate with AWS over the internet or Direct Connect.
+- CloudWatch Application Insights integrates with ECS Anywhere clusters for observability and troubleshooting.
 
 **IAM Roles:**
 - **EC2 Instance Profile**: Used by the container agent on EC2 — allows to pull images(ECR), write logs(Cloudwatch), make container API calls(ECS) etc.
