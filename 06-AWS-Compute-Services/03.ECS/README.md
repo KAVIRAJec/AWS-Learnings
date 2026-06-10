@@ -37,16 +37,26 @@ Amazon ECS is a fully managed **container orchestration service** that runs, man
 - **EBS**: Can be attached per task on EC2 launch type.
 
 **Auto Scaling:**
-- Auto scaling can be done based on CPU utilization, memory utilization, ALB Request Count per target(metric form ALB), or custom CloudWatch metrics.
-- Types of Auto Scaling:
-    - **Service Auto Scaling**: Automatically adjusts the number of tasks in a service.
-    - **Cluster Auto Scaling**: Automatically adjusts the number of EC2 instances in the cluster (only for EC2 launch type).
-    - **Target Tracking Scaling**: Scale based on a specific metric (e.g., keep CPU at 50%).
-    - **Step Scaling**: Scale based on a specific cloudwatch alarm threshold (e.g., scale out if CPU > 70% for 5 minutes).
-    - **Scheduled Scaling**: Scale based on a schedule (e.g., scale out at 9 AM, scale in at 5 PM).
-- EC2 launch type auto scaling can be done by
-    - **Auto Scaling Groups**: Define scaling policies to add/remove EC2 instances based on CloudWatch alarms. 
-    - **ECS Cluster Capacity Providers**: ECS can manage scaling of EC2 instances in the cluster based on task demand using capacity providers and auto scaling groups.
+
+ECS has two independent levels of scaling:
+
+**1. Service Auto Scaling** — adjusts the **number of tasks** (containers) in a service.
+
+Supported metrics for ECS Service scaling:
+- `ECSServiceAverageCPUUtilization` — average CPU utilization across all tasks in the service
+- `ECSServiceAverageMemoryUtilization` — average memory utilization across all tasks in the service
+- `ALBRequestCountPerTarget` — number of requests per target in an ALB target group
+
+> **ALB does not expose a CPU utilization metric** — you cannot create an Auto Scaling policy based on "ALB CPU utilization." Only the above three metrics are available for ECS Service Auto Scaling.
+
+**2. Cluster Auto Scaling** — adjusts the **number of EC2 instances** in the cluster (EC2 launch type only). Can be driven by service-level CPU utilization triggering the need for more capacity.
+- **Auto Scaling Groups**: Add/remove EC2 instances based on CloudWatch alarms.
+- **ECS Cluster Capacity Providers**: ECS manages EC2 scaling automatically based on task demand.
+
+**Scaling policy types (apply to both levels):**
+- **Target Tracking**: Maintain a specific metric at a target value (e.g., keep CPU at 50%).
+- **Step Scaling**: Trigger on a CloudWatch alarm threshold (e.g., scale out if CPU > 70% for 5 minutes).
+- **Scheduled Scaling**: Scale on a time schedule (e.g., scale out at 9 AM, scale in at 5 PM).
 
 
 **Integrations:**

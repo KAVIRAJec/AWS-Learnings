@@ -8,6 +8,9 @@ Amazon CloudFront is a **Content Delivery Network (CDN)** that delivers data, vi
 - **Distribution**: A CloudFront configuration that maps your origin to edge locations. Has a unique domain like `xyz.cloudfront.net`.
 - **Cache Behavior**: Rules that define how CloudFront handles requests — TTL, path patterns, allowed HTTP methods, etc.
 - **TTL (Time to Live)**: Controls how long content stays cached at edge locations before CloudFront re-fetches from the origin. Can be set per object using `Cache-Control` headers.
+  - **`Cache-Control: max-age=<seconds>`** — object stays cached for that many seconds. After expiry, the next request causes CloudFront to forward to origin to revalidate.
+  - **`Cache-Control: max-age=0`** — object expires immediately on every request, causing CloudFront to forward **every request** to the origin. This is why the origin appears to be hit for each request even for commonly cached objects.
+  - Minimum TTL for web distributions: **0 seconds**. Setting max-age=0 is valid but eliminates caching entirely.
 - **Invalidation**: Forcefully removes cached objects from edge locations before TTL expires. Useful after content updates (charges apply per invalidation path).
 - **Origin Access Control (OAC)**: Restricts S3 bucket access so only CloudFront can read it — bucket stays private, content is served only via CloudFront.
 

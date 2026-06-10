@@ -16,6 +16,14 @@
     - **Web Server Environment**: For web applications that handle HTTP requests and responses. It typically includes a load balancer, EC2 instances, and an auto-scaling group.
     - **Worker Environment**: For background processing tasks that do not require user interaction. It typically includes EC2 instances that process messages from an Amazon SQS queue.
 
+## File and Log Storage
+
+- **Application files**: Stored in **Amazon S3**. When you upload your application via the console, CLI, or IDE toolkit, Elastic Beanstalk automatically copies the files to an S3 bucket in your account.
+- **Server log files**: Stored on the **EBS volumes of the EC2 instances** by default. Optionally can be streamed or archived to:
+  - **Amazon S3** — Elastic Beanstalk can be configured to copy server logs to S3 every hour via environment configuration settings.
+  - **Amazon CloudWatch Logs** — the CloudWatch Logs agent on each EC2 instance publishes log streams; configure alarms on metric filters for specific log events.
+- Logs cannot be stored directly to **Glacier** (must go through S3 lifecycle policy) or **CloudTrail** (CloudTrail is for API audit logs, not application logs).
+
 ## Workflow
 1. **Upload Code:** Developers upload their application code to Elastic Beanstalk.(.zip or docker image)
 2. **Provision Resources:** Elastic Beanstalk automatically provisions resources like EC2, ELB, and Auto Scaling.

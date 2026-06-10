@@ -67,6 +67,18 @@ EC2 instances transition through these states:
 - **Convertible Reserved Instances**: Allow you to change the instance type, operating system, and tenancy over the term of the reservation, providing flexibility to adapt to changing needs. Provides a discount of up to 55% compared to On-Demand pricing.
 - **Scheduled Reserved Instances**: Allow you to reserve capacity for specific time periods, such as daily or weekly, providing flexibility for workloads that require predictable capacity at specific times.
 
+**Zonal vs Regional Reserved Instances — key distinction:**
+
+| | Zonal Reserved Instance | Regional Reserved Instance |
+|---|---|---|
+| **Scope** | Specific AZ | Entire region (any AZ) |
+| **Capacity reservation** | **Yes** — guarantees capacity in that AZ | **No** — billing discount only, no capacity guarantee |
+| **Billing discount** | Yes | Yes |
+| **AZ flexibility** | Fixed to one AZ | Applies to any AZ in the region |
+| **Instance size flexibility** | No | Yes (within instance family) |
+
+> **Regional RIs do NOT reserve capacity** — they only provide billing discounts. If you need guaranteed capacity in a specific AZ, use a **Zonal RI** or an **On-Demand Capacity Reservation**.
+
 ---
 
 ## EC2 Saving Plans
@@ -161,4 +173,20 @@ Dedicated Instances are EC2 instances that run on hardware dedicated to a single
 ---
 
 ## EC2 Capacity Reservations
-Capacity Reservations allow you to reserve capacity for your EC2 instances in a specific Availability Zone. This ensures that you have the capacity you need when you need it, even during peak demand periods. Capacity Reservations are charged at the same rate as On-Demand instances even it is not used and can be used in conjunction with other pricing models, such as Reserved Instances and Spot Instances. It does not provide any discount on the pricing.
+
+On-Demand Capacity Reservations let you reserve EC2 compute capacity in a **specific AZ** for any duration — **without a 1 or 3-year term commitment**.
+
+- Capacity is available immediately after creation and stays reserved until you cancel it.
+- **Billing starts as soon as the reservation is active** — you are charged at On-Demand rates whether or not you run instances against the reservation.
+- **No billing discount** on their own — but you can combine them with **Savings Plans** or **Regional Reserved Instances** to get discounts on the reserved capacity.
+- **Cancel at any time** — no penalties, unlike Reserved Instances.
+- You specify: AZ, instance type, number of instances, platform/OS.
+
+**Use case**: Workloads that run on a recurring schedule (e.g., nightly batch jobs from 10 PM–3 AM) — create the reservation before the window, cancel after. Ensures capacity without paying for a full-year commitment.
+
+| | On-Demand Capacity Reservation | Zonal Reserved Instance |
+|---|---|---|
+| **Term commitment** | None — cancel anytime | 1 or 3 years |
+| **Capacity guarantee in AZ** | Yes | Yes |
+| **Billing discount** | No (combine with Savings Plan/Regional RI) | Yes |
+| **Best for** | Short or recurring capacity needs | Long-running, steady-state workloads |

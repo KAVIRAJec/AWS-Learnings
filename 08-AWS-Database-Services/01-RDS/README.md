@@ -9,7 +9,7 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
   - **Cannot automatically export automated snapshots to S3** — automated snapshots are managed by RDS internally. To move one to S3, you must first **copy it** (which turns it into a manual snapshot), then export that manual snapshot to S3.
 - **Manual Snapshots**: Stored in S3, retained indefinitely — used for long-term backup.
 - **Storage Auto Scaling**: Automatically expands storage when free space < 10%, low for 5 mins, and 6 hours since last modification. You set a max threshold.
-- **Read Replicas**: Up to 15 read replicas per instance — asynchronous replication for read-heavy workloads. Supports within-AZ, cross-AZ, cross-region. Free data transfer within the same region, charged cross-region.
+- **Read Replicas**: Up to **5-15** read replicas per instance (MySQL, PostgreSQL, MariaDB) — asynchronous replication (seconds of lag) for read-heavy workloads. Supports within-AZ, cross-AZ, cross-region. Free data transfer within the same region, charged cross-region.
 - **Multi-AZ**: Synchronous standby replica in a different AZ for high availability and failover — **not for read scaling** (standby cannot serve read requests). To convert single-AZ to Multi-AZ: click modify → no downtime (AWS takes a snapshot, creates standby, establishes sync).
   - **Replication**: **Synchronous** — every write to primary is replicated to standby before the write is acknowledged. Never asynchronous for Multi-AZ.
   - **Automatic failover**: If the primary fails (AZ failure, hardware issue, DB crash), RDS automatically promotes the standby — no manual intervention needed. The DNS endpoint stays the same; applications reconnect automatically.
@@ -21,6 +21,8 @@ Amazon RDS is a managed relational database service supporting **MySQL, PostgreS
     > This means OS maintenance causes only a brief failover, not full downtime. **Exception**: engine version upgrades shut down both primary and standby at the same time — causing actual downtime.
 - **Engine version upgrades**: Require downtime — even in Multi-AZ, both the primary and standby are upgraded at the same time. Downtime duration depends on DB instance size.
 - **Authentication**: Supports IAM database authentication (MySQL, PostgreSQL) — generates temporary auth tokens valid for 15 minutes. Eliminates the need to store DB credentials in your app.
+  - **Network traffic is automatically encrypted with SSL** when using IAM DB Auth — no separate SSL configuration needed.
+  - EC2 instances can use their **instance profile credentials** to authenticate to RDS — no password required, greater security for EC2-hosted applications.
 
 **RDS Scope — Region vs AZ:**
 

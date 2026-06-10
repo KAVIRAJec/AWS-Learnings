@@ -14,7 +14,20 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
   | **Aurora Serverless** | Aurora automatically recreates the DB instance in a **different AZ**. |
 
   > Aurora flips the **CNAME** record (not an A record / IP address) to redirect traffic to the new primary — applications reconnect via the same endpoint without any DNS change on their side.
-- **Read Replicas**: Up to 15 read replicas with auto-scaling support.
+- **Read Replicas**: Up to 15 read replicas with auto-scaling support. Replication is **asynchronous with milliseconds of lag** (< 1 second) — much lower than standard RDS MySQL replicas.
+
+**Aurora Replicas vs MySQL (RDS) Replicas:**
+
+| Feature | Aurora Replicas | MySQL (RDS) Replicas |
+|---|---|---|
+| **Number of replicas** | Up to 15 | Up to 5 |
+| **Replication type** | Asynchronous (**milliseconds**) | Asynchronous (**seconds**) |
+| **Performance impact on primary** | Low | High |
+| **Replica location** | In-region | Cross-region supported |
+| **Failover target** | Yes — **no data loss** | Yes — potentially **minutes of data loss** |
+| **Automated failover** | Yes | No |
+| **User-defined replication delay** | No | Yes |
+| **Different schema vs primary** | No | Yes |
 
 **Cluster Endpoints:**
 - **Writer Endpoint**: Points to the primary instance — handles reads and writes (DDL + DML). On failover, automatically re-points to the new primary.
@@ -51,6 +64,14 @@ Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for
 | Aurora Read Replica promotion | Brief write unavailability during failover | Valid but app cannot write during the failover window |
 
 > For minimal downtime, use **DMS with Full Load + CDC** — the source provisioned cluster stays fully operational while DMS continuously replicates changes to the new Aurora Serverless cluster. Cut over by updating the application's connection string when the target is in sync.
+
+**Aurora Backtrack:**
+- **Rewinds** an Aurora DB cluster to a specific point in time — without restoring from a backup or creating a new cluster.
+- Works by undoing changes in-place — the same cluster, same endpoint, same data, just rolled back to an earlier state.
+- **Aurora MySQL only** — not supported on Aurora PostgreSQL.
+- Backtrack window configurable up to 72 hours.
+- **Not a replacement for backups** — use backups/snapshots for disaster recovery. Backtrack is for quickly undoing accidental operations (e.g., DELETE without WHERE clause, dropped table).
+- **Cannot recover from AZ or region failures** — backtrack is a data correction tool, not an HA/DR mechanism.
 
 **Aurora Global Database:**
 - Single Aurora DB spanning multiple regions — primary (1) + secondary read-only regions (up to 10).
