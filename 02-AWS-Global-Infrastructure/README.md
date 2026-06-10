@@ -3,10 +3,72 @@
 The AWS Global Infrastructure is a combination of data centers, networks, and technologies distributed globally to deliver a fast, flexible, and secure cloud experience.
 
 ## AWS Service Scopes
-| Scope | Resources |
+
+### Global (not tied to any region)
+| Service | Notes |
 |---|---|
-| **Global** | <pre>EFS(Multi-region)<br>Global Accelerator</pre> |
-| **Regional** | <pre>AWS CloudShell(console)<br>EC2,EBS,Snapshot,AMI,Load Balancer<br>S3<br></pre> |
+| **IAM** | Users, groups, roles, policies — global; STS has a global endpoint but also regional endpoints |
+| **Route 53** | Global DNS service |
+| **CloudFront** | CDN — edge locations worldwide; ACM certificates for CloudFront must be in `us-east-1` |
+| **WAF** (with CloudFront) | Global when attached to CloudFront; regional when attached to ALB/API GW |
+| **Global Accelerator** | Anycast IPs are global; endpoint groups are regional |
+| **AWS Organizations** | Account management — global |
+| **AWS Billing / Cost Explorer** | Global across all regions |
+| **Direct Connect Gateway** | Global resource — connects one DX connection to VPCs in multiple regions |
+| **S3 bucket names** | Globally unique — but bucket data lives in the region you choose |
+
+---
+
+### Regional (scoped to one AWS Region)
+| Service | Notes |
+|---|---|
+| **VPC** | Regional — spans all AZs in the region |
+| **S3** (data) | Bucket data stored in the region you select |
+| **Lambda** | Functions are regional |
+| **API Gateway** | Regional by default; edge-optimized uses CloudFront |
+| **ALB / NLB / GLB** | Regional — routes across AZs |
+| **ECS / EKS / ECR** | Cluster and registry are regional |
+| **DynamoDB** | Tables are regional (Global Tables span regions) |
+| **Aurora** | Cluster is regional; Global Database spans regions |
+| **RDS** (service) | Regional service; individual instances run in a specific AZ |
+| **ElastiCache** | Cluster is regional; individual nodes are AZ-specific |
+| **Redshift** | Cluster is regional (single-AZ by default); Multi-AZ option available |
+| **Kinesis** | Streams and Firehose are regional |
+| **SNS / SQS / EventBridge** | Topics, queues, and event buses are regional |
+| **CloudWatch** | Metrics, logs, alarms are regional |
+| **CloudTrail** | Trails are regional (multi-region trail delivers all to one S3 bucket) |
+| **CloudFormation** | Stacks are regional |
+| **Step Functions** | State machines are regional |
+| **Elastic Beanstalk** | Environments are regional |
+| **EFS** | File system is regional — spans all AZs; mount targets are per AZ |
+| **FSx** | File systems are regional |
+| **EBS Snapshots** | Stored in the region (can be copied cross-region) |
+| **AMI** | Regional (can be copied cross-region) |
+| **ACM** | Certificates are regional — exception: CloudFront requires `us-east-1` |
+| **KMS** | Keys are regional — cannot be used across regions directly |
+| **Secrets Manager** | Secrets are regional |
+| **Systems Manager** | Regional |
+| **Transit Gateway** | Regional hub; inter-region TGW peering connects across regions |
+| **Internet Gateway** | Attached to a VPC (regional) |
+| **VPN Gateway (VGW)** | Attached to a VPC (regional) |
+| **Security Groups** | Scoped to a VPC (regional) |
+| **NACLs** | Scoped to a VPC subnet (regional) |
+| **Athena / Glue / EMR** | Regional |
+| **CodePipeline / CodeBuild / CodeDeploy** | Regional |
+
+---
+
+### AZ-Specific (scoped to a single Availability Zone)
+| Service | Notes |
+|---|---|
+| **EC2 instance** | Runs in one AZ — if AZ fails, instance is lost |
+| **EBS volume** | Tied to one AZ — cannot attach to an instance in a different AZ |
+| **Subnet** | Belongs to one AZ |
+| **NAT Gateway** | Created in a specific AZ — deploy one per AZ for HA |
+| **RDS instance** | Runs in one AZ; Multi-AZ adds a standby in a second AZ |
+| **ElastiCache node** | Individual nodes are AZ-specific |
+| **EFS mount target** | One mount target per AZ — the EFS file system itself is regional |
+| **Redshift node** | Single-AZ cluster; data in one AZ unless Multi-AZ enabled |
 
 ## Regions
 AWS operates its cloud services across geographic locations called **Regions**. Each Region is a separate geographic area consisting of multiple **Availability Zones (AZs)**, which are isolated locations within the Region.
