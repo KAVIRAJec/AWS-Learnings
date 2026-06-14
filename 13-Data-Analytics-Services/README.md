@@ -12,3 +12,4 @@
 | 08 | [Lake Formation](./08-Lake-Formation/README.md) | Simplified data lake setup and governance |
 | 09 | [MSK](./09-MSK/README.md) | Managed Apache Kafka |
 | 10 | [Data Pipeline](./10-Data-Pipeline/README.md) | Legacy scheduled data movement (prefer Glue) |
+| 11 | [AppFlow](./11-AppFlow/README.md) | Managed SaaS-to-AWS data integration (Salesforce, SAP, Slack → S3, Redshift) |

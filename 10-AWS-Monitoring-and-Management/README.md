@@ -20,3 +20,5 @@
 | 16 | [Parameter Store](./16-Parameter-Store/README.md) | Config and secrets storage (SSM) |
 | 17 | [CloudHSM](./17-CloudHSM/README.md) | Dedicated hardware security module |
 | 18 | [EventBridge](./18-EventBridge/README.md) | Serverless event bus for event-driven architectures |
+| 19 | [SES](./19-SES/README.md) | Managed email sending and receiving service |
+| 20 | [Pinpoint](./20-Pinpoint/README.md) | Multi-channel customer engagement (email, SMS, push, voice) |
