@@ -55,8 +55,16 @@ AWS-Learnings/
 ├── 15-AWS-Security-Services/           ← ACM, WAF, Shield, Firewall Manager,
 │                                          GuardDuty, Inspector, Security Hub,
 │                                          Macie, Network Firewall, Artifact
-└── 16-AWS-Migration-Services/
+├── 16-AWS-Migration-Services/
+└── 17-AWS-GenAI-Developer-Professional/  ← AIP-C01 (branch: genai-developer-professional);
+                                           TRACKER.md = coverage checklist; one folder per service
 ```
+
+### AIP-C01 (Gen AI Developer Professional)
+- Separate study track on branch `genai-developer-professional`; merge to `main` only when the user says it's done.
+- Use the `genai-pro-study` skill (`.claude/skills/genai-pro-study/SKILL.md`) for next-topic, named-topic, practice-question, and status requests.
+- Notes are organized **by service** (`01-GenAI-Fundamentals/`, `02-Amazon-Bedrock/` with feature sub-folders, `03-Agent-Frameworks-and-MCP/`, …), not by exam domain; `TRACKER.md` holds the folder table and maps notes to exam-guide skill IDs.
+- Existing SAA coverage to link rather than duplicate: `14-Machine-Learning-Services/` (SageMaker, Comprehend, Kendra, Textract, Transcribe), Step Functions/API Gateway/Lambda in 06, OpenSearch in 13.
 
 ### EC2 Sub-files (`06-AWS-Compute-Services/01-EC2/`)
 | File | Content |
@@ -90,6 +98,7 @@ AWS-Learnings/
 - Bullet format: `- **Term**: explanation — include real numbers/limits`.
 - `---` horizontal rules between major sections.
 - Tables for all two-way comparisons (never prose comparison).
+- Visual first: explain with diagrams (Mermaid/ASCII), worked examples with real numbers, and tables (options, `Name | Default | Range | Effect`, `Symptom | Cause | Fix`, `Need | Pick`); callouts (`> [!WARNING]`) for gotchas; fragments over sentences. Full format rules for AIP-C01 notes are in the `genai-pro-study` skill.
 - ASCII diagrams for flows and architectures.
 - `**X vs Y:**` block at the end when a service is commonly confused with another.
 - No trailing summaries. No "key exam points" sections. No exam-focused labels.
