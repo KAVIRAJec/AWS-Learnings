@@ -75,12 +75,12 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 1.5.6 Access mechanisms: function calling, MCP clients for retrieval
 
 ### [ ] 1.6 Prompt engineering and governance
-- [ ] 1.6.1 Instruction frameworks (Prompt Management, role definition, templates)
+- [~] 1.6.1 Instruction frameworks (Prompt Management, role definition, templates) → [Prompt Management](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); Guardrails pending
 - [ ] 1.6.2 Interactive systems: clarification workflows, intent recognition, conversation history in DynamoDB
-- [ ] 1.6.3 Prompt management + governance (versions, approvals, S3 repos, CloudTrail)
+- [~] 1.6.3 Prompt management + governance (versions, approvals, S3 repos, CloudTrail) → [governance pattern](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); Step Functions approval pattern pending
 - [ ] 1.6.4 Prompt QA: output verification, edge-case testing, regression
 - [ ] 1.6.5 Advanced prompting: structured input, output format, CoT, feedback loops
-- [ ] 1.6.6 Bedrock Prompt Flows: chains, conditional branching, reusable components
+- [x] 1.6.6 Bedrock Prompt Flows: chains, conditional branching, reusable components → [Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/02-Prompt-Flows.md), [nodes](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/03-Flow-Nodes.md)
 
 ---
 
@@ -111,11 +111,11 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 2.4.1 Sync/async interaction: Bedrock APIs, SDKs, SQS, API Gateway validation
 - [ ] 2.4.2 Streaming: Bedrock streaming APIs, WebSockets, SSE, chunked transfer
 - [ ] 2.4.3 Resilience: exponential backoff, rate limiting, fallbacks, X-Ray
-- [ ] 2.4.4 Model routing: static, Step Functions content-based, metric-based, API Gateway transforms
+- [~] 2.4.4 Model routing: static, Step Functions content-based, metric-based, API Gateway transforms → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
 
 ### [ ] 2.5 Application integration patterns and dev tools
 - [ ] 2.5.1 FM API interfaces: streaming via API Gateway, token limits, timeout retries
-- [ ] 2.5.2 Accessible interfaces: Amplify, OpenAPI, Prompt Flows
+- [~] 2.5.2 Accessible interfaces: Amplify, OpenAPI, Prompt Flows → [Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/02-Prompt-Flows.md); Amplify/OpenAPI pending
 - [ ] 2.5.3 Business system enhancements: Lambda CRM, Step Functions doc processing, Bedrock Data Automation
 - [ ] 2.5.4 Developer productivity: Amazon Q Developer
 - [ ] 2.5.5 Advanced apps: Strands/Agent Squad, Step Functions agent patterns, prompt chaining
@@ -145,7 +145,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 3.4 Responsible AI
 - [ ] 3.4.1 Transparency: reasoning display, confidence metrics, source attribution, agent tracing
-- [ ] 3.4.2 Fairness: metrics, Prompt Management A/B testing, LLM-as-a-judge
+- [~] 3.4.2 Fairness: metrics, Prompt Management A/B testing, LLM-as-a-judge → [variants](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); fairness metrics and LLM-judge pending
 - [ ] 3.4.3 Policy compliance: Guardrails, model cards, automated compliance checks
 
 ---
@@ -154,9 +154,9 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 4.1 Cost optimization and resource efficiency
 - [ ] 4.1.1 Token efficiency: estimation, context optimization, compression, pruning
-- [ ] 4.1.2 Cost-effective model selection: tiering by complexity, price-to-performance
+- [~] 4.1.2 Cost-effective model selection: tiering by complexity, price-to-performance → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
 - [ ] 4.1.3 Throughput systems: batching, capacity planning, Provisioned Throughput
-- [ ] 4.1.4 Caching: semantic, fingerprinting, edge, prompt caching
+- [~] 4.1.4 Caching: semantic, fingerprinting, edge, prompt caching → [prompt caching](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/01-Prompt-Caching.md); semantic/edge pending
 
 ### [ ] 4.2 Application performance
 - [ ] 4.2.1 Latency-cost tradeoffs: pre-computation, latency-optimized models, parallelism, streaming
@@ -207,7 +207,7 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [ ] Bedrock Agents (action groups, Lambda, return of control, tracing, memory)
 - [ ] Bedrock AgentCore
 - [ ] Bedrock Guardrails (all policy types, ApplyGuardrail API, contextual grounding)
-- [ ] Bedrock Prompt Management / Prompt Flows / prompt caching / Intelligent Prompt Routing
+- [x] Bedrock Prompt Management / Prompt Flows / prompt caching / Intelligent Prompt Routing → [05-Prompt-Management-and-Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/README.md), [06-Inference-Throughput-and-Routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/README.md)
 - [ ] Bedrock Provisioned Throughput, Cross-Region Inference, Batch Inference
 - [ ] Bedrock Model Customization (fine-tuning, continued pretraining, distillation, Custom Model Import)
 - [ ] Bedrock Data Automation
