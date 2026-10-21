@@ -1,20 +1,23 @@
 # Context Window and Truncation
 
-Long documents cannot be sent to an FM whole: input plus output must fit the model's context window. The fix is to split documents into chunks at ingestion, embed them, and at query time retrieve only the chunks relevant to the question — so prompt size depends on the query, not the document size.
+A model sees only what fits in its context window (input + output tokens). Anything beyond it is rejected or cut, and the model never sees the dropped content. Remedy is retrieval and chunking: [Knowledge Bases](../02-Amazon-Bedrock/02-Knowledge-Bases/README.md), [Chunking](../02-Amazon-Bedrock/02-Knowledge-Bases/01-Chunking.md).
 
-**Key Concepts:**
-- **Context window**: max tokens (input + output) a model handles per request; exceeding it causes truncation or a rejected request, depending on the model/API — the model never sees the dropped content.
-- **Chunk**: the unit that is embedded, stored in the vector index, and returned at retrieval. Keeps a mapping back to the source document.
-- **Token-budget failure modes**: (1) stuffing everything into one prompt, (2) chaining steps that each append prior output, so context grows per hop, (3) `maxTokens` too low so the *response* is cut off.
-- **Retrieve-then-generate**: embed chunks once, embed the query at runtime, fetch top-k similar chunks, pass only those — keeps every request inside the window regardless of document size.
+**Token-budget failure modes:**
 
-Chunking and retrieval remedies: [Knowledge Bases chunking](../02-Amazon-Bedrock/02-Knowledge-Bases/01-Chunking.md).
+| Failure | Cause |
+|---|---|
+| Overflow | Whole document stuffed into one prompt |
+| Context growth | Multi-step workflow appends prior output at each hop |
+| Cut response | `maxTokens` too low (truncates the **answer**) |
 
 ---
 
 ## Diagnosing Truncation and Input Loss
 
-- **Answer cut mid-sentence**: response `stopReason` is `max_tokens` → raise `maxTokens` or shorten the prompt. (Converse API returns `usage` with input/output token counts.)
-- **Request rejected**: input exceeds the model's context window → `ValidationException`; fix with retrieval/chunking, not retries.
-- **Content missing only at peak load**: suspect throttling (`ThrottlingException`, tokens-per-minute/requests-per-minute quotas) and async/SQS/Lambda payload or batch-size handling in the workflow rather than the model — check each hop's payload size, not only the final prompt.- **Observability**: enable Bedrock model invocation logging to see the exact prompt the model received; compare logged input tokens against the window per workflow step.
-- **Multi-step workflows**: pass retrieved chunk IDs/references between steps and re-retrieve, instead of appending full prior outputs into each next prompt.
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Answer cut mid-sentence | `stopReason` = `max_tokens` | Raise `maxTokens`, shorten prompt (Converse `usage` shows token counts) |
+| Request rejected | Input over the context window (`ValidationException`) | Retrieval/chunking, not retries |
+| Content missing only at peak load | Throttling (`ThrottlingException`, TPM/RPM quotas), or SQS/Lambda payload and batch-size limits | Check each hop's payload, not just the final prompt |
+| Cannot see what the model got | No prompt visibility | Enable model invocation logging; compare logged input tokens to the window per step |
+| Multi-step prompts keep growing | Appending full prior outputs | Pass chunk IDs/references and re-retrieve |

@@ -142,14 +142,3 @@ If the flow is KMS-encrypted, the key policy must also allow the flow role.
 | KB node guardrail ignored/invalid | Retrieval-only mode | Set `modelId` so it uses `RetrieveAndGenerate` |
 | Prod behaves like latest edits | App calls `TSTALIASID` (points to `DRAFT`) | Call a prod alias that points to a numbered version |
 
----
-
-## Need → Pick
-
-| Need | Pick |
-|---|---|
-| Safe release and instant rollback | Version + alias repoint |
-| Test latest edits | `TSTALIASID` on `DRAFT` |
-| Job over 1 hour | `StartFlowExecution` |
-| Debug node-by-node | `enableTrace` (sync) or `ListFlowExecutionEvents eventType=Node` (async) |
-| Ask the user mid-flow | Agent node + multi-turn |

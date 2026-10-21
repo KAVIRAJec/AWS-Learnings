@@ -67,49 +67,12 @@ sequenceDiagram
 | One Input node | Mandatory, flow must start with it |
 | Output nodes | Several allowed (one per branch); each yields a `flowOutputEvent` |
 | Multiple branches | A flow call can return several outputs |
-| `InvokeFlow` limit | Runs until finished or **1 hour** timeout |
 | Streaming result | Response is an event stream |
 | Pricing | No flow fee on its own; pay for resources used (e.g. model invoked by a Prompt node) |
 
 ---
 
-## Build → Test → Deploy
-
-| Stage | What happens |
-|---|---|
-| Create | Name, role, nodes, connections. `DRAFT` working version + test alias `TSTALIASID` created automatically |
-| Prepare | Applies latest changes to the working draft so it can be tested |
-| Test | Invoke with sample input; `enableTrace` shows each node's input/output |
-| Version | Immutable snapshot, numbered from 1 |
-| Alias | Points at a version; apps call the alias via `InvokeFlow` |
-| Roll back / upgrade | Change what the alias points to; no app change |
-
-Full detail: [Deployment and Execution](04-Flow-Deployment-and-Execution.md). Node catalog: [Flow Nodes](03-Flow-Nodes.md).
-
----
-
-## Flow Guardrails
-
-| Node | How | Constraint |
-|---|---|---|
-| Prompt node | `guardrailConfiguration` in node config | Applies to prompt and response |
-| Knowledge Base node | `guardrailConfiguration` | **Only when generating** (`RetrieveAndGenerate`), so `modelId` required |
-
----
-
-## Need → Pick
-
-| Need | Pick |
-|---|---|
-| Prompt chain A → B → C, no code | Flow with Prompt nodes, data connections |
-| Branch on a model result | Condition node |
-| Run a step per array item | Iterator node (+ Collector) |
-| Retry-style repeat until a condition | DoWhile loop node (`maxIterations`) |
-| Custom business logic | Lambda node (or Inline Code node) |
-| RAG step in a pipeline | Knowledge Base node |
-| Clarifying questions mid-flow | Agent node + multi-turn |
-| Run longer than 1 hour | Flow executions (async, up to 24 h) |
-| Complex agent reasoning loops, custom state | Step Functions / agent frameworks instead (see integration notes) |
+Deploy, versions/aliases and async runs: [Deployment and Execution](04-Flow-Deployment-and-Execution.md). Node catalog and guardrails per node: [Flow Nodes](03-Flow-Nodes.md).
 
 **Prompt Flows vs Step Functions:**
 

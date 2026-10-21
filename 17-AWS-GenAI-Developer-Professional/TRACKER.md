@@ -31,13 +31,6 @@ Notes are organized **by service** (one folder per service, like the SAA folders
 
 Folders with only a `.gitkeep` have no content yet.
 
----|---|---|
-| 1. FM Integration, Data Management, Compliance | 31% | `01-FM-Integration-Data-Compliance/` |
-| 2. Implementation and Integration | 26% | `02-Implementation-Integration/` |
-| 3. AI Safety, Security, Governance | 20% | `03-Safety-Security-Governance/` |
-| 4. Operational Efficiency and Optimization | 12% | `04-Operational-Efficiency/` |
-| 5. Testing, Validation, Troubleshooting | 11% | `05-Testing-Troubleshooting/` |
-
 ---
 
 ## Domain 1 — FM Integration, Data Management, Compliance (31%)
@@ -60,8 +53,8 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 1.3.4 Input quality enhancement (Comprehend entities, Lambda normalization)
 
 ### [ ] 1.4 Vector store solutions
-- [ ] 1.4.1 Vector DB architectures (Bedrock KB, OpenSearch, RDS/Aurora, DynamoDB)
-- [~] 1.4.2 Metadata frameworks for search precision → [KB metadata filtering](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md)
+- [~] 1.4.1 Vector DB architectures (Bedrock KB, OpenSearch, RDS/Aurora, DynamoDB) → [OpenSearch Serverless](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [KB store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md); DynamoDB pattern pending
+- [~] 1.4.2 Metadata frameworks for search precision → [KB metadata filtering](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); S3 metadata/tagging patterns pending
 - [ ] 1.4.3 High-performance vector stores (sharding, multi-index, hierarchical indexing)
 - [ ] 1.4.4 Integration with document systems, wikis, knowledge sources
 - [ ] 1.4.5 Vector store maintenance (incremental update, change detection, sync, refresh)
@@ -69,8 +62,8 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 1.5 Retrieval mechanisms for FM augmentation
 - [x] 1.5.1 Chunking strategies (fixed, hierarchical, semantic, custom Lambda) → [chunking](02-Amazon-Bedrock/02-Knowledge-Bases/01-Chunking.md)
 - [ ] 1.5.2 Embedding models (Titan, dimensionality, batch generation)
-- [ ] 1.5.3 Vector search (OpenSearch, Aurora pgvector, Bedrock KB managed stores)
-- [~] 1.5.4 Hybrid search + rerankers → [query-time controls](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md)
+- [x] 1.5.3 Vector search (OpenSearch, Aurora pgvector, Bedrock KB managed stores) → [OpenSearch](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md), [Aurora hybrid](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md)
+- [x] 1.5.4 Hybrid search + rerankers → [Hybrid Search](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [Reranking](02-Amazon-Bedrock/02-Knowledge-Bases/04-Reranking.md)
 - [~] 1.5.5 Query expansion / decomposition / transformation → [decomposition](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md)
 - [ ] 1.5.6 Access mechanisms: function calling, MCP clients for retrieval
 
@@ -160,7 +153,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 4.2 Application performance
 - [ ] 4.2.1 Latency-cost tradeoffs: pre-computation, latency-optimized models, parallelism, streaming
-- [ ] 4.2.2 Retrieval performance: index optimization, query preprocessing, hybrid scoring
+- [~] 4.2.2 Retrieval performance: index optimization, query preprocessing, hybrid scoring → [hybrid scoring](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); index tuning pending
 - [ ] 4.2.3 Throughput optimization: token processing, batch inference, concurrency
 - [ ] 4.2.4 Inference parameters: temperature, top-k, top-p, A/B testing
 - [ ] 4.2.5 Resource allocation: token capacity planning, GenAI auto-scaling
@@ -214,7 +207,7 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [ ] Bedrock Model Evaluation (automatic, human, LLM-as-judge, RAG eval)
 - [ ] Strands Agents, AWS Agent Squad, MCP
 - [ ] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards)
-- [ ] OpenSearch vector engine / Aurora pgvector / other vector stores
+- [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
 - [ ] Titan and other embedding models
 - [ ] Amazon Q (Developer, Business) and Amazon Kendra
 - [ ] Comprehend, Transcribe, Textract, Rekognition (pre/post-processing services)

@@ -34,7 +34,7 @@ flowchart LR
 | Base inference params | `maxTokens`, `stopSequences`, `temperature`, `topP` |
 | Model-specific params | `additionalModelRequestFields` JSON (e.g. `top_k`); does not override base values set in console |
 | Optional (Converse-capable models) | System prompt, prior user/assistant turns, tools, reasoning tokens |
-| Prompt caching option | None / Tools / Tools+system / Tools+system+messages (per model) |
+| Prompt caching option | Per-model setting; see [Prompt Caching](../06-Inference-Throughput-and-Routing/01-Prompt-Caching.md) |
 | Variant metadata | Key-value `metadata` array per variant |
 | Encryption | AWS managed key by default; optional customer managed KMS key |
 | API required fields | `name`, `variants`, `defaultVariant` |
@@ -152,15 +152,6 @@ Prompt Management has versioning and KMS encryption natively. Approval workflows
 | Safe prompt release and rollback | Immutable version; repoint consumer |
 | Compare wording or models | Variants (up to 3) in prompt builder |
 | Multi-step prompt chain | Prompt node in [Prompt Flows](02-Prompt-Flows.md) |
-| Reduce cost of a long static prefix | `CHAT` template + prompt caching ([details](../06-Inference-Throughput-and-Routing/01-Prompt-Caching.md)) |
+| Reduce cost of a long static prefix | `CHAT` template + [prompt caching](../06-Inference-Throughput-and-Routing/01-Prompt-Caching.md) |
 | Enforce safety on input and output | Guardrail via `guardrailConfig` on the call, or on the flow Prompt node |
 | Quick rewrite for a target model | `OptimizePrompt` |
-
-**Prompt Management vs Prompt Flows:**
-
-| | Prompt Management | Prompt Flows |
-|---|---|---|
-| What it manages | One prompt (+ variants, versions) | A multi-node workflow |
-| Runs | Via `Converse` / `InvokeModel` with prompt ARN | Via `InvokeFlow` on an alias |
-| Versioning | Prompt versions | Flow versions + aliases |
-| Relationship | Reusable building block | Consumes prompts through Prompt nodes |

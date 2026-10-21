@@ -39,16 +39,7 @@ flowchart LR
 
 ---
 
-## How a Request Flows
-
-| Step | What happens |
-|---|---|
-| 1 | Pick a model family / router |
-| 2 | Router analyzes the prompt content and context |
-| 3 | Predicts response quality per model |
-| 4 | Applies criteria; chooses best quality-cost option |
-| 5 | Forwards to chosen model |
-| 6 | Returns response, including **which model handled it** |
+Per request: the router predicts each model's response quality, applies the criteria, forwards to the chosen model, and returns the response **with the model used**.
 
 ---
 

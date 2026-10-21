@@ -2,22 +2,6 @@
 
 Every node has a name, type, typed inputs (each with an expression), typed outputs, and node-specific configuration. Node types fall into logic nodes (control the path) and data nodes (do work).
 
-```mermaid
-flowchart TD
-    N["Flow nodes"] --> L["Logic"]
-    N --> D["Data / work"]
-    L --> L1["Input, Output"]
-    L --> L2["Condition"]
-    L --> L3["Iterator + Collector"]
-    L --> L4["DoWhile loop"]
-    D --> D1["Prompt"]
-    D --> D2["Agent"]
-    D --> D3["Knowledge Base"]
-    D --> D4["Lambda, Inline code"]
-    D --> D5["S3 storage, S3 retrieval"]
-    D --> D6["Lex"]
-```
-
 ---
 
 ## Logic Nodes

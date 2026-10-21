@@ -119,13 +119,6 @@ flowchart TD
     S -->|"PDF with charts or tables"| E["BDA / FM parser, then any strategy"]
 ```
 
-| Need | Pick | Why |
-|---|---|---|
-| Cheapest, predictable | Fixed-size / default | No FM cost |
-| Coherent topic passages | Semantic | Splits at meaning shifts; pays FM cost |
-| Manuals, legal, technical reports | Hierarchical | Small-chunk precision, big-chunk context |
-| Tables must stay whole | `NONE` + Lambda | Full control |
-
 **Fixed-size vs Semantic vs Hierarchical:**
 
 | | Fixed-size | Semantic | Hierarchical |

@@ -24,12 +24,29 @@ Notes live in `17-AWS-GenAI-Developer-Professional/`. The checklist of everythin
 
 ## Covering a topic in depth
 
-1. `grep -ri` the notes folder and the SAA folders for existing coverage; link to it (relative link) rather than duplicating. Relevant SAA material: `06-AWS-Compute-Services` (Lambda, API Gateway, Step Functions), `08-AWS-Database-Services`, `10-AWS-Monitoring-and-Management`, `13-Data-Analytics-Services` (OpenSearch), `14-Machine-Learning-Services`, `15-AWS-Security-Services`.
+1. **Duplicate check first** (see *No-duplication rules* below): `grep -ri` the notes folder and the SAA folders for each term/number you are about to write; link to the existing home instead of restating it. Relevant SAA material: `06-AWS-Compute-Services` (Lambda, API Gateway, Step Functions), `08-AWS-Database-Services`, `10-AWS-Monitoring-and-Management`, `13-Data-Analytics-Services` (OpenSearch), `14-Machine-Learning-Services`, `15-AWS-Security-Services`.
 2. Research current AWS docs with WebSearch/WebFetch (docs.aws.amazon.com). GenAI services change fast (model IDs, quotas, features); do not rely on memory for limits, supported regions/models, or API names. Record exact numbers and API/parameter names.
 3. Write or extend notes in the **service folder** that owns the topic (see the folder table in `TRACKER.md`). Same layout as the SAA folders: a service with several facets gets a folder with `README.md` (definition, Key Concepts, diagram, file index table) plus numbered sub-files (`01-Chunking.md`); a small topic is a single `.md` file. Put content where the service lives, not where the exam domain lists it; other services link to it with relative links. Delete a folder's `.gitkeep` once it has real content. Add a new numbered folder only when no existing one fits, and update the `TRACKER.md` folder table.
-4. Depth checklist per topic: what it is and why it exists; how it works (ASCII flow); configuration options with defaults/limits; API names and key parameters; IAM/network/encryption angle; cost and quota gotchas; failure modes; "X vs Y" confusions with neighboring services; a short "When to choose" for scenario questions. "In depth" means the scenario-discriminating details a Professional-level question hinges on, not length.
+4. Depth checklist per topic: what it is and why it exists; how it works (ASCII flow); configuration options with defaults/limits; API names and key parameters; IAM/network/encryption angle; cost and quota gotchas; failure modes; "X vs Y" confusions with neighboring services; a short "When to choose" for scenario questions. "In depth" means the scenario-discriminating details a Professional-level question hinges on, not length. Skip any checklist item whose content already has a home in another file (link instead).
 5. Update `TRACKER.md`: flip skill boxes (`[x]` full, `[~]` partial), add a note-file pointer after the skill text as `→ [file](path)`, tick the parent task when all its skills are `[x]`, and tick Cross-Cutting backlog items.
 6. End the reply with: what was covered, which skill IDs ticked, and the next suggested topic.
+
+## No-duplication rules
+
+Every fact has exactly **one home**. Other files link to it with a relative link; they never restate it.
+
+| Rule | Detail |
+|---|---|
+| Home = the file about that service/feature | e.g. embedding dimensions live in the vector-store options note; chunk strategies in `01-Chunking.md` |
+| Link, don't copy | One short clause plus a link (`how it works: [Hybrid Search](…)`), not a second table |
+| READMEs are indexes | Definition, one diagram, file table, pending list. **No** decision tables, parameter tables, or content already in a sub-file. Exception: one cross-file comparison that belongs to no single sub-file |
+| One diagram per idea | The pipeline/flow diagram lives in one file; others link. No diagram that only restates a table in the same file (or vice versa) |
+| One decision table per file | `Need → Pick` only when its rows are not already visible in that file's tables or flowchart; delete rows that repeat a table above |
+| One troubleshooting table per topic | Symptom rows already implied by another file's table are linked, not repeated |
+| Same fact in two services | Put it in the service that owns the setting; the other gets a link |
+| Definitions once | Do not re-define chunk, embedding, RAG, etc. in each note; link to the first definition |
+| Before saving | Re-read the new file against its neighbors: any table, number, or sentence that also exists elsewhere is cut or turned into a link |
+| Extending a note | Add only the missing fact; if it already exists elsewhere, link and stop |
 
 ## Style (inherits repo CLAUDE.md)
 

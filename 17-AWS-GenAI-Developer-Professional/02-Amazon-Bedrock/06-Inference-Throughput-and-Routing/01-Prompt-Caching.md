@@ -61,7 +61,7 @@ flowchart LR
 | Converse / ConverseStream | `{"cachePoint": {"type": "default"}}` as a block in `system`, `messages[].content`, or `toolConfig.tools` |
 | InvokeModel (Claude) | `"cache_control": {"type": "ephemeral"}` on a content block |
 | InvokeModel (Nova) | `"cachePoint": {"type": "default"}` in content |
-| Prompt Management | Prompt caching option on a `CHAT` template: None / Tools / Tools+system / Tools+system+messages |
+| Prompt Management | `CHAT` template option: None / Tools / Tools+system / Tools+system+messages |
 | Console playground | Prompt caching toggle; checkpoints created automatically |
 
 ---
