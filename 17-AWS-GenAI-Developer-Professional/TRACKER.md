@@ -68,7 +68,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 1.5.6 Access mechanisms: function calling, MCP clients for retrieval
 
 ### [ ] 1.6 Prompt engineering and governance
-- [~] 1.6.1 Instruction frameworks (Prompt Management, role definition, templates) → [Prompt Management](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); Guardrails pending
+- [~] 1.6.1 Instruction frameworks (Prompt Management, role definition, templates) → [Prompt Management](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); Guardrails: [Guardrails](02-Amazon-Bedrock/04-Guardrails/README.md)
 - [ ] 1.6.2 Interactive systems: clarification workflows, intent recognition, conversation history in DynamoDB
 - [~] 1.6.3 Prompt management + governance (versions, approvals, S3 repos, CloudTrail) → [governance pattern](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); Step Functions approval pattern pending
 - [ ] 1.6.4 Prompt QA: output verification, edge-case testing, regression
@@ -119,27 +119,27 @@ Folders with only a `.gitkeep` have no content yet.
 ## Domain 3 — AI Safety, Security, Governance (20%)
 
 ### [ ] 3.1 Input and output safety controls
-- [ ] 3.1.1 Input content safety: Guardrails, custom moderation workflows
-- [ ] 3.1.2 Output content safety: Guardrails, toxicity evals, text-to-SQL determinism
-- [ ] 3.1.3 Hallucination reduction: KB grounding, confidence scoring, JSON Schema outputs
-- [ ] 3.1.4 Defense in depth: Comprehend pre-filter, Guardrails, Lambda post-validation, API Gateway filtering
-- [ ] 3.1.5 Threat detection: prompt injection, jailbreak, sanitization, adversarial testing
+- [~] 3.1.1 Input content safety: Guardrails, custom moderation workflows → [policies](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md), [applying](02-Amazon-Bedrock/04-Guardrails/02-Using-Guardrails.md); Step Functions/Lambda moderation pending
+- [~] 3.1.2 Output content safety: Guardrails, toxicity evals, text-to-SQL determinism → [policies](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); toxicity evals, text-to-SQL pending
+- [~] 3.1.3 Hallucination reduction: KB grounding, confidence scoring, JSON Schema outputs → [contextual grounding](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md)
+- [~] 3.1.4 Defense in depth: Comprehend pre-filter, Guardrails, Lambda post-validation, API Gateway filtering → [Guardrails layer](02-Amazon-Bedrock/04-Guardrails/02-Using-Guardrails.md); other layers pending
+- [~] 3.1.5 Threat detection: prompt injection, jailbreak, sanitization, adversarial testing → [prompt attack filter](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); sanitization and adversarial testing pending
 
 ### [ ] 3.2 Data security and privacy controls
 - [ ] 3.2.1 Protected environments: VPC endpoints, IAM, Lake Formation, CloudWatch
-- [ ] 3.2.2 PII detection: Comprehend, Macie, Bedrock data privacy, S3 lifecycle retention
-- [ ] 3.2.3 Privacy-preserving utility: masking, anonymization, Guardrails
+- [ ] 3.2.2 PII detection: Comprehend, Macie, Bedrock data privacy, S3 lifecycle retention → [PII filters](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md)
+- [~] 3.2.3 Privacy-preserving utility: masking, anonymization, Guardrails → [masking](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); Comprehend patterns pending
 
 ### [ ] 3.3 AI governance and compliance
-- [ ] 3.3.1 Compliance frameworks: SageMaker model cards, Glue lineage, decision logs
+- [~] 3.3.1 Compliance frameworks: SageMaker model cards, Glue lineage, decision logs → [model cards](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); lineage, decision logs pending
 - [ ] 3.3.2 Data source tracking: Glue Data Catalog, metadata attribution, CloudTrail
 - [ ] 3.3.3 Organizational governance frameworks
-- [ ] 3.3.4 Continuous monitoring: misuse/drift/bias detection, alerting, token-level redaction
+- [~] 3.3.4 Continuous monitoring: misuse/drift/bias detection, alerting, token-level redaction → [bias monitoring](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); misuse/drift, redaction pending
 
 ### [ ] 3.4 Responsible AI
 - [ ] 3.4.1 Transparency: reasoning display, confidence metrics, source attribution, agent tracing
-- [~] 3.4.2 Fairness: metrics, Prompt Management A/B testing, LLM-as-a-judge → [variants](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md); fairness metrics and LLM-judge pending
-- [ ] 3.4.3 Policy compliance: Guardrails, model cards, automated compliance checks
+- [x] 3.4.2 Fairness: metrics, Prompt Management A/B testing, LLM-as-a-judge → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md), [judge metrics](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md), [variants](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md)
+- [~] 3.4.3 Policy compliance: Guardrails, model cards, automated compliance checks → [versions, enforcement](02-Amazon-Bedrock/04-Guardrails/03-Tiers-Versions-Governance.md); model cards pending
 
 ---
 
@@ -161,7 +161,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 4.3 Monitoring systems
 - [ ] 4.3.1 Holistic observability: metrics, tracing, FM interaction tracing, dashboards
-- [ ] 4.3.2 GenAI monitoring: token usage, hallucination rate, invocation logs, anomaly detection
+- [~] 4.3.2 GenAI monitoring: token usage, hallucination rate, invocation logs, anomaly detection → [custom metrics and alarms](10-Observability-and-Cost-Optimization/01-CloudWatch-Custom-Metrics-and-Alarms.md); built-in Bedrock metrics, invocation logs pending
 - [ ] 4.3.3 Integrated observability: compliance monitoring, audit, behavior tracking
 - [ ] 4.3.4 Tool performance: call patterns, multi-agent coordination tracking
 - [~] 4.3.5 Vector store operations: monitoring, index optimization, data quality → [k-NN metrics, hot shards](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); automated index routines and data quality pending
@@ -172,11 +172,11 @@ Folders with only a `.gitkeep` have no content yet.
 ## Domain 5 — Testing, Validation, Troubleshooting (11%)
 
 ### [ ] 5.1 Evaluation systems
-- [ ] 5.1.1 Assessment metrics: relevance, factual accuracy, consistency, fluency
-- [ ] 5.1.2 Bedrock Model Evaluations, A/B + canary, cost-performance analysis
+- [~] 5.1.1 Assessment metrics: relevance, factual accuracy, consistency, fluency → [judge and programmatic metrics](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md)
+- [~] 5.1.2 Bedrock Model Evaluations, A/B + canary, cost-performance analysis → [Model Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); A/B, canary, cost analysis pending
 - [ ] 5.1.3 User-centered evaluation: feedback, ratings, annotation workflows
 - [ ] 5.1.4 Continuous QA: regression testing, automated quality gates
-- [ ] 5.1.5 RAG evaluation, LLM-as-a-Judge, human feedback
+- [~] 5.1.5 RAG evaluation, LLM-as-a-Judge, human feedback → [Model Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); RAG metric detail pending
 - [ ] 5.1.6 Retrieval quality testing: relevance scoring, context matching, latency
 - [ ] 5.1.7 Agent evaluation: task completion, tool usage, reasoning quality
 - [ ] 5.1.8 Reporting to stakeholders
@@ -199,17 +199,17 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [~] Bedrock Knowledge Bases (ingestion, sync, parsing, chunking, retrieval APIs) — chunking/parsing/query config done; sync, stores, Retrieve vs RetrieveAndGenerate internals pending
 - [ ] Bedrock Agents (action groups, Lambda, return of control, tracing, memory)
 - [ ] Bedrock AgentCore
-- [ ] Bedrock Guardrails (all policy types, ApplyGuardrail API, contextual grounding)
+- [~] Bedrock Guardrails (all policy types, ApplyGuardrail API, contextual grounding) → [04-Guardrails](02-Amazon-Bedrock/04-Guardrails/README.md); Agents/KB integration, image filters, Automated Reasoning authoring pending
 - [x] Bedrock Prompt Management / Prompt Flows / prompt caching / Intelligent Prompt Routing → [05-Prompt-Management-and-Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/README.md), [06-Inference-Throughput-and-Routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/README.md)
 - [ ] Bedrock Provisioned Throughput, Cross-Region Inference, Batch Inference
 - [ ] Bedrock Model Customization (fine-tuning, continued pretraining, distillation, Custom Model Import)
 - [ ] Bedrock Data Automation
-- [ ] Bedrock Model Evaluation (automatic, human, LLM-as-judge, RAG eval)
+- [~] Bedrock Model Evaluation (automatic, human, LLM-as-judge, RAG eval) → [09-Model-Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); RAG evaluation metrics in depth pending
 - [ ] Strands Agents, AWS Agent Squad, MCP
 - [ ] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards)
 - [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
 - [ ] Titan and other embedding models
 - [ ] Amazon Q (Developer, Business) and Amazon Kendra
 - [ ] Comprehend, Transcribe, Textract, Rekognition (pre/post-processing services)
-- [ ] Responsible AI concepts (bias, explainability, transparency)
+- [~] Responsible AI concepts (bias, explainability, transparency) → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); explainability, transparency pending
 - [ ] GenAI fundamentals (transformers, tokens, context window, temperature/top-k/top-p, RAG vs fine-tuning)
