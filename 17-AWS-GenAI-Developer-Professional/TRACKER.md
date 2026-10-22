@@ -55,7 +55,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 1.4 Vector store solutions
 - [~] 1.4.1 Vector DB architectures (Bedrock KB, OpenSearch, RDS/Aurora, DynamoDB) → [OpenSearch Serverless](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [KB store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md); DynamoDB pattern pending
 - [~] 1.4.2 Metadata frameworks for search precision → [KB metadata filtering](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); S3 metadata/tagging patterns pending
-- [ ] 1.4.3 High-performance vector stores (sharding, multi-index, hierarchical indexing)
+- [~] 1.4.3 High-performance vector stores (sharding, multi-index, hierarchical indexing) → [sharding, memory, HNSW](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); multi-index/hierarchical pending
 - [ ] 1.4.4 Integration with document systems, wikis, knowledge sources
 - [ ] 1.4.5 Vector store maintenance (incremental update, change detection, sync, refresh)
 
@@ -153,7 +153,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 4.2 Application performance
 - [ ] 4.2.1 Latency-cost tradeoffs: pre-computation, latency-optimized models, parallelism, streaming
-- [~] 4.2.2 Retrieval performance: index optimization, query preprocessing, hybrid scoring → [hybrid scoring](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); index tuning pending
+- [~] 4.2.2 Retrieval performance: index optimization, query preprocessing, hybrid scoring → [hybrid scoring](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); index tuning pending; [HNSW tuning](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md)
 - [ ] 4.2.3 Throughput optimization: token processing, batch inference, concurrency
 - [ ] 4.2.4 Inference parameters: temperature, top-k, top-p, A/B testing
 - [ ] 4.2.5 Resource allocation: token capacity planning, GenAI auto-scaling
@@ -164,7 +164,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 4.3.2 GenAI monitoring: token usage, hallucination rate, invocation logs, anomaly detection
 - [ ] 4.3.3 Integrated observability: compliance monitoring, audit, behavior tracking
 - [ ] 4.3.4 Tool performance: call patterns, multi-agent coordination tracking
-- [ ] 4.3.5 Vector store operations: monitoring, index optimization, data quality
+- [~] 4.3.5 Vector store operations: monitoring, index optimization, data quality → [k-NN metrics, hot shards](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); automated index routines and data quality pending
 - [ ] 4.3.6 FM troubleshooting frameworks: golden datasets, output diffing, reasoning path tracing
 
 ---
@@ -186,7 +186,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 5.2.1 Content handling: context window overflow, truncation, dynamic chunking → [diagnosing truncation](01-GenAI-Fundamentals/Context-Window-and-Truncation.md)
 - [ ] 5.2.2 FM integration issues: error logging, request validation, response analysis
 - [ ] 5.2.3 Prompt problems: testing frameworks, version comparison
-- [ ] 5.2.4 Retrieval issues: embedding diagnostics, drift, chunking remediation
+- [~] 5.2.4 Retrieval issues: embedding diagnostics, drift, chunking remediation → [vector search symptoms](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md)
 - [ ] 5.2.5 Prompt maintenance: template testing, schema validation, prompt observability
 
 ---

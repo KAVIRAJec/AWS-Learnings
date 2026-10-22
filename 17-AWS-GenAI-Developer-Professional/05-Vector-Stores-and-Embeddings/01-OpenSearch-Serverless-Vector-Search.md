@@ -130,7 +130,7 @@ Lets OpenSearch embed text itself instead of your app passing vectors.
 | Version | n/a | ≥ 2.13 for k-NN index; ≥ 2.16 for binary vectors |
 | Custom metadata filter fields | Filterable | Must be `keyword` (or `text` with `keyword` subfield), or filters fail with "Rewrite first" |
 | Ingestion failures | Check capacity | Raise IOPS/throughput |
-| Graph memory | n/a | k-NN uses up to 50% of the non-heap half of RAM; watch `KNNGraphMemoryUsage` |
+| Graph memory / shard sizing | n/a | See [Performance Tuning](04-OpenSearch-Performance-Tuning.md) |
 
 ---
 

@@ -98,7 +98,7 @@ AWS-Learnings/
 - Bullet format: `- **Term**: explanation — include real numbers/limits`.
 - `---` horizontal rules between major sections.
 - Tables for all two-way comparisons (never prose comparison).
-- Visual first: explain with diagrams (Mermaid/ASCII), worked examples with real numbers, and tables (options, `Name | Default | Range | Effect`, `Symptom | Cause | Fix`, `Need | Pick`); callouts (`> [!WARNING]`) for gotchas; fragments over sentences. Full format rules for AIP-C01 notes are in the `genai-pro-study` skill.
+- Fit the form to the topic: explain concepts in plain language and define terms on first use; use diagrams for flows, worked examples for numbers, and tables only for reference or comparison content (limits, parameters, option matrices). No fixed template. Details in the `genai-pro-study` skill.
 - ASCII diagrams for flows and architectures.
 - `**X vs Y:**` block at the end when a service is commonly confused with another.
 - No trailing summaries. No "key exam points" sections. No exam-focused labels.
