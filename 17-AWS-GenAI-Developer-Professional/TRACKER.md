@@ -44,7 +44,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 1.2.1 FM selection: benchmarks, capabilities, limitations
 - [ ] 1.2.2 Dynamic model/provider switching without code change (Lambda, API Gateway, AppConfig)
 - [ ] 1.2.3 Resilience: Step Functions circuit breaker, Cross-Region Inference, graceful degradation
-- [ ] 1.2.4 Customization lifecycle: SageMaker fine-tuned models, LoRA/adapters, Model Registry, rollback, retirement
+- [x] 1.2.4 Customization lifecycle: SageMaker fine-tuned models, LoRA/adapters, Model Registry, rollback, retirement → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md), [approach choice](01-GenAI-Fundamentals/Choosing-a-Customization-Approach.md), [Bedrock customization](02-Amazon-Bedrock/07-Model-Customization/01-Bedrock-Model-Customization.md)
 
 ### [ ] 1.3 Data validation and processing pipelines for FMs
 - [ ] 1.3.1 Data quality validation (Glue Data Quality, Data Wrangler, Lambda, CloudWatch)
@@ -89,7 +89,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 2.1.7 MCP servers: Lambda (stateless) vs ECS (complex), MCP client libraries
 
 ### [ ] 2.2 Model deployment strategies
-- [ ] 2.2.1 Lambda on-demand vs Bedrock Provisioned Throughput vs SageMaker endpoints
+- [~] 2.2.1 Lambda on-demand vs Bedrock Provisioned Throughput vs SageMaker endpoints → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md); Lambda and SageMaker endpoint patterns pending
 - [ ] 2.2.2 LLM-specific deployment: containers, GPU, memory, token capacity, model loading
 - [ ] 2.2.3 Optimized deployment: smaller models, API-based model cascading
 
@@ -148,7 +148,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 4.1 Cost optimization and resource efficiency
 - [ ] 4.1.1 Token efficiency: estimation, context optimization, compression, pruning
 - [~] 4.1.2 Cost-effective model selection: tiering by complexity, price-to-performance → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
-- [ ] 4.1.3 Throughput systems: batching, capacity planning, Provisioned Throughput
+- [~] 4.1.3 Throughput systems: batching, capacity planning, Provisioned Throughput → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md); batching, auto-scaling pending
 - [~] 4.1.4 Caching: semantic, fingerprinting, edge, prompt caching → [prompt caching](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/01-Prompt-Caching.md); semantic/edge pending
 
 ### [ ] 4.2 Application performance
@@ -201,15 +201,15 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [ ] Bedrock AgentCore
 - [~] Bedrock Guardrails (all policy types, ApplyGuardrail API, contextual grounding) → [04-Guardrails](02-Amazon-Bedrock/04-Guardrails/README.md); Agents/KB integration, image filters, Automated Reasoning authoring pending
 - [x] Bedrock Prompt Management / Prompt Flows / prompt caching / Intelligent Prompt Routing → [05-Prompt-Management-and-Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/README.md), [06-Inference-Throughput-and-Routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/README.md)
-- [ ] Bedrock Provisioned Throughput, Cross-Region Inference, Batch Inference
-- [ ] Bedrock Model Customization (fine-tuning, continued pretraining, distillation, Custom Model Import)
+- [~] Bedrock Provisioned Throughput, Cross-Region Inference, Batch Inference → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md); CRIS and batch pending
+- [x] Bedrock Model Customization (fine-tuning, continued pretraining, distillation, Custom Model Import) → [07-Model-Customization](02-Amazon-Bedrock/07-Model-Customization/01-Bedrock-Model-Customization.md); continued pre-training is not a listed Bedrock method (covered conceptually)
 - [ ] Bedrock Data Automation
 - [~] Bedrock Model Evaluation (automatic, human, LLM-as-judge, RAG eval) → [09-Model-Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); RAG evaluation metrics in depth pending
 - [ ] Strands Agents, AWS Agent Squad, MCP
-- [ ] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards)
+- [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; Clarify detail pending
 - [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
 - [ ] Titan and other embedding models
 - [ ] Amazon Q (Developer, Business) and Amazon Kendra
 - [ ] Comprehend, Transcribe, Textract, Rekognition (pre/post-processing services)
 - [~] Responsible AI concepts (bias, explainability, transparency) → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); explainability, transparency pending
-- [ ] GenAI fundamentals (transformers, tokens, context window, temperature/top-k/top-p, RAG vs fine-tuning)
+- [~] GenAI fundamentals (transformers, tokens, context window, temperature/top-k/top-p, RAG vs fine-tuning) → [context window](01-GenAI-Fundamentals/Context-Window-and-Truncation.md), [customization approaches](01-GenAI-Fundamentals/Choosing-a-Customization-Approach.md); transformers, inference parameters pending
