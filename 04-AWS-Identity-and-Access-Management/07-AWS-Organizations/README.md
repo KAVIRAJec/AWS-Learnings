@@ -73,6 +73,7 @@ If a parent OU removes an allow, child accounts lose it too — even if their ow
 | Affect service-linked roles? | No — service-linked roles bypass SCPs |
 
 > SCPs do **not grant** any permissions on their own — an IAM policy must still explicitly allow the action. SCP just caps what the IAM policy can reach.
+- SCPs can include **`Condition`** keys (e.g. limit Regions or source IP), but they apply to **every principal in the account/OU** as a ceiling. They can't grant access or pick permissions per user from attributes like department — that is done with IAM policies/roles (e.g. ABAC).
 - **Tag Policies**: Enforce consistent tagging standards across accounts — define allowed tag keys and values for resources. Non-compliant resources are flagged but not blocked (unless combined with SCPs). Applied at root, OU, or account level.
 - **Consolidated Billing**: All member account charges roll up to the management account — single invoice, volume discounts aggregated across accounts.
   - **RI & Savings Plans sharing**: Reserved Instance and Savings Plan discounts apply across all accounts in the org (same region, same AZ for RIs).

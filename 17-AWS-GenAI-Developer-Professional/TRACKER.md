@@ -53,15 +53,15 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 1.3.4 Input quality enhancement (Comprehend entities, Lambda normalization)
 
 ### [ ] 1.4 Vector store solutions
-- [~] 1.4.1 Vector DB architectures (Bedrock KB, OpenSearch, RDS/Aurora, DynamoDB) → [OpenSearch Serverless](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [KB store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md); DynamoDB pattern pending
+- [~] 1.4.1 Vector DB architectures (Bedrock KB, OpenSearch, RDS/Aurora, DynamoDB) → [OpenSearch Serverless](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [KB store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md); DynamoDB pattern pending; [index design](05-Vector-Stores-and-Embeddings/05-OpenSearch-Index-Design.md)
 - [~] 1.4.2 Metadata frameworks for search precision → [KB metadata filtering](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); S3 metadata/tagging patterns pending
-- [~] 1.4.3 High-performance vector stores (sharding, multi-index, hierarchical indexing) → [sharding, memory, HNSW](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); multi-index/hierarchical pending
+- [x] 1.4.3 High-performance vector stores (sharding, multi-index, hierarchical indexing) → [sharding, memory, HNSW](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md), [multi-index design](05-Vector-Stores-and-Embeddings/05-OpenSearch-Index-Design.md)
 - [ ] 1.4.4 Integration with document systems, wikis, knowledge sources
-- [ ] 1.4.5 Vector store maintenance (incremental update, change detection, sync, refresh)
+- [~] 1.4.5 Vector store maintenance (incremental update, change detection, sync, refresh) → [freshness and sync](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md); custom-pipeline change detection patterns pending
 
 ### [ ] 1.5 Retrieval mechanisms for FM augmentation
 - [x] 1.5.1 Chunking strategies (fixed, hierarchical, semantic, custom Lambda) → [chunking](02-Amazon-Bedrock/02-Knowledge-Bases/01-Chunking.md)
-- [ ] 1.5.2 Embedding models (Titan, dimensionality, batch generation)
+- [~] 1.5.2 Embedding models (Titan, dimensionality, batch generation) → [embedding models](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md); model selection benchmarking pending
 - [x] 1.5.3 Vector search (OpenSearch, Aurora pgvector, Bedrock KB managed stores) → [OpenSearch](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md), [Aurora hybrid](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md)
 - [x] 1.5.4 Hybrid search + rerankers → [Hybrid Search](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [Reranking](02-Amazon-Bedrock/02-Knowledge-Bases/04-Reranking.md)
 - [~] 1.5.5 Query expansion / decomposition / transformation → [decomposition](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md)
@@ -96,9 +96,9 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 2.3 Enterprise integration architectures
 - [ ] 2.3.1 Enterprise connectivity: legacy APIs, event-driven, data sync
 - [ ] 2.3.2 Integrated AI: API Gateway microservices, Lambda webhooks, EventBridge
-- [ ] 2.3.3 Secure access: identity federation, RBAC, least-privilege FM access
+- [x] 2.3.3 Secure access: identity federation, RBAC, least-privilege FM access → [federated access](09-Security-Governance-Responsible-AI/02-Federated-Access-to-Foundation-Models.md)
 - [ ] 2.3.4 Cross-environment/data residency: Outposts, Wavelength, secure routing
-- [ ] 2.3.5 CI/CD + GenAI gateway: CodePipeline/CodeBuild, security scans, rollback, central abstraction
+- [~] 2.3.5 CI/CD + GenAI gateway: CodePipeline/CodeBuild, security scans, rollback, central abstraction → [gated pipeline pattern](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); CodePipeline/CodeBuild and gateway detail pending
 
 ### [ ] 2.4 FM API integrations
 - [ ] 2.4.1 Sync/async interaction: Bedrock APIs, SDKs, SQS, API Gateway validation
@@ -126,12 +126,12 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 3.1.5 Threat detection: prompt injection, jailbreak, sanitization, adversarial testing → [prompt attack filter](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); sanitization and adversarial testing pending
 
 ### [ ] 3.2 Data security and privacy controls
-- [ ] 3.2.1 Protected environments: VPC endpoints, IAM, Lake Formation, CloudWatch
+- [~] 3.2.1 Protected environments: VPC endpoints, IAM, Lake Formation, CloudWatch → [IAM conditions](09-Security-Governance-Responsible-AI/02-Federated-Access-to-Foundation-Models.md); Bedrock VPC endpoints, Lake Formation pending
 - [ ] 3.2.2 PII detection: Comprehend, Macie, Bedrock data privacy, S3 lifecycle retention → [PII filters](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md)
 - [~] 3.2.3 Privacy-preserving utility: masking, anonymization, Guardrails → [masking](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); Comprehend patterns pending
 
 ### [ ] 3.3 AI governance and compliance
-- [~] 3.3.1 Compliance frameworks: SageMaker model cards, Glue lineage, decision logs → [model cards](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); lineage, decision logs pending
+- [~] 3.3.1 Compliance frameworks: SageMaker model cards, Glue lineage, decision logs → [model cards](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); lineage, decision logs pending
 - [ ] 3.3.2 Data source tracking: Glue Data Catalog, metadata attribution, CloudTrail
 - [ ] 3.3.3 Organizational governance frameworks
 - [~] 3.3.4 Continuous monitoring: misuse/drift/bias detection, alerting, token-level redaction → [bias monitoring](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); misuse/drift, redaction pending
@@ -139,7 +139,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 3.4 Responsible AI
 - [ ] 3.4.1 Transparency: reasoning display, confidence metrics, source attribution, agent tracing
 - [x] 3.4.2 Fairness: metrics, Prompt Management A/B testing, LLM-as-a-judge → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md), [judge metrics](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md), [variants](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md)
-- [~] 3.4.3 Policy compliance: Guardrails, model cards, automated compliance checks → [versions, enforcement](02-Amazon-Bedrock/04-Guardrails/03-Tiers-Versions-Governance.md); model cards pending
+- [~] 3.4.3 Policy compliance: Guardrails, model cards, automated compliance checks → [versions, enforcement](02-Amazon-Bedrock/04-Guardrails/03-Tiers-Versions-Governance.md); model cards pending; [model cards](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md)
 
 ---
 
@@ -153,7 +153,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 4.2 Application performance
 - [ ] 4.2.1 Latency-cost tradeoffs: pre-computation, latency-optimized models, parallelism, streaming
-- [~] 4.2.2 Retrieval performance: index optimization, query preprocessing, hybrid scoring → [hybrid scoring](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); index tuning pending; [HNSW tuning](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md)
+- [~] 4.2.2 Retrieval performance: index optimization, query preprocessing, hybrid scoring → [hybrid scoring](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [filter placement](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md); index tuning pending; [HNSW tuning](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); [exact vs ANN](05-Vector-Stores-and-Embeddings/05-OpenSearch-Index-Design.md)
 - [ ] 4.2.3 Throughput optimization: token processing, batch inference, concurrency
 - [ ] 4.2.4 Inference parameters: temperature, top-k, top-p, A/B testing
 - [ ] 4.2.5 Resource allocation: token capacity planning, GenAI auto-scaling
@@ -186,7 +186,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 5.2.1 Content handling: context window overflow, truncation, dynamic chunking → [diagnosing truncation](01-GenAI-Fundamentals/Context-Window-and-Truncation.md)
 - [ ] 5.2.2 FM integration issues: error logging, request validation, response analysis
 - [ ] 5.2.3 Prompt problems: testing frameworks, version comparison
-- [~] 5.2.4 Retrieval issues: embedding diagnostics, drift, chunking remediation → [vector search symptoms](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md)
+- [~] 5.2.4 Retrieval issues: embedding diagnostics, drift, chunking remediation → [vector search symptoms](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); [embedding drift](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [ ] 5.2.5 Prompt maintenance: template testing, schema validation, prompt observability
 
 ---
@@ -196,7 +196,7 @@ Folders with only a `.gitkeep` have no content yet.
 Services/concepts spanning many skills. Cover as dedicated notes, then link from the skills above.
 
 - [ ] Amazon Bedrock core: model catalog, InvokeModel vs Converse API, inference params, quotas/throttling
-- [~] Bedrock Knowledge Bases (ingestion, sync, parsing, chunking, retrieval APIs) — chunking/parsing/query config done; sync, stores, Retrieve vs RetrieveAndGenerate internals pending
+- [~] Bedrock Knowledge Bases (ingestion, sync, parsing, chunking, retrieval APIs) — chunking/parsing/query config done; sync, stores, Retrieve vs RetrieveAndGenerate internals pending; ingestion/sync now in [freshness note](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [ ] Bedrock Agents (action groups, Lambda, return of control, tracing, memory)
 - [ ] Bedrock AgentCore
 - [~] Bedrock Guardrails (all policy types, ApplyGuardrail API, contextual grounding) → [04-Guardrails](02-Amazon-Bedrock/04-Guardrails/README.md); Agents/KB integration, image filters, Automated Reasoning authoring pending
@@ -206,9 +206,9 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [ ] Bedrock Data Automation
 - [~] Bedrock Model Evaluation (automatic, human, LLM-as-judge, RAG eval) → [09-Model-Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); RAG evaluation metrics in depth pending
 - [ ] Strands Agents, AWS Agent Squad, MCP
-- [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; Clarify detail pending
+- [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; model cards: [pipeline](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); Clarify detail pending
 - [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
-- [ ] Titan and other embedding models
+- [~] Titan and other embedding models → [06-Embeddings-and-Index-Freshness](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [ ] Amazon Q (Developer, Business) and Amazon Kendra
 - [ ] Comprehend, Transcribe, Textract, Rekognition (pre/post-processing services)
 - [~] Responsible AI concepts (bias, explainability, transparency) → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); explainability, transparency pending

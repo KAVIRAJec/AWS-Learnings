@@ -72,6 +72,10 @@ Use judgement. These are tendencies, not quotas:
 
 A single note usually mixes several of these. A concept-heavy topic may be mostly prose and one diagram; a limits-heavy topic may be mostly tables. If a table's cells are full sentences, it should be prose. If a paragraph is a list of numbers, it should be a table. If a diagram only repeats a list, drop it.
 
+### Length: short and quick to learn
+
+The reader is revising on a tight timeline. **Default to one screen (roughly 40–70 lines)** per note; split a topic into two short notes rather than one long one. Lead with what it is and the one thing to remember, then a diagram or tiny example, then only the facts and numbers a scenario question can turn on. Cut background the reader already has, repeated caveats, and any section that doesn't change an answer. Short does not mean cryptic: still define each term in plain words.
+
 ### Quality checks before saving
 
 - Could someone new follow it top to bottom? Is every acronym and term defined where first used?

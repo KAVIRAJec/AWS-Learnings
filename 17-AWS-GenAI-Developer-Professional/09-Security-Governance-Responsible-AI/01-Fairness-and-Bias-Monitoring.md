@@ -88,6 +88,6 @@ Design points that decide whether the numbers mean anything:
 
 ---
 
-## Documenting it: SageMaker Model Cards
+## Documenting it: model cards
 
-A model card is a governance record of a model: intended uses (and uses it should *not* have), a **risk rating** (unknown, low, medium, high), training and evaluation details, and ethical considerations and caveats. Evaluation results can be attached as JSON (for example reports from Clarify or Model Monitor). Edits create new immutable versions (only an approval-status change doesn't), and a card can be exported to PDF for stakeholders. For a regulated agency, the fairness metrics, thresholds, and results of each evaluation belong on the card so audits can trace what was checked and when.
+Record the fairness metrics, thresholds, and results of each evaluation on the model's card so audits can trace what was checked and when. Card contents and automation: [Model Cards in the Pipeline](../04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md).

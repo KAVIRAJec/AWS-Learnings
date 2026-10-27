@@ -26,4 +26,6 @@ flowchart LR
 
 Vector stores and search internals live in [05-Vector-Stores-and-Embeddings](../../05-Vector-Stores-and-Embeddings/README.md).
 
-**Pending:** ingestion/sync jobs, `Retrieve` vs `RetrieveAndGenerate` internals, service role and encryption.
+Ingestion, sync and direct ingestion: [Embeddings and Index Freshness](../../05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md).
+
+**Pending:** `Retrieve` vs `RetrieveAndGenerate` internals, service role and encryption.

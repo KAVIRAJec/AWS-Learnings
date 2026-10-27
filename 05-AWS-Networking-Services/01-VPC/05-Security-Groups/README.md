@@ -6,6 +6,7 @@ A **Security Group** is a virtual firewall that controls inbound and outbound tr
 - Rules are **allow-only** — you cannot write a deny rule. Everything not explicitly allowed is denied by default.
 - An instance can have **multiple security groups** — all rules are evaluated together (union).
 - Changes take effect **immediately**.
+- **Network level only**: rules match protocol, port, and source/destination (IP, prefix list, another SG). A Security Group never sees *who* the caller is (user, role, token) or *which API action* is being called, so it cannot authorize AWS API calls — that is IAM's job. On a VPC endpoint it only controls which network sources can reach the endpoint.
 
 ---
 

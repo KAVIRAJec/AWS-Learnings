@@ -17,6 +17,8 @@ IAM Identity Center (formerly AWS SSO) is a centralized service to manage **SSO 
 - **AWS Access Portal**: The web portal (`https://<subdomain>.awsapps.com/start`) where users log in once and see all their assigned AWS accounts and applications — click to assume the role, no per-account login needed.
 - **SCIM**: Automatic user/group provisioning and deprovisioning from external IdPs — no manual sync needed.
 
+**Identity Center vs Cognito**: Identity Center gives your **workforce** SSO into AWS accounts and business apps; **Cognito** authenticates the **end users of your own applications** and issues tokens/credentials for them. Don't use Identity Center to sign app users into an app.
+
 **IAM Identity Center vs IAM Users:**
 
 | | IAM Identity Center | IAM Users |

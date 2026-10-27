@@ -32,6 +32,21 @@ IAM Policies are JSON documents that define what actions are allowed or denied o
   ]
 }
 ```
+**Identity-based vs Resource-based policies**:
+
+| | Identity-based | Resource-based |
+|---|---|---|
+| **Attached to** | IAM user, group, or role | The resource (S3 bucket, SQS queue, KMS key, Lambda, …) |
+| **`Principal` element** | Not used (the attached identity is the principal) | Required — says who is allowed |
+| **Cross-account** | Caller must assume a role in the other account | Can grant a principal in another account directly |
+| **Best for** | "What can this user/role do?" — per-identity rules and conditions | "Who may touch this resource?" |
+
+- **Common condition keys** (add a `Condition` block to narrow when a statement applies):
+  - `aws:SourceIp` (with `IpAddress`): caller's IP range. **Not present when the request comes through a VPC endpoint** — use `aws:SourceVpce` / `aws:SourceVpc` instead.
+  - `aws:CurrentTime` / `aws:EpochTime` (with `DateGreaterThan`, `DateLessThan`): time-of-day or date windows.
+  - `aws:PrincipalTag/<key>`: tag on the caller — the basis of **ABAC**.
+  - `aws:ViaAWSService`: true when an AWS service calls on the user's behalf; exclude it in Deny statements so service-to-service calls aren't blocked.
+- **ABAC vs RBAC**: RBAC writes a policy per job function and must be updated for each new resource. **ABAC** matches tags on the caller to tags on the resource, so **one policy scales** to new projects/resources. SAML/OIDC federation can pass user attributes as **session tags**, so directory attributes (department, project) drive access.
 - **`aws:PrincipalOrgID` Condition Key**: Restricts access to only principals (users, roles) that belong to a specific AWS Organization — useful in S3 bucket policies to allow access from any account in your org without listing every account ID.
 ```json
 {
