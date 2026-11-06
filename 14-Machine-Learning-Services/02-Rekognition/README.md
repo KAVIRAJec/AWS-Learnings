@@ -7,7 +7,7 @@ Amazon Rekognition is a managed **computer vision service** that provides pre-tr
 - **Facial Analysis**: Detect faces and analyze attributes — age range, emotions (happy, sad, angry), gender, eye glasses, face pose, smile. Does **not** identify who the person is.
 - **Facial Recognition**: Compare faces against a stored collection — identify or verify specific persons. Must first index faces into a **Collection**.
 - **Text in Image (OCR)**: Detect and extract printed and handwritten text from images.
-- **Content Moderation**: Identify explicit, unsafe, or inappropriate content — returns confidence scores. Supports human review workflows via **Amazon Augumented A2I**.
+- **Content Moderation**: Identify explicit, unsafe, or inappropriate content — returns confidence scores. Supports human review workflows via **Amazon Augumented A2I**. For images, call `DetectModerationLabels` with a `.jpg`/`.png` as bytes or an **S3 object**; set `MinConfidence` to drop low-confidence labels. Labels are hierarchical (each has a `ParentName` and taxonomy level).
 - **Celebrity Recognition**: Identify well-known public figures in images and video.
 - **Custom Labels**: Train Rekognition to detect your own objects (products, logos, defects) using your labeled images — no ML expertise needed.
 

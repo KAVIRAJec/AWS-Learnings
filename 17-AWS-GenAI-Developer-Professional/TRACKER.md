@@ -5,13 +5,20 @@ AWS Certified Generative AI Developer – Professional. Source: [official exam g
 **Status legend:** `[ ]` not started · `[~]` partly covered · `[x]` covered in depth
 **Notes column** = file where the content lives (relative to this folder). Tick a task only when all its skills are `[x]`.
 
-| Domain | Weight |
-|---|---|
-| 1. FM Integration, Data Management, Compliance | 31% |
-| 2. Implementation and Integration | 26% |
-| 3. AI Safety, Security, Governance | 20% |
-| 4. Operational Efficiency and Optimization | 12% |
-| 5. Testing, Validation, Troubleshooting | 11% |
+## Progress (updated 2026-11-06)
+
+**Coverage % = (fully covered + ½ × partly covered) ÷ skills.** Counted over the skill lines in each domain below (not the cross-cutting backlog).
+
+| Domain | Exam weight | Skills | `[x]` | `[~]` | `[ ]` | Coverage | Weighted share |
+|---|---|---|---|---|---|---|---|
+| 1. FM Integration, Data Management, Compliance | 31% | 28 | 6 | 8 | 14 | **35.7%** | 11.1 |
+| 2. Implementation and Integration | 26% | 25 | 2 | 4 | 19 | **16.0%** | 4.2 |
+| 3. AI Safety, Security, Governance | 20% | 15 | 2 | 9 | 4 | **43.3%** | 8.7 |
+| 4. Operational Efficiency and Optimization | 12% | 16 | 0 | 6 | 10 | **18.8%** | 2.2 |
+| 5. Testing, Validation, Troubleshooting | 11% | 14 | 0 | 5 | 9 | **17.9%** | 2.0 |
+| **Overall (weighted by exam %)** | 100% | 98 | 10 | 32 | 56 | **28.1%** | 28.1 |
+
+Biggest gaps by exam weight: **Domain 2** (agents, deployment, integration patterns) and **Domain 4/5** (optimization, monitoring, evaluation). Refresh this table whenever the skill boxes change.
 
 Notes are organized **by service** (one folder per service, like the SAA folders), not by domain. A skill below may point to several service folders.
 
@@ -89,7 +96,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 2.1.7 MCP servers: Lambda (stateless) vs ECS (complex), MCP client libraries
 
 ### [ ] 2.2 Model deployment strategies
-- [~] 2.2.1 Lambda on-demand vs Bedrock Provisioned Throughput vs SageMaker endpoints → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md); Lambda and SageMaker endpoint patterns pending
+- [x] 2.2.1 Lambda on-demand vs Bedrock Provisioned Throughput vs SageMaker endpoints → [hosting choice](01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md), [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md)
 - [ ] 2.2.2 LLM-specific deployment: containers, GPU, memory, token capacity, model loading
 - [ ] 2.2.3 Optimized deployment: smaller models, API-based model cascading
 
@@ -101,7 +108,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 2.3.5 CI/CD + GenAI gateway: CodePipeline/CodeBuild, security scans, rollback, central abstraction → [gated pipeline pattern](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); CodePipeline/CodeBuild and gateway detail pending
 
 ### [ ] 2.4 FM API integrations
-- [ ] 2.4.1 Sync/async interaction: Bedrock APIs, SDKs, SQS, API Gateway validation
+- [~] 2.4.1 Sync/async interaction: Bedrock APIs, SDKs, SQS, API Gateway validation → [Converse vs InvokeModel](02-Amazon-Bedrock/01-Core-and-APIs/01-Converse-and-InvokeModel.md); SQS async and API Gateway validation pending
 - [ ] 2.4.2 Streaming: Bedrock streaming APIs, WebSockets, SSE, chunked transfer
 - [ ] 2.4.3 Resilience: exponential backoff, rate limiting, fallbacks, X-Ray
 - [~] 2.4.4 Model routing: static, Step Functions content-based, metric-based, API Gateway transforms → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
@@ -119,10 +126,10 @@ Folders with only a `.gitkeep` have no content yet.
 ## Domain 3 — AI Safety, Security, Governance (20%)
 
 ### [ ] 3.1 Input and output safety controls
-- [~] 3.1.1 Input content safety: Guardrails, custom moderation workflows → [policies](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md), [applying](02-Amazon-Bedrock/04-Guardrails/02-Using-Guardrails.md); Step Functions/Lambda moderation pending
+- [x] 3.1.1 Input content safety: Guardrails, custom moderation workflows → [policies](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md), [applying](02-Amazon-Bedrock/04-Guardrails/02-Using-Guardrails.md), [moderation workflow](09-Security-Governance-Responsible-AI/03-Input-Moderation-Workflow.md)
 - [~] 3.1.2 Output content safety: Guardrails, toxicity evals, text-to-SQL determinism → [policies](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); toxicity evals, text-to-SQL pending
 - [~] 3.1.3 Hallucination reduction: KB grounding, confidence scoring, JSON Schema outputs → [contextual grounding](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md)
-- [~] 3.1.4 Defense in depth: Comprehend pre-filter, Guardrails, Lambda post-validation, API Gateway filtering → [Guardrails layer](02-Amazon-Bedrock/04-Guardrails/02-Using-Guardrails.md); other layers pending
+- [~] 3.1.4 Defense in depth: Comprehend pre-filter, Guardrails, Lambda post-validation, API Gateway filtering → [Guardrails layer](02-Amazon-Bedrock/04-Guardrails/02-Using-Guardrails.md); other layers pending; [pre-model checks](09-Security-Governance-Responsible-AI/03-Input-Moderation-Workflow.md)
 - [~] 3.1.5 Threat detection: prompt injection, jailbreak, sanitization, adversarial testing → [prompt attack filter](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); sanitization and adversarial testing pending
 
 ### [ ] 3.2 Data security and privacy controls
@@ -195,7 +202,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 Services/concepts spanning many skills. Cover as dedicated notes, then link from the skills above.
 
-- [ ] Amazon Bedrock core: model catalog, InvokeModel vs Converse API, inference params, quotas/throttling
+- [~] Amazon Bedrock core: model catalog, InvokeModel vs Converse API, inference params, quotas/throttling → [Converse](02-Amazon-Bedrock/01-Core-and-APIs/01-Converse-and-InvokeModel.md); model catalog and quotas pending
 - [~] Bedrock Knowledge Bases (ingestion, sync, parsing, chunking, retrieval APIs) — chunking/parsing/query config done; sync, stores, Retrieve vs RetrieveAndGenerate internals pending; ingestion/sync now in [freshness note](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [ ] Bedrock Agents (action groups, Lambda, return of control, tracing, memory)
 - [ ] Bedrock AgentCore

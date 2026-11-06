@@ -21,7 +21,12 @@ AWS Step Functions is a **serverless graph workflow orchestration service** that
 | Duration | Up to **1 year** | Up to **5 minutes** |
 | Execution model | Exactly-once | At-least-once |
 | Pricing | Per state transition | Per execution duration + count |
+| **Execution history** | **Kept by Step Functions** (visual debugging in the console, `GetExecutionHistory`; removed after **90 days**) — shows every state's input and output with no setup | **Not captured by Step Functions** — you must enable **CloudWatch Logs** to see what each state did |
+| Integration patterns | All, including `.sync` (wait for job) and `.waitForTaskToken` (callback) | No `.sync` or callback patterns; no Distributed Map or Activities |
 | Use case | Long-running, auditable workflows | High-volume, short-lived event processing |
+
+- Express comes in two forms: **asynchronous** (returns at once, at-least-once; get results from logs) and **synchronous** (waits and returns the result, at-most-once; started from API Gateway, Lambda, or `StartSyncExecution`).
+- The workflow type **cannot be changed** after the state machine is created.
 
 **Error Handling:**
 - Built-in **retry** and **catch** mechanisms per state — no need to handle retries in application code.

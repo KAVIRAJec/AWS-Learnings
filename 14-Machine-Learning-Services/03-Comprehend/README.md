@@ -10,6 +10,8 @@ Amazon Comprehend is a managed **Natural Language Processing (NLP)** service tha
 - **Language Detection**: Identify the dominant language in a document — supports 100+ languages.
 - **Syntax Analysis**: Tokenize text and label parts of speech (noun, verb, adjective) — useful for grammar-based filtering.
 - **PII Detection**: Identify Personally Identifiable Information — names, addresses, phone numbers, credit cards, SSNs. Can **redact** PII from documents automatically.
+- **Toxicity Detection** (`DetectToxicContent`): scores text for harmful content in real time — categories `HATE_SPEECH`, `HARASSMENT_OR_ABUSE`, `INSULT`, `PROFANITY`, `SEXUAL`, `VIOLENCE_OR_THREAT`, `GRAPHIC`, plus an overall **Toxicity** score. **English only**, up to **10 text strings of 1 KB** per call. Used to moderate chats and to screen generative-AI prompts and outputs.
+- **Prompt Safety Classification**: pre-trained classifier (`ClassifyDocument`) that labels an English prompt (≤ 10 KB) `SAFE` or `UNSAFE` with confidence scores (unsafe = malicious intent, or requests for medical, legal, political, or financial advice). No longer offered to new customers.
 
 **Custom Models:**
 - **Custom Entity Recognition**: Train Comprehend to detect your own entity types (product SKUs, internal codes, medical terms) using annotated training data (CSV or augmented manifests).

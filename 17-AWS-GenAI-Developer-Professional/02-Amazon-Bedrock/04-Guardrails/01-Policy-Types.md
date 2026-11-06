@@ -127,3 +127,6 @@ Validate responses against logical rules you write in natural language, such as 
 **Detect mode** (action `NONE`) returns what the guardrail would have caught in the trace without blocking, so you can tune strengths and find false positives before enforcing.
 
 Content filters and sensitive-information filters do not evaluate tool-use fields (tool results, tool definitions, tool-call arguments).
+
+> [!NOTE]
+> Guardrails evaluate **content**, never **who sent it**. Blocking suspended users or checking account status needs your own lookup (for example a Lambda function reading a table), ahead of the model call.
