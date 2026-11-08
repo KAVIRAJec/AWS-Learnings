@@ -23,6 +23,7 @@ flowchart LR
 | `02-Parsing.md` | Default parser vs Bedrock Data Automation vs FM parser |
 | `03-Query-Time-Retrieval.md` | `numberOfResults`, hybrid search, metadata filters, query decomposition, generation cap |
 | `04-Reranking.md` | Reranker models, `Rerank` API, KB-integrated reranking, permissions |
+| `05-Measuring-Retrieval-Latency.md` | Timing retrieval separately with `Retrieve` + `Converse`, custom metric and alarm |
 
 Vector stores and search internals live in [05-Vector-Stores-and-Embeddings](../../05-Vector-Stores-and-Embeddings/README.md).
 

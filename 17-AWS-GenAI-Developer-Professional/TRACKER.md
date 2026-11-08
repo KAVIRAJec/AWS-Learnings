@@ -5,7 +5,7 @@ AWS Certified Generative AI Developer – Professional. Source: [official exam g
 **Status legend:** `[ ]` not started · `[~]` partly covered · `[x]` covered in depth
 **Notes column** = file where the content lives (relative to this folder). Tick a task only when all its skills are `[x]`.
 
-## Progress (updated 2026-11-06)
+## Progress (updated 2026-11-08)
 
 **Coverage % = (fully covered + ½ × partly covered) ÷ skills.** Counted over the skill lines in each domain below (not the cross-cutting backlog).
 
@@ -15,8 +15,8 @@ AWS Certified Generative AI Developer – Professional. Source: [official exam g
 | 2. Implementation and Integration | 26% | 25 | 2 | 4 | 19 | **16.0%** | 4.2 |
 | 3. AI Safety, Security, Governance | 20% | 15 | 2 | 9 | 4 | **43.3%** | 8.7 |
 | 4. Operational Efficiency and Optimization | 12% | 16 | 0 | 6 | 10 | **18.8%** | 2.2 |
-| 5. Testing, Validation, Troubleshooting | 11% | 14 | 0 | 5 | 9 | **17.9%** | 2.0 |
-| **Overall (weighted by exam %)** | 100% | 98 | 10 | 32 | 56 | **28.1%** | 28.1 |
+| 5. Testing, Validation, Troubleshooting | 11% | 14 | 0 | 6 | 8 | **21.4%** | 2.4 |
+| **Overall (weighted by exam %)** | 100% | 98 | 10 | 33 | 55 | **28.5%** | 28.5 |
 
 Biggest gaps by exam weight: **Domain 2** (agents, deployment, integration patterns) and **Domain 4/5** (optimization, monitoring, evaluation). Refresh this table whenever the skill boxes change.
 
@@ -54,8 +54,8 @@ Folders with only a `.gitkeep` have no content yet.
 - [x] 1.2.4 Customization lifecycle: SageMaker fine-tuned models, LoRA/adapters, Model Registry, rollback, retirement → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md), [approach choice](01-GenAI-Fundamentals/Choosing-a-Customization-Approach.md), [Bedrock customization](02-Amazon-Bedrock/07-Model-Customization/01-Bedrock-Model-Customization.md)
 
 ### [ ] 1.3 Data validation and processing pipelines for FMs
-- [ ] 1.3.1 Data quality validation (Glue Data Quality, Data Wrangler, Lambda, CloudWatch)
-- [~] 1.3.2 Multimodal processing (text/image/audio/tabular; Transcribe, SageMaker Processing) → [parsers](02-Amazon-Bedrock/02-Knowledge-Bases/02-Parsing.md)
+- [ ] 1.3.1 Data quality validation (Glue Data Quality, Data Wrangler, Lambda, CloudWatch) → [Processing and alternatives](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md); Glue Data Quality, Data Wrangler detail pending
+- [~] 1.3.2 Multimodal processing (text/image/audio/tabular; Transcribe, SageMaker Processing) → [parsers](02-Amazon-Bedrock/02-Knowledge-Bases/02-Parsing.md); [Processing jobs](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md)
 - [ ] 1.3.3 Model-specific input formatting (Bedrock JSON, Converse API, conversation format)
 - [ ] 1.3.4 Input quality enhancement (Comprehend entities, Lambda normalization)
 
@@ -108,10 +108,10 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 2.3.5 CI/CD + GenAI gateway: CodePipeline/CodeBuild, security scans, rollback, central abstraction → [gated pipeline pattern](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); CodePipeline/CodeBuild and gateway detail pending
 
 ### [ ] 2.4 FM API integrations
-- [~] 2.4.1 Sync/async interaction: Bedrock APIs, SDKs, SQS, API Gateway validation → [Converse vs InvokeModel](02-Amazon-Bedrock/01-Core-and-APIs/01-Converse-and-InvokeModel.md); SQS async and API Gateway validation pending
+- [~] 2.4.1 Sync/async interaction: Bedrock APIs, SDKs, SQS, API Gateway validation → [Converse vs InvokeModel](02-Amazon-Bedrock/01-Core-and-APIs/01-Converse-and-InvokeModel.md); SQS async and API Gateway validation pending; [API Gateway request validation](../06-AWS-Compute-Services/12-API-Gateway/README.md)
 - [ ] 2.4.2 Streaming: Bedrock streaming APIs, WebSockets, SSE, chunked transfer
 - [ ] 2.4.3 Resilience: exponential backoff, rate limiting, fallbacks, X-Ray
-- [~] 2.4.4 Model routing: static, Step Functions content-based, metric-based, API Gateway transforms → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
+- [~] 2.4.4 Model routing: static, Step Functions content-based, metric-based, API Gateway transforms → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md); [API Gateway request transforms](../06-AWS-Compute-Services/12-API-Gateway/README.md)
 
 ### [ ] 2.5 Application integration patterns and dev tools
 - [ ] 2.5.1 FM API interfaces: streaming via API Gateway, token limits, timeout retries
@@ -171,7 +171,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 4.3.2 GenAI monitoring: token usage, hallucination rate, invocation logs, anomaly detection → [custom metrics and alarms](10-Observability-and-Cost-Optimization/01-CloudWatch-Custom-Metrics-and-Alarms.md); built-in Bedrock metrics, invocation logs pending
 - [ ] 4.3.3 Integrated observability: compliance monitoring, audit, behavior tracking
 - [ ] 4.3.4 Tool performance: call patterns, multi-agent coordination tracking
-- [~] 4.3.5 Vector store operations: monitoring, index optimization, data quality → [k-NN metrics, hot shards](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); automated index routines and data quality pending
+- [~] 4.3.5 Vector store operations: monitoring, index optimization, data quality → [k-NN metrics, hot shards](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); automated index routines and data quality pending; [KB retrieval latency](02-Amazon-Bedrock/02-Knowledge-Bases/05-Measuring-Retrieval-Latency.md)
 - [ ] 4.3.6 FM troubleshooting frameworks: golden datasets, output diffing, reasoning path tracing
 
 ---
@@ -184,14 +184,14 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 5.1.3 User-centered evaluation: feedback, ratings, annotation workflows
 - [ ] 5.1.4 Continuous QA: regression testing, automated quality gates
 - [~] 5.1.5 RAG evaluation, LLM-as-a-Judge, human feedback → [Model Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); RAG metric detail pending
-- [ ] 5.1.6 Retrieval quality testing: relevance scoring, context matching, latency
+- [~] 5.1.6 Retrieval quality testing: relevance scoring, context matching, latency → [retrieval latency](02-Amazon-Bedrock/02-Knowledge-Bases/05-Measuring-Retrieval-Latency.md); relevance scoring, context matching pending
 - [ ] 5.1.7 Agent evaluation: task completion, tool usage, reasoning quality
 - [ ] 5.1.8 Reporting to stakeholders
 - [ ] 5.1.9 Deployment validation: synthetic workflows, hallucination/semantic drift checks
 
 ### [ ] 5.2 Troubleshoot GenAI applications
 - [~] 5.2.1 Content handling: context window overflow, truncation, dynamic chunking → [diagnosing truncation](01-GenAI-Fundamentals/Context-Window-and-Truncation.md)
-- [ ] 5.2.2 FM integration issues: error logging, request validation, response analysis
+- [ ] 5.2.2 FM integration issues: error logging, request validation, response analysis; [request validation](../06-AWS-Compute-Services/12-API-Gateway/README.md)
 - [ ] 5.2.3 Prompt problems: testing frameworks, version comparison
 - [~] 5.2.4 Retrieval issues: embedding diagnostics, drift, chunking remediation → [vector search symptoms](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); [embedding drift](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [ ] 5.2.5 Prompt maintenance: template testing, schema validation, prompt observability
@@ -213,7 +213,7 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [ ] Bedrock Data Automation
 - [~] Bedrock Model Evaluation (automatic, human, LLM-as-judge, RAG eval) → [09-Model-Evaluation](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md); RAG evaluation metrics in depth pending
 - [ ] Strands Agents, AWS Agent Squad, MCP
-- [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; model cards: [pipeline](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); Clarify detail pending
+- [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; model cards: [pipeline](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); Clarify detail pending; [one-page reference](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md)
 - [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
 - [~] Titan and other embedding models → [06-Embeddings-and-Index-Freshness](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [ ] Amazon Q (Developer, Business) and Amazon Kendra

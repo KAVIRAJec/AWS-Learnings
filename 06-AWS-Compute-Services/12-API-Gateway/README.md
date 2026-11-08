@@ -38,6 +38,26 @@ Amazon API Gateway is a fully managed service for creating, publishing, and mana
    | **Latency / Cost** | Lower | Higher (Lambda invocation) | N/A for REST use cases |
    | **Use case** | Modern APIs with standard JWT | Complex/custom auth logic | Real-time bidirectional apps only |
 
+**Request & Response Transformation (REST APIs):**
+
+```
+Client → Method request → [validation] → Integration request → Backend
+Client ← Method response ←──────────── Integration response ←──┘
+```
+Mapping applies at the two **integration** steps and needs a **non-proxy** (or AWS service) integration; a proxy passes data through untouched.
+
+| | Parameter mapping | Mapping template (VTL) |
+|---|---|---|
+| **Changes** | Path, query string, headers (and response headers) — **not the body** | Whole body, plus headers and status code |
+| **How** | Expressions, no code: `method.request.header.X` → `integration.request.header.Y`; static values in `'quotes'` | Velocity script + JSONPath, chosen by `Content-Type` |
+| **API types** | REST and HTTP | REST only |
+| **Use when** | Rename/inject headers, static CORS headers | Reshape the JSON body or override status codes |
+
+Prefer parameter mapping when it is enough. Template example (client `{"question":"..."}` → backend body): `#set($q = $input.path('$.question'))` then `{"text":"$util.escapeJavaScript($q)"}`.
+
+- **Passthrough** (no template matches the `Content-Type`): `WHEN_NO_MATCH` sends the body unchanged; `WHEN_NO_TEMPLATES` passes only if no templates exist; `NEVER` returns **415**.
+- **Request validation**: a validator on a method returns **400 before the backend runs** if a required parameter is missing/blank (existence only, not type) or the body fails a **JSON Schema model**.
+
 **Endpoint Types:**
 - **Edge-Optimized** (default): API is deployed globally and routed through **CloudFront edge locations** — reduces latency for geographically distributed clients. The API still lives in one region but requests are routed via the nearest edge.
 - **Regional**: Deployed in a specific AWS region — intended for clients in the same region. Can manually combine with your own CloudFront distribution for more control over caching and distribution.
