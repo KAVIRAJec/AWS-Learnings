@@ -111,3 +111,24 @@ The **AWS Well-Architected Framework** provides best practices and design princi
 | **Performance Efficiency** | Are we using the right resources efficiently? | CloudFront, ElastiCache, Lambda, Compute Optimizer |
 | **Cost Optimization** | Are we avoiding unnecessary spend? | Cost Explorer, Savings Plans, Spot Instances, Budgets |
 | **Sustainability** | Are we minimizing environmental impact? | Graviton, Serverless, Carbon Footprint Tool |
+
+---
+
+## AWS Well-Architected Tool
+
+A **free** console service for reviewing a workload against the Framework: define a **workload**, answer questions per pillar, and get flagged risks plus an improvement plan.
+
+- **Risks:** **High Risk Issues (HRI)** need immediate attention; **Medium Risk Issues (MRI)** are fixed in planning cycles. The **improvement plan** lists what to fix.
+- **Milestones:** saved snapshots of a review to track progress over time.
+- **Integrations:** Trusted Advisor and Security Hub findings; included with Business and Enterprise support.
+
+**Which feature for which need** (these four are easy to confuse):
+
+| Feature | What it is | Use it when |
+|---|---|---|
+| **Lens** | Extra **questions** for a domain. Framework Lens is automatic; add Lens Catalog lenses (Serverless, SaaS, Machine Learning, ...) or **custom lenses** (your own pillars, questions, best practices; shareable with other accounts). 5 added at a time, 20 per workload | You need questions the Framework doesn't ask |
+| **Profile** | Your **business context and goals**; the Tool uses it to **prioritize** which questions and risks matter | Teams should focus on what matters to the business. Fills in **no answers** |
+| **Review template** | **Pre-filled answers** (and notes) for Framework and custom-lens questions that many workloads share; shareable with accounts, an organization or OU (same Region); new workloads are **defined from** it | Many workloads share the same answers (for example a common platform's identity, logging, network setup) |
+| **Workload sharing** | Gives other accounts, an organization/OU or IAM users access to **one existing review**: **Read-only** or **Contributor** (can edit answers) | People collaborate on, or audit, the same review |
+
+Memory aid: lens = more **questions**; profile = which questions **matter**; template = shared **answers**; sharing = same **review**, more people.

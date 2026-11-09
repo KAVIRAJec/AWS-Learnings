@@ -11,12 +11,12 @@ AWS Certified Generative AI Developer – Professional. Source: [official exam g
 
 | Domain | Exam weight | Skills | `[x]` | `[~]` | `[ ]` | Coverage | Weighted share |
 |---|---|---|---|---|---|---|---|
-| 1. FM Integration, Data Management, Compliance | 31% | 28 | 6 | 8 | 14 | **35.7%** | 11.1 |
-| 2. Implementation and Integration | 26% | 25 | 2 | 4 | 19 | **16.0%** | 4.2 |
+| 1. FM Integration, Data Management, Compliance | 31% | 28 | 7 | 8 | 13 | **39.3%** | 12.2 |
+| 2. Implementation and Integration | 26% | 25 | 2 | 5 | 18 | **18.0%** | 4.7 |
 | 3. AI Safety, Security, Governance | 20% | 15 | 2 | 9 | 4 | **43.3%** | 8.7 |
 | 4. Operational Efficiency and Optimization | 12% | 16 | 0 | 6 | 10 | **18.8%** | 2.2 |
 | 5. Testing, Validation, Troubleshooting | 11% | 14 | 0 | 6 | 8 | **21.4%** | 2.4 |
-| **Overall (weighted by exam %)** | 100% | 98 | 10 | 33 | 55 | **28.5%** | 28.5 |
+| **Overall (weighted by exam %)** | 100% | 98 | 11 | 34 | 53 | **30.1%** | 30.1 |
 
 Biggest gaps by exam weight: **Domain 2** (agents, deployment, integration patterns) and **Domain 4/5** (optimization, monitoring, evaluation). Refresh this table whenever the skill boxes change.
 
@@ -45,7 +45,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 1.1 Analyze requirements and design GenAI solutions
 - [ ] 1.1.1 Architecture design: FM, integration pattern, deployment strategy
 - [ ] 1.1.2 Bedrock proof-of-concept to validate feasibility
-- [ ] 1.1.3 Well-Architected Framework + Generative AI Lens
+- [x] 1.1.3 Well-Architected Framework + Generative AI Lens → [GenAI Lens](01-GenAI-Fundamentals/Well-Architected-Generative-AI-Lens.md), [Tool and lenses](../03-Cloud-Architecture/01-Well-Architected-Framework/README.md)
 
 ### [ ] 1.2 Select and configure FMs
 - [ ] 1.2.1 FM selection: benchmarks, capabilities, limitations
@@ -115,11 +115,11 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 2.5 Application integration patterns and dev tools
 - [ ] 2.5.1 FM API interfaces: streaming via API Gateway, token limits, timeout retries
-- [~] 2.5.2 Accessible interfaces: Amplify, OpenAPI, Prompt Flows → [Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/02-Prompt-Flows.md); Amplify/OpenAPI pending
+- [~] 2.5.2 Accessible interfaces: Amplify, OpenAPI, Prompt Flows → [Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/02-Prompt-Flows.md); OpenAPI pending; [Amplify AI kit](08-Integration-and-Orchestration/01-Amplify-AI-Kit.md)
 - [ ] 2.5.3 Business system enhancements: Lambda CRM, Step Functions doc processing, Bedrock Data Automation
-- [ ] 2.5.4 Developer productivity: Amazon Q Developer
+- [~] 2.5.4 Developer productivity: Amazon Q Developer → [Q Developer](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md)
 - [ ] 2.5.5 Advanced apps: Strands/Agent Squad, Step Functions agent patterns, prompt chaining
-- [ ] 2.5.6 Troubleshooting efficiency: Logs Insights, X-Ray, Q Developer
+- [ ] 2.5.6 Troubleshooting efficiency: Logs Insights, X-Ray, Q Developer; [Q Developer](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md)
 
 ---
 
@@ -216,7 +216,7 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; model cards: [pipeline](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); Clarify detail pending; [one-page reference](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md)
 - [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
 - [~] Titan and other embedding models → [06-Embeddings-and-Index-Freshness](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
-- [ ] Amazon Q (Developer, Business) and Amazon Kendra
+- [x] Amazon Q (Developer, Business) and Amazon Kendra → [Amazon Q overview](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md); Kendra detail in SAA notes
 - [ ] Comprehend, Transcribe, Textract, Rekognition (pre/post-processing services)
 - [~] Responsible AI concepts (bias, explainability, transparency) → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); explainability, transparency pending
 - [~] GenAI fundamentals (transformers, tokens, context window, temperature/top-k/top-p, RAG vs fine-tuning) → [context window](01-GenAI-Fundamentals/Context-Window-and-Truncation.md), [customization approaches](01-GenAI-Fundamentals/Choosing-a-Customization-Approach.md); transformers, inference parameters pending

@@ -25,4 +25,4 @@ flowchart LR
 | Versioning | Prompt versions | Flow versions + aliases |
 | Role | Reusable building block | Consumes prompts via Prompt nodes |
 
-**Pending:** Amplify/OpenAPI interfaces (2.5.2), Step Functions approval pattern (1.6.3), A/B testing with evaluations (3.4.2).
+**Pending:** OpenAPI interfaces (2.5.2; Amplify is in [Amplify AI Kit](../../08-Integration-and-Orchestration/01-Amplify-AI-Kit.md)), Step Functions approval pattern (1.6.3), A/B testing with evaluations (3.4.2).
