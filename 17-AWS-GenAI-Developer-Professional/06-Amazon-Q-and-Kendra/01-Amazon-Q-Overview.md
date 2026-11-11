@@ -11,7 +11,7 @@
 | **Q in Connect** | Contact-center agents | Detects the customer's issue and suggests real-time answers and actions |
 
 > [!NOTE]
-> **Status changes (check current docs):** Q Business is **no longer open to new customers** (AWS points to *Amazon Quick*). The Q Developer chat in the AWS console is now the **AWS assistant**; Q Developer IDE plugins end support on **30 Apr 2027** (AWS points to *Kiro*). Q Developer in the IDE/CLI keeps its name. The concepts below still describe how the products work.
+> **Status changes (check current docs):** Q Business is **no longer open to new customers** (AWS points to *Amazon Quick*). The Q Developer chat in the AWS console is now the **AWS assistant**; Q Developer IDE plugins end support on **30 Apr 2027** (AWS points to [Kiro](02-Kiro.md)). Q Developer in the IDE/CLI keeps its name. The concepts below still describe how the products work.
 
 ---
 

@@ -11,12 +11,12 @@ AWS Certified Generative AI Developer – Professional. Source: [official exam g
 
 | Domain | Exam weight | Skills | `[x]` | `[~]` | `[ ]` | Coverage | Weighted share |
 |---|---|---|---|---|---|---|---|
-| 1. FM Integration, Data Management, Compliance | 31% | 28 | 7 | 8 | 13 | **39.3%** | 12.2 |
-| 2. Implementation and Integration | 26% | 25 | 2 | 5 | 18 | **18.0%** | 4.7 |
+| 1. FM Integration, Data Management, Compliance | 31% | 28 | 9 | 7 | 12 | **44.6%** | 13.8 |
+| 2. Implementation and Integration | 26% | 25 | 3 | 5 | 17 | **22.0%** | 5.7 |
 | 3. AI Safety, Security, Governance | 20% | 15 | 2 | 9 | 4 | **43.3%** | 8.7 |
 | 4. Operational Efficiency and Optimization | 12% | 16 | 0 | 6 | 10 | **18.8%** | 2.2 |
 | 5. Testing, Validation, Troubleshooting | 11% | 14 | 0 | 6 | 8 | **21.4%** | 2.4 |
-| **Overall (weighted by exam %)** | 100% | 98 | 11 | 34 | 53 | **30.1%** | 30.1 |
+| **Overall (weighted by exam %)** | 100% | 98 | 14 | 33 | 51 | **32.8%** | 32.8 |
 
 Biggest gaps by exam weight: **Domain 2** (agents, deployment, integration patterns) and **Domain 4/5** (optimization, monitoring, evaluation). Refresh this table whenever the skill boxes change.
 
@@ -56,7 +56,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 1.3 Data validation and processing pipelines for FMs
 - [ ] 1.3.1 Data quality validation (Glue Data Quality, Data Wrangler, Lambda, CloudWatch) → [Processing and alternatives](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md); Glue Data Quality, Data Wrangler detail pending
 - [~] 1.3.2 Multimodal processing (text/image/audio/tabular; Transcribe, SageMaker Processing) → [parsers](02-Amazon-Bedrock/02-Knowledge-Bases/02-Parsing.md); [Processing jobs](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md)
-- [ ] 1.3.3 Model-specific input formatting (Bedrock JSON, Converse API, conversation format)
+- [x] 1.3.3 Model-specific input formatting (Bedrock JSON, Converse API, conversation format) → [request formats cheat sheet](01-GenAI-Fundamentals/Model-Request-Formats-Cheat-Sheet.md), [Converse](02-Amazon-Bedrock/01-Core-and-APIs/01-Converse-and-InvokeModel.md)
 - [ ] 1.3.4 Input quality enhancement (Comprehend entities, Lambda normalization)
 
 ### [ ] 1.4 Vector store solutions
@@ -68,7 +68,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 1.5 Retrieval mechanisms for FM augmentation
 - [x] 1.5.1 Chunking strategies (fixed, hierarchical, semantic, custom Lambda) → [chunking](02-Amazon-Bedrock/02-Knowledge-Bases/01-Chunking.md)
-- [~] 1.5.2 Embedding models (Titan, dimensionality, batch generation) → [embedding models](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md); model selection benchmarking pending
+- [x] 1.5.2 Embedding models (Titan, dimensionality, batch generation) → [Bedrock embedding models](05-Vector-Stores-and-Embeddings/07-Bedrock-Embedding-Models.md), [batch/freshness](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
 - [x] 1.5.3 Vector search (OpenSearch, Aurora pgvector, Bedrock KB managed stores) → [OpenSearch](05-Vector-Stores-and-Embeddings/01-OpenSearch-Serverless-Vector-Search.md), [store options](05-Vector-Stores-and-Embeddings/03-KB-Vector-Store-Options.md), [Aurora hybrid](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md)
 - [x] 1.5.4 Hybrid search + rerankers → [Hybrid Search](05-Vector-Stores-and-Embeddings/02-Hybrid-Search.md), [Reranking](02-Amazon-Bedrock/02-Knowledge-Bases/04-Reranking.md)
 - [~] 1.5.5 Query expansion / decomposition / transformation → [decomposition](02-Amazon-Bedrock/02-Knowledge-Bases/03-Query-Time-Retrieval.md)
@@ -98,7 +98,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 2.2 Model deployment strategies
 - [x] 2.2.1 Lambda on-demand vs Bedrock Provisioned Throughput vs SageMaker endpoints → [hosting choice](01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md), [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md)
 - [ ] 2.2.2 LLM-specific deployment: containers, GPU, memory, token capacity, model loading
-- [ ] 2.2.3 Optimized deployment: smaller models, API-based model cascading
+- [x] 2.2.3 Optimized deployment: smaller models, API-based model cascading → [right-sizing](01-GenAI-Fundamentals/Right-Sizing-the-Model.md), [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
 
 ### [ ] 2.3 Enterprise integration architectures
 - [ ] 2.3.1 Enterprise connectivity: legacy APIs, event-driven, data sync
@@ -117,7 +117,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 2.5.1 FM API interfaces: streaming via API Gateway, token limits, timeout retries
 - [~] 2.5.2 Accessible interfaces: Amplify, OpenAPI, Prompt Flows → [Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/02-Prompt-Flows.md); OpenAPI pending; [Amplify AI kit](08-Integration-and-Orchestration/01-Amplify-AI-Kit.md)
 - [ ] 2.5.3 Business system enhancements: Lambda CRM, Step Functions doc processing, Bedrock Data Automation
-- [~] 2.5.4 Developer productivity: Amazon Q Developer → [Q Developer](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md)
+- [~] 2.5.4 Developer productivity: Amazon Q Developer → [Q Developer](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md); [Kiro](06-Amazon-Q-and-Kendra/02-Kiro.md)
 - [ ] 2.5.5 Advanced apps: Strands/Agent Squad, Step Functions agent patterns, prompt chaining
 - [ ] 2.5.6 Troubleshooting efficiency: Logs Insights, X-Ray, Q Developer; [Q Developer](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md)
 
@@ -215,7 +215,7 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 - [ ] Strands Agents, AWS Agent Squad, MCP
 - [~] SageMaker for GenAI (JumpStart, endpoints, inference components, Model Registry, Clarify, model cards) → [LoRA lifecycle](04-SageMaker-for-GenAI/01-LoRA-Adapter-Lifecycle.md) covers inference components, Model Registry, JumpStart fine-tuning; model cards: [pipeline](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); Clarify detail pending; [one-page reference](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md)
 - [x] OpenSearch vector engine / Aurora pgvector / other vector stores → [05-Vector-Stores-and-Embeddings](05-Vector-Stores-and-Embeddings/README.md)
-- [~] Titan and other embedding models → [06-Embeddings-and-Index-Freshness](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
+- [x] Titan and other embedding models → [Bedrock embedding models](05-Vector-Stores-and-Embeddings/07-Bedrock-Embedding-Models.md)
 - [x] Amazon Q (Developer, Business) and Amazon Kendra → [Amazon Q overview](06-Amazon-Q-and-Kendra/01-Amazon-Q-Overview.md); Kendra detail in SAA notes
 - [ ] Comprehend, Transcribe, Textract, Rekognition (pre/post-processing services)
 - [~] Responsible AI concepts (bias, explainability, transparency) → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); explainability, transparency pending

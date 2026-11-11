@@ -72,6 +72,23 @@ How much a node can use: half of its RAM goes to the Java heap (up to 32 GiB), a
 
 ---
 
+## Ways to fit the graphs in memory (and the catch)
+
+When graphs don't fit (slow queries, out-of-memory crashes), the options are:
+
+| Option | How it helps | The catch |
+|---|---|---|
+| **Add data nodes** + reindex with **more primary shards** | More memory in total, and smaller graphs spread across nodes; keeps full-precision vectors | Primary count can't be changed in place, so you reindex; more cost |
+| **Split into per-topic indices**, search only the matching one | Each index has smaller graphs, and a query touches far fewer vectors | Needs a topic known at query time; cross-topic searches hit several indices ([Index Design](05-OpenSearch-Index-Design.md)) |
+| **Quantization / compression** (for example Faiss 16-bit scalar, which halves each vector's size) | Less memory per vector | Can **lower recall**; unusable if tests show recall loss |
+| **IVF + PQ** | Much smaller index | Lower recall, needs training |
+| **Replicas to zero** | Each copy of the graphs costs memory, so fewer copies means less | Only sensible during a bulk load. A replica is the failover copy: with none, one node failure makes part of the data unavailable |
+| **UltraWarm** (S3-backed warm storage; k-NN indices supported from OpenSearch 2.17) | Moves graphs off the hot nodes | Warm indices are **read-only**: fine for static, rarely-queried data, not for an index that receives new documents every day |
+
+Rule of thumb: fix memory by **adding capacity and shrinking what each query touches**; reach for compression only if recall tests allow it, and never trade away replicas or write access you need.
+
+---
+
 ## Shards: size, count, balance
 
 Good shard sizing keeps each shard small enough to recover and search quickly, and the shards spread evenly across data nodes.

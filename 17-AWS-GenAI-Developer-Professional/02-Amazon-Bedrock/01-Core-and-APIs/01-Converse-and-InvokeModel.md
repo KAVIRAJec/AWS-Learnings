@@ -29,4 +29,4 @@ flowchart LR
 - `InvokeModel` / `InvokeModelWithResponseStream`: the body follows each model's own schema; needed for operations like generating embeddings.
 - With Mistral and Meta models, Converse wraps your input in that model's prompt template for you.
 
-Picking the right hosting option before calling: [Choosing How to Host an FM](../../01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md). Prompt-by-ARN restrictions: [Prompt Management](../05-Prompt-Management-and-Flows/01-Prompt-Management.md).
+Per-model `InvokeModel` bodies and the SageMaker shapes: [Request Formats Cheat Sheet](../../01-GenAI-Fundamentals/Model-Request-Formats-Cheat-Sheet.md). Picking the right hosting option before calling: [Choosing How to Host an FM](../../01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md). Prompt-by-ARN restrictions: [Prompt Management](../05-Prompt-Management-and-Flows/01-Prompt-Management.md).

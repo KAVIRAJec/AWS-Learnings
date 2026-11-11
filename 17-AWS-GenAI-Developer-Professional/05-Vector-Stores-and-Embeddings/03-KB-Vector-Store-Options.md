@@ -59,14 +59,7 @@ flowchart LR
 
 ## Embedding Dimensions
 
-| Model | Dimensions |
-|---|---|
-| Titan Text Embeddings G1 | 1,536 |
-| Titan Text Embeddings V2 | 1,024 / 512 / 256 |
-| Cohere Embed English, Multilingual | 1,024 |
-
-Store dimension must equal model output. S3 Vectors allows 1–4096; OpenSearch Serverless up to 16,000.
-
+Store dimension must equal the model's output size (S3 Vectors allows 1–4096; OpenSearch Serverless up to 16,000). Dimensions per model: [Bedrock Embedding Models](07-Bedrock-Embedding-Models.md).
 ---
 
 ## Binary vs Float Embeddings

@@ -7,6 +7,7 @@ Amazon Comprehend is a managed **Natural Language Processing (NLP)** service tha
 - **Key Phrase Extraction**: Identify the most significant noun phrases in text — captures the main topics.
 - **Sentiment Analysis**: Classify the overall tone as POSITIVE, NEGATIVE, NEUTRAL, or MIXED — returns a confidence score for each label.
 - **Targeted Sentiment**: Determine sentiment toward specific entities within the same document (e.g., "the food was great" → FOOD: POSITIVE, "service was poor" → SERVICE: NEGATIVE).
+  - `DetectSentiment` returns **one overall label** for the document plus a **score for each of the four sentiments** (`BatchDetectSentiment` and `StartSentimentDetectionJob` for volume; all documents in one job must share a language). `DetectTargetedSentiment` returns a sentiment **per entity mention** instead, so a mixed review yields several results, not one label.
 - **Language Detection**: Identify the dominant language in a document — supports 100+ languages.
 - **Syntax Analysis**: Tokenize text and label parts of speech (noun, verb, adjective) — useful for grammar-based filtering.
 - **PII Detection**: Identify Personally Identifiable Information — names, addresses, phone numbers, credit cards, SSNs. Can **redact** PII from documents automatically.
@@ -16,6 +17,7 @@ Amazon Comprehend is a managed **Natural Language Processing (NLP)** service tha
 **Custom Models:**
 - **Custom Entity Recognition**: Train Comprehend to detect your own entity types (product SKUs, internal codes, medical terms) using annotated training data (CSV or augmented manifests).
 - **Custom Classification**: Train a multi-class or multi-label document classifier to categorize documents into your own categories (support ticket routing, content tagging).
+  - Needs **labeled training data**, so use it only for labels the pre-trained features don't offer. Real-time use runs on an **endpoint billed while it exists**; **flywheels** manage retraining and new model versions.
 
 **Amazon Comprehend Medical:**
 - Specialized NLP for **clinical and biomedical text** — recognizes medical entities: diagnoses (ICD-10 codes), medications, dosages, procedures, anatomy, and test results.

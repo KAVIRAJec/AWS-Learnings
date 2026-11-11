@@ -109,20 +109,7 @@ For custom pipelines (your own OpenSearch ingestion), you own this: detect chang
 
 ## Embedding models on Bedrock
 
-Pick one model and keep it for an index. Reference for the common ones used with Knowledge Bases:
-
-| Model | Vector size | Vector types | Notes |
-|---|---|---|---|
-| Titan Text Embeddings V2 | 1,024 (default), 512, 256 | float, binary | Optional `normalize` (default true); choose size per request |
-| Titan Embeddings G1 - Text | 1,536 | float | No inference parameters |
-| Cohere Embed English / Multilingual (v3) | 1,024 | float, binary | Pick Multilingual for mixed languages |
-| Titan Multimodal Embeddings G1, Cohere Embed v3 multimodal, Nova Multimodal | 1,024 | float (+ binary for Cohere) | Text plus images/other media |
-
-- **Dimensions are a trade-off.** Fewer dimensions mean smaller storage and faster search at the cost of some accuracy; the vector field's `dimension` must match the choice. Details: [Store Options](03-KB-Vector-Store-Options.md).
-- **Binary vectors** are far smaller than float, and are supported only on some vector stores.
-- **Titan V2 request** (`InvokeModel`): `inputText` plus optional `dimensions`, `normalize`, `embeddingTypes`; the response returns `embedding`, `inputTextTokenCount`, and `embeddingsByType`.
-- **Batch generation.** Titan takes one text per call, so for large corpora run many calls in parallel (for example SQS feeding Lambda), respect throttling quotas, and write results with the model and pipeline version attached.
-
+Pick one model and keep it for an index. Full list with dimensions, vector types and limits: [Bedrock Embedding Models](07-Bedrock-Embedding-Models.md). Titan V2 request: `inputText` plus optional `dimensions`, `normalize`, `embeddingTypes`; response has `embedding` and `embeddingsByType`. Titan takes one text per call, so for large corpora run many calls in parallel (for example SQS feeding Lambda), respect throttling, and write results with the model and pipeline version attached.
 ---
 
 ## Why a full, uniform rebuild is the answer
