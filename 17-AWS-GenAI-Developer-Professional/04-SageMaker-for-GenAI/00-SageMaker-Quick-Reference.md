@@ -46,16 +46,19 @@ SageMaker AI is AWS's managed platform to **prepare data, build, train, evaluate
 
 ## 5. Deploy: inference variants
 
-| Variant | Best for | Key facts |
-|---|---|---|
-| **Real-time endpoint** | Interactive, low latency | Always-on instances, pay while running |
-| **Serverless Inference** | Idle gaps, tolerates cold starts | Pay per request, scales to zero; **no GPU**; 1–6 GB memory; 200 concurrent invocations per endpoint |
-| **Asynchronous Inference** | Big payloads, long jobs | Queue; up to 1 GB payload, up to 1 hour; results to S3; can scale to zero |
-| **Batch Transform** | Offline scoring of a dataset in S3 | No persistent endpoint |
-| **Multi-model endpoint** | Many small models, sparse traffic | One endpoint hosts many models |
-| **Inference components** | Hosting FMs on shared compute; **LoRA adapters**; **scale to zero** | At zero instances calls fail for minutes until one provisions |
-| **Neo** | Cheaper/faster inference | Compiles a model for target hardware (such as Inferentia) |
-| **Auto scaling** | Match instances to traffic | Application Auto Scaling on endpoints |
+| Variant | Best for | You pay for | GPU | Scale to zero | Request limits | Key facts |
+|---|---|---|---|---|---|---|
+| **Real-time endpoint** | Interactive, low latency, steady traffic | Instance-hours, always on | **Yes** | **No** by default; **yes** only when hosting inference components | Synchronous | Widest features: multiple production variants (A/B, shadow), data capture, Model Monitor, VPC, inference pipelines |
+| **Serverless Inference** | Idle gaps, spiky traffic, tolerates cold starts | Per request duration (+ Provisioned Concurrency if used) | **No** | **Yes**, automatic (cold start on next call) | Memory 1–6 GB; **200 concurrent** per endpoint; 50 endpoints per Region; image up to 10 GB | **Provisioned Concurrency** keeps workers warm; no multi-model, data capture, Model Monitor, VPC |
+| **Asynchronous Inference** | Big payloads, long jobs, latency-tolerant | Instance-hours while running | **Yes** | **Yes**, requests wait in the queue | Payload up to **1 GB**; processing up to **1 hour** | Payload in S3 → `InvokeEndpointAsync` → result in S3; optional SNS notifications; async-only endpoint |
+| **Batch Transform** | Offline scoring of a dataset in S3 | Instance-hours for the job only | Yes | **n/a**: no endpoint, instances stop after the job | Whole dataset in S3 | Set `SplitType` to match input format |
+| **Multi-model endpoint** | Many small similar models, sparse traffic | Shared instance-hours | Yes | No | Models **loaded on demand** from S3 | One container serves many models |
+| **Multi-container endpoint** | Different frameworks sharing instances | Shared instance-hours | Yes | No | Call a container directly or chain them as a pipeline | Distinct from multi-model: different containers |
+| **Inference components** | FMs on shared compute; **LoRA adapters**; per-model scaling | Instance-hours while copies run | **Yes**: each component reserves accelerators and memory | **Yes**: `MinInstanceCount = 0` + step scaling on `NoCapacityInvocationFailures` | At zero, calls **fail for several minutes** until an instance provisions | Needs a real-time endpoint; see [LoRA](01-LoRA-Adapter-Lifecycle.md) |
+| **Neo** | Cheaper or faster inference | n/a (an optimization step) | Targets GPUs, Inferentia, CPU | n/a | n/a | Compiles a model ahead of time for the target hardware |
+| **Auto scaling** | Match instances to traffic | n/a | n/a | Only as above | n/a | Application Auto Scaling: target tracking, step, scheduled; cooldowns; scale-in is slower than scale-out |
+
+LLM-specific speedups (fast model loading, quantization, compilation, speculative decoding): [LLM inference optimization](04-LLM-Inference-Optimization.md).
 
 How to deploy: **JumpStart in Studio** (no code), **ModelBuilder** in the Python SDK (control), **Boto3/CloudFormation** (repeatable, at scale). Which hosting option to pick: [Choosing How to Host an FM](../01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md).
 

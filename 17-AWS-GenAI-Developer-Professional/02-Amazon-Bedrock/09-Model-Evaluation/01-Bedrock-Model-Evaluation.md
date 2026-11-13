@@ -60,6 +60,42 @@ If your dataset includes a reference answer (ground truth), the judge uses it wh
 
 ---
 
+## RAG evaluation metrics
+
+Also judge-scored, in two job types. Retrieval problems and generation problems show up in different metrics, so this tells you which half to fix.
+
+| Job type | Metric | What it checks |
+|---|---|---|
+| **Retrieve only** | **Context relevance** | Are the retrieved passages relevant to the question? |
+| | **Context coverage** | Do the retrieved passages cover everything in the **ground truth**? (ground truth required) |
+| **Retrieve and generate** | **Correctness**, **Completeness**, **Helpfulness**, **Logical coherence** | Same meaning as the model metrics, applied to the final answer |
+| | **Faithfulness** | Does the answer avoid hallucinating beyond the retrieved text? |
+| | **Citation precision** | Of the passages cited, how many were cited correctly? |
+| | **Citation coverage** | Is the answer supported by its citations, with none missing? |
+| | **Harmfulness**, **Stereotyping**, **Refusal** | Same responsible-AI checks as above |
+
+Low context relevance or coverage → fix retrieval ([chunking](../02-Knowledge-Bases/README.md), reranking). Good retrieval but low faithfulness → fix the prompt or model. Custom metrics are supported here too.
+
+---
+
+## Human evaluation: rating methods
+
+Human jobs have no fixed metric list: you **define your own metrics** (for example Coherence, Accuracy, Fluency) and attach a **rating method** to each.
+
+| Rating method | Evaluator does |
+|---|---|
+| **Likert scale, individual** | Rates one response on a 5-point scale |
+| **Likert scale, comparison** | States preference between two responses on a scale |
+| **Choice buttons** | Picks the better of two responses |
+| **Ordinal ranking** | Ranks responses 1, 2, ... |
+| **Thumbs up / down** | Accepts or rejects one response |
+
+- Compare up to **two** models (or your own responses) per job; custom prompt dataset up to **1,000 prompts**.
+- Workers are a **work team** (Cognito-managed, you choose how many rate each prompt); via API you must first create a SageMaker **flow definition** (`AWS/Bedrock/Evaluation`).
+- Evaluators may see toxic content, so brief them first. Ground-truth answers are shown for reference and are **not** scored.
+
+---
+
 ## Practical notes
 
 - The S3 bucket needs the required CORS permissions for the console to show results.

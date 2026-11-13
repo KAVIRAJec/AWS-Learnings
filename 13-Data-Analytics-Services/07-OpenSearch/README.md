@@ -23,7 +23,7 @@ Amazon OpenSearch Service (formerly Elasticsearch Service) is a managed service 
 
 **Security:**
 - Encryption at rest (KMS) and in transit (TLS).
-- **Fine-grained access control**: Index-level, document-level, and field-level permissions.
+- **Fine-grained access control**: Index-level, document-level, and field-level permissions. Multi-tenant patterns (pool vs silo): [Multi-Tenant Vector Isolation](../../17-AWS-GenAI-Developer-Professional/05-Vector-Stores-and-Embeddings/08-Multi-Tenant-Vector-Isolation.md).
 - Integrates with **Cognito** for dashboard authentication.
 
 **Use cases:** Application & infrastructure log analytics, full-text product/document search, SIEM (security event monitoring), clickstream analytics.

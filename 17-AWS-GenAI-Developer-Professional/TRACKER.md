@@ -5,18 +5,18 @@ AWS Certified Generative AI Developer – Professional. Source: [official exam g
 **Status legend:** `[ ]` not started · `[~]` partly covered · `[x]` covered in depth
 **Notes column** = file where the content lives (relative to this folder). Tick a task only when all its skills are `[x]`.
 
-## Progress (updated 2026-11-08)
+## Progress (updated 2026-11-12)
 
 **Coverage % = (fully covered + ½ × partly covered) ÷ skills.** Counted over the skill lines in each domain below (not the cross-cutting backlog).
 
 | Domain | Exam weight | Skills | `[x]` | `[~]` | `[ ]` | Coverage | Weighted share |
 |---|---|---|---|---|---|---|---|
 | 1. FM Integration, Data Management, Compliance | 31% | 28 | 9 | 7 | 12 | **44.6%** | 13.8 |
-| 2. Implementation and Integration | 26% | 25 | 3 | 5 | 17 | **22.0%** | 5.7 |
-| 3. AI Safety, Security, Governance | 20% | 15 | 2 | 9 | 4 | **43.3%** | 8.7 |
-| 4. Operational Efficiency and Optimization | 12% | 16 | 0 | 6 | 10 | **18.8%** | 2.2 |
+| 2. Implementation and Integration | 26% | 25 | 3 | 7 | 15 | **26.0%** | 6.8 |
+| 3. AI Safety, Security, Governance | 20% | 15 | 2 | 10 | 3 | **46.7%** | 9.3 |
+| 4. Operational Efficiency and Optimization | 12% | 16 | 0 | 7 | 9 | **21.9%** | 2.6 |
 | 5. Testing, Validation, Troubleshooting | 11% | 14 | 0 | 6 | 8 | **21.4%** | 2.4 |
-| **Overall (weighted by exam %)** | 100% | 98 | 14 | 33 | 51 | **32.8%** | 32.8 |
+| **Overall (weighted by exam %)** | 100% | 98 | 14 | 37 | 47 | **34.9%** | 34.9 |
 
 Biggest gaps by exam weight: **Domain 2** (agents, deployment, integration patterns) and **Domain 4/5** (optimization, monitoring, evaluation). Refresh this table whenever the skill boxes change.
 
@@ -87,7 +87,7 @@ Folders with only a `.gitkeep` have no content yet.
 ## Domain 2 — Implementation and Integration (26%)
 
 ### [ ] 2.1 Agentic AI solutions and tool integrations
-- [ ] 2.1.1 Agents with memory/state: Strands Agents, AWS Agent Squad, MCP
+- [~] 2.1.1 Agents with memory/state: Strands Agents, AWS Agent Squad, MCP → [Bedrock Agents memory](02-Amazon-Bedrock/03-Agents-and-AgentCore/01-Bedrock-Agents.md), [AgentCore Memory](02-Amazon-Bedrock/03-Agents-and-AgentCore/02-AgentCore.md); Strands, Agent Squad, MCP pending
 - [ ] 2.1.2 Structured reasoning: ReAct + CoT via Step Functions
 - [ ] 2.1.3 Safeguarded workflows: stopping conditions, timeouts, IAM boundaries, circuit breakers
 - [ ] 2.1.4 Model coordination: specialized FMs, ensembles, model selection frameworks
@@ -97,7 +97,7 @@ Folders with only a `.gitkeep` have no content yet.
 
 ### [ ] 2.2 Model deployment strategies
 - [x] 2.2.1 Lambda on-demand vs Bedrock Provisioned Throughput vs SageMaker endpoints → [hosting choice](01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md), [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md)
-- [ ] 2.2.2 LLM-specific deployment: containers, GPU, memory, token capacity, model loading
+- [~] 2.2.2 LLM-specific deployment: containers, GPU, memory, token capacity, model loading → [LLM inference optimization](04-SageMaker-for-GenAI/04-LLM-Inference-Optimization.md), [deploy variants table](04-SageMaker-for-GenAI/00-SageMaker-Quick-Reference.md); token capacity, Bedrock-side limits pending
 - [x] 2.2.3 Optimized deployment: smaller models, API-based model cascading → [right-sizing](01-GenAI-Fundamentals/Right-Sizing-the-Model.md), [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
 
 ### [ ] 2.3 Enterprise integration architectures
@@ -133,18 +133,18 @@ Folders with only a `.gitkeep` have no content yet.
 - [~] 3.1.5 Threat detection: prompt injection, jailbreak, sanitization, adversarial testing → [prompt attack filter](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); sanitization and adversarial testing pending
 
 ### [ ] 3.2 Data security and privacy controls
-- [~] 3.2.1 Protected environments: VPC endpoints, IAM, Lake Formation, CloudWatch → [IAM conditions](09-Security-Governance-Responsible-AI/02-Federated-Access-to-Foundation-Models.md); Bedrock VPC endpoints, Lake Formation pending
+- [~] 3.2.1 Protected environments: VPC endpoints, IAM, Lake Formation, CloudWatch → [IAM conditions](09-Security-Governance-Responsible-AI/02-Federated-Access-to-Foundation-Models.md), [multi-tenant isolation](05-Vector-Stores-and-Embeddings/08-Multi-Tenant-Vector-Isolation.md); Bedrock VPC endpoints, Lake Formation pending
 - [ ] 3.2.2 PII detection: Comprehend, Macie, Bedrock data privacy, S3 lifecycle retention → [PII filters](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md)
 - [~] 3.2.3 Privacy-preserving utility: masking, anonymization, Guardrails → [masking](02-Amazon-Bedrock/04-Guardrails/01-Policy-Types.md); Comprehend patterns pending
 
 ### [ ] 3.3 AI governance and compliance
-- [~] 3.3.1 Compliance frameworks: SageMaker model cards, Glue lineage, decision logs → [model cards](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md); lineage, decision logs pending
+- [~] 3.3.1 Compliance frameworks: SageMaker model cards, Glue lineage, decision logs → [model cards](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md), [ML lineage](04-SageMaker-for-GenAI/03-ML-Lineage-Tracking.md); Glue lineage, decision logs pending
 - [ ] 3.3.2 Data source tracking: Glue Data Catalog, metadata attribution, CloudTrail
 - [ ] 3.3.3 Organizational governance frameworks
 - [~] 3.3.4 Continuous monitoring: misuse/drift/bias detection, alerting, token-level redaction → [bias monitoring](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md); misuse/drift, redaction pending
 
 ### [ ] 3.4 Responsible AI
-- [ ] 3.4.1 Transparency: reasoning display, confidence metrics, source attribution, agent tracing
+- [~] 3.4.1 Transparency: reasoning display, confidence metrics, source attribution, agent tracing → agent trace in [Bedrock Agents](02-Amazon-Bedrock/03-Agents-and-AgentCore/01-Bedrock-Agents.md); confidence metrics pending
 - [x] 3.4.2 Fairness: metrics, Prompt Management A/B testing, LLM-as-a-judge → [fairness](09-Security-Governance-Responsible-AI/01-Fairness-and-Bias-Monitoring.md), [judge metrics](02-Amazon-Bedrock/09-Model-Evaluation/01-Bedrock-Model-Evaluation.md), [variants](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/01-Prompt-Management.md)
 - [~] 3.4.3 Policy compliance: Guardrails, model cards, automated compliance checks → [versions, enforcement](02-Amazon-Bedrock/04-Guardrails/03-Tiers-Versions-Governance.md); model cards pending; [model cards](04-SageMaker-for-GenAI/02-Model-Cards-in-the-Pipeline.md)
 
@@ -155,7 +155,7 @@ Folders with only a `.gitkeep` have no content yet.
 ### [ ] 4.1 Cost optimization and resource efficiency
 - [ ] 4.1.1 Token efficiency: estimation, context optimization, compression, pruning
 - [~] 4.1.2 Cost-effective model selection: tiering by complexity, price-to-performance → [prompt routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/02-Intelligent-Prompt-Routing.md)
-- [~] 4.1.3 Throughput systems: batching, capacity planning, Provisioned Throughput → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md); batching, auto-scaling pending
+- [~] 4.1.3 Throughput systems: batching, capacity planning, Provisioned Throughput → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md), [service tiers](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/04-Service-Tiers.md); batching, auto-scaling pending
 - [~] 4.1.4 Caching: semantic, fingerprinting, edge, prompt caching → [prompt caching](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/01-Prompt-Caching.md); semantic/edge pending
 
 ### [ ] 4.2 Application performance
@@ -170,7 +170,7 @@ Folders with only a `.gitkeep` have no content yet.
 - [ ] 4.3.1 Holistic observability: metrics, tracing, FM interaction tracing, dashboards
 - [~] 4.3.2 GenAI monitoring: token usage, hallucination rate, invocation logs, anomaly detection → [custom metrics and alarms](10-Observability-and-Cost-Optimization/01-CloudWatch-Custom-Metrics-and-Alarms.md); built-in Bedrock metrics, invocation logs pending
 - [ ] 4.3.3 Integrated observability: compliance monitoring, audit, behavior tracking
-- [ ] 4.3.4 Tool performance: call patterns, multi-agent coordination tracking
+- [~] 4.3.4 Tool performance: call patterns, multi-agent coordination tracking → [agent trace](02-Amazon-Bedrock/03-Agents-and-AgentCore/01-Bedrock-Agents.md), [AgentCore Observability](02-Amazon-Bedrock/03-Agents-and-AgentCore/02-AgentCore.md)
 - [~] 4.3.5 Vector store operations: monitoring, index optimization, data quality → [k-NN metrics, hot shards](05-Vector-Stores-and-Embeddings/04-OpenSearch-Performance-Tuning.md); automated index routines and data quality pending; [KB retrieval latency](02-Amazon-Bedrock/02-Knowledge-Bases/05-Measuring-Retrieval-Latency.md)
 - [ ] 4.3.6 FM troubleshooting frameworks: golden datasets, output diffing, reasoning path tracing
 
@@ -204,8 +204,8 @@ Services/concepts spanning many skills. Cover as dedicated notes, then link from
 
 - [~] Amazon Bedrock core: model catalog, InvokeModel vs Converse API, inference params, quotas/throttling → [Converse](02-Amazon-Bedrock/01-Core-and-APIs/01-Converse-and-InvokeModel.md); model catalog and quotas pending
 - [~] Bedrock Knowledge Bases (ingestion, sync, parsing, chunking, retrieval APIs) — chunking/parsing/query config done; sync, stores, Retrieve vs RetrieveAndGenerate internals pending; ingestion/sync now in [freshness note](05-Vector-Stores-and-Embeddings/06-Embeddings-and-Index-Freshness.md)
-- [ ] Bedrock Agents (action groups, Lambda, return of control, tracing, memory)
-- [ ] Bedrock AgentCore
+- [x] Bedrock Agents (action groups, Lambda, return of control, tracing, memory) → [Bedrock Agents](02-Amazon-Bedrock/03-Agents-and-AgentCore/01-Bedrock-Agents.md)
+- [x] Bedrock AgentCore → [AgentCore](02-Amazon-Bedrock/03-Agents-and-AgentCore/02-AgentCore.md)
 - [~] Bedrock Guardrails (all policy types, ApplyGuardrail API, contextual grounding) → [04-Guardrails](02-Amazon-Bedrock/04-Guardrails/README.md); Agents/KB integration, image filters, Automated Reasoning authoring pending
 - [x] Bedrock Prompt Management / Prompt Flows / prompt caching / Intelligent Prompt Routing → [05-Prompt-Management-and-Flows](02-Amazon-Bedrock/05-Prompt-Management-and-Flows/README.md), [06-Inference-Throughput-and-Routing](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/README.md)
 - [~] Bedrock Provisioned Throughput, Cross-Region Inference, Batch Inference → [Provisioned Throughput](02-Amazon-Bedrock/06-Inference-Throughput-and-Routing/03-Provisioned-Throughput.md); CRIS and batch pending
