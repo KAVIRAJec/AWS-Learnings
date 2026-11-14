@@ -80,12 +80,51 @@ When graphs don't fit (slow queries, out-of-memory crashes), the options are:
 |---|---|---|
 | **Add data nodes** + reindex with **more primary shards** | More memory in total, and smaller graphs spread across nodes; keeps full-precision vectors | Primary count can't be changed in place, so you reindex; more cost |
 | **Split into per-topic indices**, search only the matching one | Each index has smaller graphs, and a query touches far fewer vectors | Needs a topic known at query time; cross-topic searches hit several indices ([Index Design](05-OpenSearch-Index-Design.md)) |
-| **Quantization / compression** (for example Faiss 16-bit scalar, which halves each vector's size) | Less memory per vector | Can **lower recall**; unusable if tests show recall loss |
+| **Quantization / compression**: 16-bit, byte, binary, PQ ([below](#quantization-and-on-disk-mode)) | Less memory per vector, 2x to 32x+ | Can **lower recall**; unusable if tests show recall loss |
+| **`on_disk` mode** ([below](#quantization-and-on-disk-mode)) | Compressed copy in RAM, full precision on disk (32x default) | Higher latency (disk reads + rescoring) |
 | **IVF + PQ** | Much smaller index | Lower recall, needs training |
 | **Replicas to zero** | Each copy of the graphs costs memory, so fewer copies means less | Only sensible during a bulk load. A replica is the failover copy: with none, one node failure makes part of the data unavailable |
 | **UltraWarm** (S3-backed warm storage; k-NN indices supported from OpenSearch 2.17) | Moves graphs off the hot nodes | Warm indices are **read-only**: fine for static, rarely-queried data, not for an index that receives new documents every day |
 
 Rule of thumb: fix memory by **adding capacity and shrinking what each query touches**; reach for compression only if recall tests allow it, and never trade away replicas or write access you need.
+
+---
+
+## Quantization and on-disk mode
+
+**Quantization** stores each vector with fewer bits, so the graph needs less RAM. You trade **memory for recall** (and sometimes latency). Reference: 1 billion vectors, 384 dimensions, `m=16`.
+
+| Technique | Bits per dimension | Shrink | Engine | How you use it | 1B-vector memory |
+|---|---|---|---|---|---|
+| None (float32) | 32 | 1x | any | default | about 1,830 GB |
+| **Faiss 16-bit scalar** (fp16) | 16 | **2x** | Faiss HNSW | automatic at ingestion; values must be within ±65,504 (`clip` option) | about 914 GB |
+| **Byte** (int8) | 8 | **4x** | Lucene, Faiss | **you convert to bytes** before ingesting | about 329 GB |
+| **Binary quantization** | 1 (or 2, 4) | **32x** (16x, 8x) | Faiss HNSW | trained at index time; extra bits recover recall | about 194 GB at 1 bit |
+| **Product quantization (PQ)** | sub-vector codes | up to **64x** | Faiss IVF or HNSW | **training step** (at least 256 documents) | smallest, lowest recall |
+| **`on_disk` mode** | 1 in RAM + full precision on disk | **32x** default | Faiss | set `mode: on_disk` (and optional `compression_level`) | compressed copy only |
+
+Rule: more shrink means less memory and cost but lower recall, so measure recall on your own data first.
+
+**Binary quantization vs binary vectors.** Not the same thing:
+- **Binary quantization** converts your **float32** embeddings to bits for you (positive values become 1, others 0), so the result is an **approximation**. Recall can drop noticeably (one benchmark: 0.73, recovered to 0.94 with 3x oversampling).
+- **Binary vectors** (`data_type: binary`) are embeddings a model **outputs as bits** (for example Cohere Embed v3). You store them as packed bytes, search by **Hamming distance** (count of differing bits), and the **dimension must be a multiple of 8** (pad with zeros). Recall is good because the model was built for it. Which Bedrock models can emit binary: [Bedrock Embedding Models](07-Bedrock-Embedding-Models.md).
+
+**`on_disk` mode** (OpenSearch 2.17+) is quantization plus a safety net:
+
+```mermaid
+flowchart LR
+    Q["Query"] --> P1["Phase 1: search the<br/>compressed index in RAM"]
+    P1 -->|"candidates x oversample factor"| P2["Phase 2: fetch full-precision<br/>vectors from disk, rescore exactly"]
+    P2 --> R["Top k results"]
+```
+
+- Defaults: Faiss IVF-style index with **32x** compression (binary). `compression_level` can be set lower (2x to 16x) to keep more recall.
+- **Oversample factor**: how many extra candidates phase 1 collects before the exact rescore. Default **2.0** (unless you override the compression level); raising it improves recall and costs latency.
+- AWS's benchmark with default settings: **recall@100 0.93 to 0.99**, **P90 latency 7 to 169 ms**, **67 to 83% cheaper** than the in-memory equivalent.
+- **Use when** P90 latency of roughly **100 to 200 ms** is acceptable and cost matters more than speed. **Don't use** for near-real-time latency targets, where a smaller in-memory quantization (fp16, byte) fits better.
+- Memory estimate: `1.1 × (dimensions ÷ 8 + 8 × m) × vector count` bytes.
+
+On OpenSearch Serverless the same idea appears as the NextGen **compression level** (default 32x): [Serverless](01-OpenSearch-Serverless-Vector-Search.md).
 
 ---
 

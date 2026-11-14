@@ -56,11 +56,34 @@ SageMaker AI is AWS's managed platform to **prepare data, build, train, evaluate
 | **Multi-container endpoint** | Different frameworks sharing instances | Shared instance-hours | Yes | No | Call a container directly or chain them as a pipeline | Distinct from multi-model: different containers |
 | **Inference components** | FMs on shared compute; **LoRA adapters**; per-model scaling | Instance-hours while copies run | **Yes**: each component reserves accelerators and memory | **Yes**: `MinInstanceCount = 0` + step scaling on `NoCapacityInvocationFailures` | At zero, calls **fail for several minutes** until an instance provisions | Needs a real-time endpoint; see [LoRA](01-LoRA-Adapter-Lifecycle.md) |
 | **Neo** | Cheaper or faster inference | n/a (an optimization step) | Targets GPUs, Inferentia, CPU | n/a | n/a | Compiles a model ahead of time for the target hardware |
+| **Inference Recommender** | Choosing instance type, count and config by measurement | Only the instances used while the job runs | Tests whichever instance types you pick | n/a | Up to **10** instance types or a serverless config per job | Load-tests your model and returns cost and latency per option; see [below](#inference-recommender-in-short) |
 | **Auto scaling** | Match instances to traffic | n/a | n/a | Only as above | n/a | Application Auto Scaling: target tracking, step, scheduled; cooldowns; scale-in is slower than scale-out |
 
 LLM-specific speedups (fast model loading, quantization, compilation, speculative decoding): [LLM inference optimization](04-LLM-Inference-Optimization.md).
 
 How to deploy: **JumpStart in Studio** (no code), **ModelBuilder** in the Python SDK (control), **Boto3/CloudFormation** (repeatable, at scale). Which hosting option to pick: [Choosing How to Host an FM](../01-GenAI-Fundamentals/Choosing-How-to-Host-an-FM.md).
+
+## Inference Recommender in short
+
+**What it is:** automated load testing that answers "which instance type, and how many, should host this model?". It deploys your model to temporary endpoints on candidate instances (or a serverless config), sends it traffic, and reports cost and performance for each, so you pick by measurement instead of guessing. You pay only for the instances while the job runs.
+
+**Inputs:** a SageMaker model or a model version registered in **Model Registry**, an IAM role, and a **sample payload** (the load test replays it). Run it from the console, SDK, or CLI (`CreateInferenceRecommendationsJob`).
+
+| | **Instance recommendations** (default job) | **Custom load test** (`Advanced` job) |
+|---|---|---|
+| You provide | Model + sample payload | Also a **traffic pattern**, **stopping conditions**, and the instance types |
+| Does | Runs a set of load tests on recommended instance types or a serverless endpoint | Benchmarks to **your** latency and throughput requirements |
+| Use for | A quick shortlist | Validating against a production target |
+
+**Custom load test settings**
+- **Traffic pattern**: *phases* (users spawned per minute; 1–3 initial users, spawn rate 0–3, each phase 120–3,600 s) or *stairs* (add users in timed steps). A "user" is a system-generated client looping requests.
+- **Stopping conditions** (job stops when any is met): `MaxInvocations` (requests per minute, up to **30,000**), `ModelLatencyThresholds` (a percentile such as P95 and a value in ms), and `FlatInvocations` (`Stop` by default when throughput stops rising, meaning the endpoint is at capacity).
+- **Limits**: up to **10** tests and 10 in parallel per job; a job can take **up to 2 hours**.
+
+**Results per option:** `CostPerHour`, `CostPerInference`, max invocations per minute, `ModelLatency` (in microseconds; includes round trip to the container), and a recommended `InitialInstanceCount` (how many instances to meet your `MaxInvocations`). Serverless results add CPU and memory use and `ModelSetupTime` (cold start). Console views let you weight cost, latency and throughput.
+
+**Where it fits:** instance choice for [real-time or serverless endpoints](#5-deploy-inference-variants); it can also test models **compiled with Neo** and tune environment parameters. For LLM-specific speedups see [LLM inference optimization](04-LLM-Inference-Optimization.md).
+
 
 ---
 
